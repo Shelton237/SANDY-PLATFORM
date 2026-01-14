@@ -1,21 +1,38 @@
 {
-  "name": "Sandy Juice",
-  "short_name": "Juice",
-  "description": "Jus presses a froid et snacks 100% naturels, livres directement chez vous.",
-  "start_url": "/",
+  "name": "Sandy Juice Platform",
+  "short_name": "Sandy Juice",
+  "description": "Jus pressés à froid, supply-chain et suivi des commandes Sandy Juice.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
   "theme_color": "#16a34a",
   "icons": [
     {
       "src": "/icons/logo.svg",
       "sizes": "192x192",
-      "type": "image/svg"
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
       "src": "/icons/logo.svg",
       "sizes": "512x512",
-      "type": "image/svg"
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

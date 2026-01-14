@@ -188,7 +188,7 @@
           <!-- Bouton CTA amélioré -->
           <Link 
             :href="route('products')" 
-            class="bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 flex items-center group/cta"
+            class="hidden md:flex bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 items-center group/cta"
           >
             <i class="bi bi-lightning-charge-fill mr-2 group-hover/cta:animate-bounce"></i>
             Commander

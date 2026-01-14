@@ -15,7 +15,7 @@
       <button 
         v-show="showScrollButton"
         @click="scrollToTop"
-        class="fixed bottom-8 right-8 bg-primary text-white p-3 rounded-xl shadow-xl hover:bg-primary-dark transition-all z-40"
+        class="fixed bottom-16 right-4 sm:bottom-8 sm:right-8 bg-primary text-white p-3 rounded-xl shadow-xl hover:bg-primary-dark transition-all z-40"
         aria-label="Retour en haut"
       >
         <i class="bi bi-arrow-up"></i>
@@ -26,23 +26,30 @@
       href="https://wa.me/237655699825"
       target="_blank"
       rel="noopener noreferrer"
-      class="fixed bottom-20 right-6 z-40 inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-white font-semibold shadow-lg hover:bg-[#1eb053]"
+      class="fixed bottom-24 right-4 sm:bottom-20 sm:right-6 z-40 hidden sm:inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-white font-semibold shadow-lg hover:bg-[#1eb053]"
     >
       <i class="bi bi-whatsapp text-xl"></i>
       Commander sur WhatsApp
+    </a>
+    <a
+      href="https://wa.me/237655699825"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="fixed bottom-16 right-4 z-40 sm:hidden inline-flex items-center justify-center rounded-full bg-[#25D366] p-4 text-white shadow-lg hover:bg-[#1eb053]"
+      aria-label="Commander sur WhatsApp"
+    >
+      <i class="bi bi-whatsapp text-2xl"></i>
     </a>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { usePage } from '@inertiajs/vue3'
+import { ref, onMounted, onUnmounted } from 'vue'
 import NavigationHeader from '@/Components/Home/NavigationHeader.vue'
 import Footer from '@/Components/Home/Footer.vue'
 import NotificationCenter from '@/Components/NotificationCenter.vue'
 
 const showScrollButton = ref(false)
-const page = usePage()
 
 // Optimisation du scroll avec debounce
 let scrollTimeout = null

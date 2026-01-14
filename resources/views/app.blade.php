@@ -13,6 +13,7 @@
     <meta name="keywords" content="Sandy Juice, jus naturels Cameroun, pressage a froid, livraison Yaounde, pipeline production">
     <meta name="author" content="{{ $appName }}">
     <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#16a34a">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -29,6 +30,7 @@
 
     <!-- Canonical -->
     <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
