@@ -106,7 +106,45 @@
                 placeholder="Gingembre, ananas, detox..."
                 class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:border-[#f49926] focus:ring-2 focus:ring-[#f49926]/20 transition"
                 @input="handleSearchInput"
+                @focus="handleSearchFocus"
+                @blur="handleSearchBlur"
               >
+              <div
+                v-if="showSuggestionPanel"
+                class="absolute left-0 right-0 top-[calc(100%+0.75rem)] z-30 rounded-2xl border border-slate-100 bg-white shadow-2xl"
+              >
+                <div v-if="suggestionLoading" class="px-4 py-3 flex items-center gap-3 text-sm text-slate-500">
+                  <i class="bi bi-arrow-repeat animate-spin text-[#f49926]"></i>
+                  Recherche en cours...
+                </div>
+                <template v-else>
+                  <div v-if="suggestions.length" class="divide-y divide-slate-100">
+                    <Link
+                      v-for="item in suggestions"
+                      :key="item.slug"
+                      :href="item.url"
+                      class="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition"
+                      @click="handleSuggestionNavigate"
+                    >
+                      <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100">
+                        <img :src="item.image || '/images/catalog/placeholder.jpg'" :alt="item.name" class="w-full h-full object-cover" />
+                      </div>
+                      <div class="flex-1">
+                        <p class="text-sm font-semibold text-[#254a29]">{{ item.name }}</p>
+                        <p class="text-xs text-slate-500 truncate">
+                          {{ item.tagline || 'Recette signature Sandy' }}
+                        </p>
+                      </div>
+                      <span class="text-[11px] font-semibold text-[#f49926] bg-[#fef4e7] px-2 py-1 rounded-full">
+                        {{ item.category_label }}
+                      </span>
+                    </Link>
+                  </div>
+                  <div v-else class="px-4 py-3 text-sm text-slate-500">
+                    Aucun jus ne correspond encore a cette requete.
+                  </div>
+                </template>
+              </div>
             </div>
           </div>
           <div class="w-full lg:w-auto">
@@ -156,13 +194,102 @@
               <div class="text-xs text-slate-500">{{ category.description }}</div>
             </button>
           </div>
-          <div class="mt-4 flex flex-wrap gap-3 text-sm">
-            <button class="text-[#f49926] font-semibold hover:underline" @click="clearFilters">
-              Reinitialiser les filtres
+        </div>
+
+        <div class="mt-4 flex flex-wrap gap-3 text-sm">
+          <button class="text-[#f49926] font-semibold hover:underline" @click="clearFilters">
+            Reinitialiser les filtres
+          </button>
+          <span v-if="isFiltering" class="text-slate-400 flex items-center gap-2">
+            <i class="bi bi-arrow-repeat animate-spin"></i> Mise a jour
+          </span>
+          <span
+            v-if="hasIngredientFilter"
+            class="inline-flex items-center gap-2 rounded-2xl border border-[#f49926]/30 bg-[#fef4e7] px-3 py-1 text-[#f49926]"
+          >
+            <i class="bi bi-filter"></i>
+            {{ ingredientMap[selectedIngredient] || selectedIngredient }}
+            <button class="ml-1 text-xs" type="button" @click="clearIngredientFilter">
+              <i class="bi bi-x"></i>
             </button>
-            <span v-if="isFiltering" class="text-slate-400 flex items-center gap-2">
-              <i class="bi bi-arrow-repeat animate-spin"></i> Mise a jour
-            </span>
+          </span>
+          <span
+            v-if="hasPriceFilter"
+            class="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700"
+          >
+            <i class="bi bi-cash-stack"></i>
+            <= {{ formatPrice(effectivePriceMax) }}
+            <button class="ml-1 text-xs text-emerald-700" type="button" @click="clearPriceFilter">
+              <i class="bi bi-x"></i>
+            </button>
+          </span>
+        </div>
+
+        <div v-if="ingredientOptionsList.length" class="border-t border-slate-100 pt-6 mt-6">
+          <div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p class="text-xs uppercase text-slate-500 tracking-wide">Ingredients stars</p>
+              <p class="text-sm text-slate-500">Affinez selon les notes aromatiques les plus demandees</p>
+            </div>
+            <button
+              v-if="hasIngredientFilter"
+              type="button"
+              class="text-xs font-semibold text-[#f49926] hover:text-[#f28700]"
+              @click="clearIngredientFilter"
+            >
+              Effacer l'ingrédient
+            </button>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <button
+              v-for="option in ingredientOptionsList"
+              :key="option.value"
+              class="px-4 py-2 rounded-2xl border text-sm flex items-center gap-2 transition"
+              :class="[
+                selectedIngredient === option.value
+                  ? 'border-[#f49926] bg-[#fef4e7] text-[#f49926]'
+                  : 'border-slate-200 text-slate-600 hover:border-[#f49926]/40'
+              ]"
+              @click="toggleIngredient(option.value)"
+            >
+              <span class="font-medium">{{ option.label }}</span>
+              <span class="text-[11px] text-slate-400">{{ option.count }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div v-if="priceRangeAvailable" class="border-t border-slate-100 pt-6 mt-6">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="text-xs uppercase text-slate-500 tracking-wide">Budget maximal</p>
+              <p class="text-lg font-semibold text-[#254a29]"><= {{ formatPrice(effectivePriceMax) }}</p>
+              <p class="text-xs text-slate-400">
+                De {{ formatPrice(priceLimits.min) }} a {{ formatPrice(priceLimits.max) }}
+              </p>
+            </div>
+            <button
+              v-if="hasPriceFilter"
+              type="button"
+              class="text-xs font-semibold text-[#f49926] hover:text-[#f28700]"
+              @click="clearPriceFilter"
+            >
+              Retirer ce filtre
+            </button>
+          </div>
+          <div class="mt-4">
+            <input
+              v-model.number="priceMax"
+              type="range"
+              class="w-full accent-[#f49926]"
+              :min="priceLimits.min"
+              :max="priceLimits.max"
+              :step="Math.max(Math.round(priceLimits.max / 20), 50)"
+              @input="handlePriceInput"
+            >
+            <div class="flex justify-between text-xs text-slate-400 mt-1">
+              <span>{{ formatPrice(priceLimits.min) }}</span>
+              <span>{{ formatPrice(priceLimits.max) }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -305,6 +432,7 @@
 
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3'
+import axios from 'axios'
 import { computed, onUnmounted, ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import useCart from '@/Composables/useCart'
@@ -349,6 +477,17 @@ const props = defineProps({
   sortOptions: {
     type: Array,
     default: () => []
+  },
+  ingredientOptions: {
+    type: Array,
+    default: () => []
+  },
+  priceRange: {
+    type: Object,
+    default: () => ({
+      min: 0,
+      max: 0
+    })
   }
 })
 
@@ -359,7 +498,55 @@ const activeMoment = ref(props.filters?.moment ?? null)
 const sort = ref(props.filters?.sort ?? 'popularity')
 const isFiltering = ref(false)
 
+const ingredientOptionsList = computed(() => props.ingredientOptions ?? [])
+const ingredientMap = computed(() => {
+  const map = {}
+  ingredientOptionsList.value.forEach((option) => {
+    map[option.value] = option.label
+  })
+  return map
+})
+const selectedIngredient = ref(props.filters?.ingredient ?? null)
+
+const priceLimits = computed(() => {
+  const min = Number(props.priceRange?.min ?? 0)
+  const max = Number(props.priceRange?.max ?? 0)
+
+  return {
+    min: Number.isFinite(min) ? min : 0,
+    max: Number.isFinite(max) ? max : 0
+  }
+})
+const priceRangeAvailable = computed(() => priceLimits.value.max > 0)
+const priceMax = ref(
+  props.filters?.price_max ?? (priceRangeAvailable.value ? priceLimits.value.max : null)
+)
+const effectivePriceMax = computed(() => {
+  if (!priceRangeAvailable.value) {
+    return 0
+  }
+
+  const value = Number(priceMax.value ?? priceLimits.value.max)
+  if (Number.isNaN(value)) {
+    return priceLimits.value.max
+  }
+
+  return Math.min(Math.max(value, priceLimits.value.min), priceLimits.value.max)
+})
+const hasPriceFilter = computed(() => priceRangeAvailable.value && effectivePriceMax.value < priceLimits.value.max)
+const hasIngredientFilter = computed(() => Boolean(selectedIngredient.value))
+
+const trimmedSearch = computed(() => (search.value ?? '').trim())
+
+const suggestions = ref([])
+const suggestionLoading = ref(false)
+const suggestionsVisible = ref(false)
+const showSuggestionPanel = computed(() => suggestionsVisible.value && trimmedSearch.value.length >= 2)
+
 let searchTimer = null
+let suggestionTimer = null
+let priceTimer = null
+let suggestionAbortController = null
 
 const { addToCart, loading: cartLoading } = useCart()
 
@@ -434,9 +621,11 @@ const visitWithFilters = () => {
   isFiltering.value = true
 
   const query = {}
-  if (search.value) query.q = search.value
+  if (trimmedSearch.value.length) query.q = trimmedSearch.value
   if (sort.value && sort.value !== 'popularity') query.sort = sort.value
   if (activeMoment.value) query.moment = activeMoment.value
+  if (selectedIngredient.value) query.ingredient = selectedIngredient.value
+  if (hasPriceFilter.value) query.price_max = Math.round(effectivePriceMax.value)
 
   const options = {
     preserveScroll: true,
@@ -455,6 +644,52 @@ const visitWithFilters = () => {
   }
 }
 
+const fetchSuggestions = async () => {
+  const term = trimmedSearch.value
+
+  if (term.length < 2) {
+    if (suggestionAbortController) {
+      suggestionAbortController.abort()
+      suggestionAbortController = null
+    }
+    suggestions.value = []
+    suggestionLoading.value = false
+    suggestionsVisible.value = false
+    return
+  }
+
+  if (suggestionAbortController) {
+    suggestionAbortController.abort()
+  }
+  suggestionAbortController = new AbortController()
+
+  suggestionLoading.value = true
+  suggestionsVisible.value = true
+
+  try {
+    const response = await axios.get(route('products.suggestions'), {
+      params: { q: term },
+      signal: suggestionAbortController.signal
+    })
+    suggestions.value = Array.isArray(response.data) ? response.data : []
+  } catch (error) {
+    if (error?.code !== 'ERR_CANCELED' && error?.name !== 'CanceledError') {
+      console.error(error)
+    }
+  } finally {
+    suggestionLoading.value = false
+  }
+}
+
+const scheduleSuggestionFetch = () => {
+  if (suggestionTimer) {
+    clearTimeout(suggestionTimer)
+  }
+  suggestionTimer = setTimeout(() => {
+    fetchSuggestions()
+  }, 250)
+}
+
 const handleSearchInput = () => {
   if (searchTimer) {
     clearTimeout(searchTimer)
@@ -462,6 +697,38 @@ const handleSearchInput = () => {
   searchTimer = setTimeout(() => {
     visitWithFilters()
   }, 350)
+
+  if (trimmedSearch.value.length < 2) {
+    if (suggestionAbortController) {
+      suggestionAbortController.abort()
+      suggestionAbortController = null
+    }
+    suggestions.value = []
+    suggestionsVisible.value = false
+    suggestionLoading.value = false
+    return
+  }
+
+  scheduleSuggestionFetch()
+}
+
+const handleSearchFocus = () => {
+  if (trimmedSearch.value.length >= 2) {
+    suggestionsVisible.value = suggestions.value.length > 0 || suggestionLoading.value
+    if (!suggestions.value.length && !suggestionLoading.value) {
+      scheduleSuggestionFetch()
+    }
+  }
+}
+
+const handleSearchBlur = () => {
+  setTimeout(() => {
+    suggestionsVisible.value = false
+  }, 120)
+}
+
+const handleSuggestionNavigate = () => {
+  suggestionsVisible.value = false
 }
 
 const handleSortChange = () => {
@@ -478,11 +745,52 @@ const toggleMoment = (value) => {
   visitWithFilters()
 }
 
+const toggleIngredient = (value) => {
+  selectedIngredient.value = selectedIngredient.value === value ? null : value
+  visitWithFilters()
+}
+
+const clearIngredientFilter = () => {
+  if (!selectedIngredient.value) {
+    return
+  }
+  selectedIngredient.value = null
+  visitWithFilters()
+}
+
+const handlePriceInput = () => {
+  if (!priceRangeAvailable.value) {
+    return
+  }
+  if (priceTimer) {
+    clearTimeout(priceTimer)
+  }
+  priceTimer = setTimeout(() => {
+    visitWithFilters()
+  }, 350)
+}
+
+const clearPriceFilter = () => {
+  if (!priceRangeAvailable.value) {
+    return
+  }
+  priceMax.value = priceLimits.value.max
+  visitWithFilters()
+}
+
 const clearFilters = () => {
   search.value = ''
   activeMoment.value = null
   sort.value = 'popularity'
   selectedCategory.value = null
+  selectedIngredient.value = null
+  priceMax.value = priceRangeAvailable.value ? priceLimits.value.max : null
+  suggestions.value = []
+  suggestionsVisible.value = false
+  if (suggestionAbortController) {
+    suggestionAbortController.abort()
+    suggestionAbortController = null
+  }
   visitWithFilters()
 }
 
@@ -497,6 +805,15 @@ const formatPrice = (value) => {
 onUnmounted(() => {
   if (searchTimer) {
     clearTimeout(searchTimer)
+  }
+  if (suggestionTimer) {
+    clearTimeout(suggestionTimer)
+  }
+  if (priceTimer) {
+    clearTimeout(priceTimer)
+  }
+  if (suggestionAbortController) {
+    suggestionAbortController.abort()
   }
 })
 </script>

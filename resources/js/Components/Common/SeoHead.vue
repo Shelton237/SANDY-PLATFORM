@@ -15,9 +15,12 @@
     <meta property="twitter:description" :content="resolvedDescription" />
     <meta property="twitter:image" :content="resolvedImage" />
     <link rel="canonical" :href="canonicalUrl" />
-    <script v-if="structuredData" type="application/ld+json">
-      {{ structuredJson }}
-    </script>
+    <component
+      :is="'script'"
+      v-if="structuredData"
+      type="application/ld+json"
+      v-html="structuredJson"
+    />
   </Head>
 </template>
 

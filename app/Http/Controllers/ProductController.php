@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -100,6 +101,8 @@ class ProductController extends Controller
             'categories' => $categories->values()->all(),
             'collections' => $this->formatCollections($catalog),
             'nutritionFocus' => config('juices.nutrition_focus', []),
+            'ingredientOptions' => $this->ingredientOptions($catalog),
+            'priceRange' => $this->priceRange($catalog),
             'filters' => $filters,
             'categoryContext' => $categoryContext,
             'featured' => $this->formatFeatured($catalog),
@@ -128,11 +131,25 @@ class ProductController extends Controller
             $sort = 'popularity';
         }
 
+        $ingredient = trim((string) $request->input('ingredient'));
+        if ($ingredient === '') {
+            $ingredient = null;
+        }
+
+        $priceMax = $request->input('price_max');
+        if ($priceMax !== null && $priceMax !== '' && is_numeric($priceMax)) {
+            $priceMax = (float) $priceMax;
+        } else {
+            $priceMax = null;
+        }
+
         return [
             'search' => $search,
             'category' => $category,
             'moment' => $moment,
-            'sort' => $sort
+            'sort' => $sort,
+            'ingredient' => $ingredient,
+            'price_max' => $priceMax,
         ];
     }
 
@@ -141,6 +158,17 @@ class ProductController extends Controller
         return $catalog
             ->when($filters['category'], fn ($items) => $items->where('category', $filters['category']))
             ->when($filters['moment'], fn ($items) => $items->filter(fn ($product) => in_array($filters['moment'], $product['moments'] ?? [], true)))
+            ->when($filters['ingredient'], function ($items) use ($filters) {
+                $needle = Str::of($filters['ingredient'])->lower();
+
+                return $items->filter(function ($product) use ($needle) {
+                    return collect($product['ingredients'] ?? [])
+                        ->contains(function ($ingredient) use ($needle) {
+                            return Str::of($ingredient['name'] ?? '')->lower()->contains($needle);
+                        });
+                });
+            })
+            ->when($filters['price_max'], fn ($items) => $items->filter(fn ($product) => ($product['price'] ?? 0) <= $filters['price_max']))
             ->when($filters['search'], function ($items) use ($filters) {
                 $search = Str::of($filters['search'])->lower();
 
@@ -253,6 +281,48 @@ class ProductController extends Controller
             ->all();
     }
 
+    private function ingredientOptions(Collection $catalog): array
+    {
+        return $catalog
+            ->flatMap(function ($product) {
+                return collect($product['ingredients'] ?? [])
+                    ->pluck('name')
+                    ->filter();
+            })
+            ->map(fn ($name) => Str::of($name)->lower()->value())
+            ->filter()
+            ->countBy()
+            ->sortDesc()
+            ->take(12)
+            ->map(function ($count, $key) {
+                $label = Str::of($key)->replace('-', ' ')->title();
+                return [
+                    'value' => $key,
+                    'label' => $label,
+                    'count' => $count,
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    private function priceRange(Collection $catalog): array
+    {
+        $prices = $catalog->pluck('price')->filter()->sort();
+
+        if ($prices->isEmpty()) {
+            return [
+                'min' => 0,
+                'max' => 0,
+            ];
+        }
+
+        return [
+            'min' => (float) floor($prices->min()),
+            'max' => (float) ceil($prices->max()),
+        ];
+    }
+
     private function transformProduct(Product $product): array
     {
         return [
@@ -322,5 +392,43 @@ class ProductController extends Controller
             ->filter(fn ($ingredient) => !empty($ingredient['name']))
             ->values()
             ->all();
+    }
+
+    public function suggestions(Request $request): JsonResponse
+    {
+        $search = trim((string) $request->input('q', ''));
+
+        if (mb_strlen($search) < 2) {
+            return response()->json([]);
+        }
+
+        $products = Product::query()
+            ->published()
+            ->select(['id', 'name', 'slug', 'category', 'tagline', 'image_path'])
+            ->where(function ($builder) use ($search) {
+                $builder->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('tagline', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            })
+            ->limit(8)
+            ->get();
+
+        $categories = $this->categories()->keyBy('slug');
+
+        return response()->json(
+            $products->map(function (Product $product) use ($categories) {
+                $category = $categories->get($product->category);
+
+                return [
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'category' => $product->category,
+                    'category_label' => $category['name'] ?? Str::title(str_replace('-', ' ', $product->category)),
+                    'tagline' => $product->tagline,
+                    'image' => $product->image_path,
+                    'url' => route('products.show', $product->slug),
+                ];
+            })->values()->all()
+        );
     }
 }

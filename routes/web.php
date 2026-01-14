@@ -35,6 +35,7 @@ Route::get('/', HomeController::class)->name('home');
 // Routes des produits
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products/category/{category}', [ProductController::class, 'byCategory'])->name('products.category');
+Route::get('/products/suggestions', [ProductController::class, 'suggestions'])->name('products.suggestions');
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 
 // Routes du panier

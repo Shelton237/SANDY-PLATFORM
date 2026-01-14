@@ -30,13 +30,13 @@
 
 <script setup>
 import { Head } from '@inertiajs/vue3';
-import HeroContent from '@/components/Home/HeroContent.vue';
+import HeroContent from '@/Components/Home/HeroContent.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { ref, onMounted } from 'vue';
-import WhyAdvertise from '@/components/Home/WhyAdvertise.vue';
-import Statistics from '@/components/Home/Statistics.vue';
-import Testimonials from '@/components/Home/Testimonials.vue';
-import Faq from '@/components/Home/Faq.vue';
+import WhyAdvertise from '@/Components/Home/WhyAdvertise.vue';
+import Statistics from '@/Components/Home/Statistics.vue';
+import Testimonials from '@/Components/Home/Testimonials.vue';
+import Faq from '@/Components/Home/Faq.vue';
 
 const stats = ref([
   { icon: 'bi-calendar-check', value: '2+', label: "ans d'expérience" },
