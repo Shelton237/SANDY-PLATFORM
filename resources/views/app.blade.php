@@ -5,27 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>JUS NATURELS - Vente de Jus et Accompagnements Bio</title>
-    <meta name="description" content="Découvrez notre sélection de jus 100% naturels et d’accompagnements sains. Commandez en ligne et profitez d’une livraison rapide.">
-    <meta name="keywords" content="jus naturels, accompagnements bio, jus frais, e-commerce Madagascar, produits sains">
-    <meta name="author" content="JUS NATURELS">
+    @php($appName = config('app.name', 'Sandy Juice'))
+
+    <title>{{ $appName }} - Jus naturels & pipeline logistique</title>
+    <meta name="application-name" content="{{ $appName }}">
+    <meta name="description" content="Sandy Juice orchestre l'approvisionnement local, la production a froid et la livraison express de jus naturels au Cameroun.">
+    <meta name="keywords" content="Sandy Juice, jus naturels Cameroun, pressage a froid, livraison Yaounde, pipeline production">
+    <meta name="author" content="{{ $appName }}">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="JUS NATURELS - Vente en ligne de jus bio">
-    <meta property="og:description" content="Commande simple et rapide de jus naturels et snacks sains.">
+    <meta property="og:title" content="{{ $appName }} - Jus naturels & cold chain">
+    <meta property="og:description" content="Commandez nos cures presses a froid, suivez vos lots et recevez-les en moins de 2h.">
     <meta property="og:image" content="{{ asset('images/logo.png') }}">
     <meta property="og:url" content="{{ url()->current() }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="JUS NATURELS - E-commerce de jus frais et accompagnements">
-    <meta property="twitter:description" content="Votre boutique en ligne de jus bio et d’accompagnements naturels.">
+    <meta property="twitter:title" content="{{ $appName }} - Pipeline complet du jus naturel">
+    <meta property="twitter:description" content="Approvisionnement, production, vente et livraison coordonnes depuis Yaounde.">
     <meta property="twitter:image" content="{{ asset('images/logo.png') }}">
 
     <!-- Canonical -->
     <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
 
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.bunny.net">

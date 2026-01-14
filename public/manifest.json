@@ -1,7 +1,7 @@
 {
   "name": "Sandy Juice",
   "short_name": "Juice",
-  "description": "Jus pressés à froid et snacks 100% naturels, livrés directement chez vous.",
+  "description": "Jus presses a froid et snacks 100% naturels, livres directement chez vous.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -8,6 +8,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Product;
+use App\Models\BlogPost;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductCategoryController;
@@ -52,6 +54,46 @@ Route::get('/checkout/cancel', [OrderController::class, 'cancel'])->name('checko
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/values', [PageController::class, 'values'])->name('values');
 Route::get('/quality', [PageController::class, 'quality'])->name('quality');
+Route::get('/delivery', [PageController::class, 'delivery'])->name('delivery');
+Route::get('/sitemap.xml', function () {
+    $baseUrl = config('seo.base_url', config('app.url'));
+    $staticUrls = [
+        ['loc' => $baseUrl . '/', 'priority' => '1.0'],
+        ['loc' => $baseUrl . '/about', 'priority' => '0.8'],
+        ['loc' => $baseUrl . '/values', 'priority' => '0.8'],
+        ['loc' => $baseUrl . '/quality', 'priority' => '0.8'],
+        ['loc' => $baseUrl . '/delivery', 'priority' => '0.8'],
+        ['loc' => $baseUrl . '/products', 'priority' => '0.9'],
+        ['loc' => $baseUrl . '/blog', 'priority' => '0.7'],
+        ['loc' => $baseUrl . '/contact', 'priority' => '0.6'],
+    ];
+
+    $products = Product::published()
+        ->select('slug', 'updated_at', 'created_at')
+        ->orderByDesc('updated_at')
+        ->get()
+        ->map(fn ($product) => [
+            'loc' => $baseUrl . route('products.show', $product->slug, false),
+            'lastmod' => optional($product->updated_at ?? $product->created_at)->toDateString(),
+            'priority' => '0.8',
+        ]);
+
+    $posts = BlogPost::published()
+        ->select('slug', 'updated_at', 'published_at')
+        ->orderByDesc('published_at')
+        ->get()
+        ->map(fn ($post) => [
+            'loc' => $baseUrl . route('blog.show', $post->slug, false),
+            'lastmod' => optional($post->updated_at ?? $post->published_at)->toDateString(),
+            'priority' => '0.6',
+        ]);
+
+    $urls = array_merge($staticUrls, $products->toArray(), $posts->toArray());
+
+    return response()
+        ->view('sitemap', ['urls' => $urls])
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
 
 // Routes du blog
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
@@ -117,6 +159,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::resource('contact-messages', AdminContactMessageController::class)
         ->only(['index', 'show', 'update']);
+    Route::post('blog-posts/cover/upload', [AdminBlogPostController::class, 'uploadCover'])->name('blog-posts.cover.upload');
     Route::resource('blog-posts', AdminBlogPostController::class);
     Route::get('/experience/home', [HomeContentController::class, 'edit'])->name('home-content.edit');
     Route::put('/experience/home', [HomeContentController::class, 'update'])->name('home-content.update');

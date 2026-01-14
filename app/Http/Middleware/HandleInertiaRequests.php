@@ -71,6 +71,13 @@ class HandleInertiaRequests extends Middleware
                 'free_delivery_threshold' => (float) config('shop.free_delivery_threshold', 0),
                 'max_quantity' => (int) config('shop.max_quantity', 12),
             ],
+            'seo' => [
+                'site_name' => config('seo.site_name'),
+                'description' => config('seo.description'),
+                'keywords' => config('seo.keywords'),
+                'image' => config('seo.image'),
+                'base_url' => config('seo.base_url'),
+            ],
             'flash' => fn () => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),

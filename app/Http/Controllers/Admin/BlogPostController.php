@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -107,6 +109,20 @@ class BlogPostController extends Controller
         return redirect()
             ->route('admin.blog-posts.index')
             ->with('success', 'Article supprime.');
+    }
+
+    public function uploadCover(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'cover' => ['required', 'image', 'max:4096'],
+        ]);
+
+        $path = $request->file('cover')->store('blog-covers', 'public');
+
+        return response()->json([
+            'url' => Storage::disk('public')->url($path),
+            'path' => $path,
+        ]);
     }
 
     private function validatedData(Request $request): array
