@@ -1,0 +1,37 @@
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+  RoundCorner 15
+}
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam defaultFontSize 14
+
+actor Admin as admin
+
+rectangle "Laptop Admin\n(Air-gapped, VPN + MFA)" as laptop
+
+rectangle "AI Orchestrator\n(Cerveau central)" as orchestrator {
+}
+
+rectangle "Vault\n(Gestion des secrets)" as vault
+rectangle "Message Bus\n(RabbitMQ / Kafka / NATS)" as bus
+rectangle "Monitoring\nELK / Prometheus / Grafana" as monitoring
+
+rectangle "Worker #1\n(Bot / Script)" as w1
+rectangle "Worker #2\n(Bot / Script)" as w2
+rectangle "Worker #N\n(Bot / Script)" as wn
+
+admin --> laptop
+laptop --> orchestrator : VPN sécurisé
+orchestrator --> bus : File de tâches
+orchestrator --> vault : Gestion secrets
+bus --> w1
+bus --> w2
+bus --> wn
+w1 --> monitoring : Logs & métriques
+w2 --> monitoring : Logs & métriques
+wn --> monitoring : Logs & métriques
+orchestrator --> monitoring : Supervision
+@enduml
