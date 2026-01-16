@@ -164,6 +164,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('blog-posts', AdminBlogPostController::class);
     Route::get('/experience/home', [HomeContentController::class, 'edit'])->name('home-content.edit');
     Route::put('/experience/home', [HomeContentController::class, 'update'])->name('home-content.update');
+    Route::post('/experience/home/carousel/upload', [HomeContentController::class, 'uploadCarouselImage'])->name('home-content.carousel.upload');
 
     Route::post('/finance/accounts', [FinanceController::class, 'storeAccount'])->name('finance.accounts.store');
     Route::post('/finance/transactions', [FinanceController::class, 'storeTransaction'])->name('finance.transactions.store');

@@ -179,6 +179,26 @@
             :class="ui.input"
             placeholder="https://..."
           />
+          <div class="mt-2 flex flex-wrap items-center gap-3 text-xs">
+            <label class="inline-flex items-center gap-2 font-semibold text-[#254a29] cursor-pointer">
+              <i class="bi bi-cloud-arrow-up"></i>
+              Importer
+              <input type="file" class="hidden" accept="image/*" @change="handlePrimaryImageUpload" />
+            </label>
+            <span v-if="heroImageUpload.uploading" class="text-slate-500">Import en cours...</span>
+            <a
+              v-if="form.image_path"
+              :href="form.image_path"
+              class="text-[#f49926] hover:underline"
+              target="_blank"
+              rel="noopener"
+            >
+              Previsualiser
+            </a>
+          </div>
+          <p v-if="heroImageUpload.error" class="text-xs text-red-500 mt-1">
+            {{ heroImageUpload.error }}
+          </p>
         </div>
       </div>
       <div class="mt-6 grid gap-4 md:grid-cols-4">
@@ -420,7 +440,7 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const ui = {
   section: 'rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm ring-1 ring-black/5',
@@ -510,6 +530,7 @@ const csrfToken =
   typeof document !== 'undefined'
     ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
     : ''
+const heroImageUpload = ref({ uploading: false, error: null })
 
 const assignUploadMeta = (image) => {
   if (image && typeof image === 'object' && !image.__upload) {
@@ -541,6 +562,53 @@ const addImage = () => {
 const removeImage = (index) => {
   ensureImagesArray()
   props.form.images.splice(index, 1)
+}
+
+const handlePrimaryImageUpload = async (event) => {
+  const file = event?.target?.files?.[0]
+  if (!file) return
+
+  heroImageUpload.value.uploading = true
+  heroImageUpload.value.error = null
+
+  const formData = new FormData()
+  formData.append('image', file)
+
+  try {
+    const response = await fetch(uploadImageUrl, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      credentials: 'same-origin',
+      body: formData
+    })
+
+    if (!response.ok) {
+      let message = 'Upload echoue'
+      try {
+        const payload = await response.json()
+        message = payload?.message ?? message
+      } catch (error) {
+        // ignore parse errors
+      }
+      throw new Error(message)
+    }
+
+    const payload = await response.json()
+    if (payload?.url) {
+      form.image_path = payload.url
+    }
+  } catch (error) {
+    heroImageUpload.value.error = error?.message ?? 'Import impossible. Reessayez.'
+  } finally {
+    heroImageUpload.value.uploading = false
+    if (event?.target) {
+      event.target.value = ''
+    }
+  }
 }
 
 const handleGalleryUpload = async (event, index) => {

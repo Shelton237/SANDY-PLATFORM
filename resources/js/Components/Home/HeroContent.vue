@@ -2,10 +2,13 @@
   <section class="relative overflow-hidden bg-[#0f1f1a] text-white">
     <div class="absolute inset-0">
       <div
-        class="absolute inset-0 opacity-20 bg-cover bg-center"
-        :style="backgroundStyle"
+        v-for="(image, index) in backgroundSlides"
+        :key="`${image}-${index}`"
+        class="absolute inset-0 bg-cover bg-center transition-all duration-[1500ms] ease-out"
+        :class="index === activeSlide ? 'opacity-40 scale-100' : 'opacity-0 scale-105'"
+        :style="{ backgroundImage: `url(${image})` }"
       ></div>
-      <div class="absolute inset-0 bg-gradient-to-br from-[#0f1f1a] via-[#112920] to-[#0f1f1a]"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-[#0f1f1a]/95 via-[#112920]/70 to-[#0f1f1a]/95 backdrop-blur-sm"></div>
     </div>
 
     <div class="relative z-10 container mx-auto px-4 py-12 lg:py-20">
@@ -95,7 +98,7 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { route } from 'ziggy-js'
 import { Ziggy } from '@/ziggy'
 
@@ -132,6 +135,7 @@ const heroContent = computed(() => {
     highlight_text: content.highlight_text || 'Approvisionnement → Stockage → Production → Commercialisation → Livraison',
     media: {
       image: content.media?.image || '/images/hero/bottles.jpg',
+      carousel: Array.isArray(content.media?.carousel) ? content.media.carousel : [],
     },
     stats: Array.isArray(content.stats) && content.stats.length
       ? content.stats
@@ -151,12 +155,54 @@ const heroContent = computed(() => {
   }
 })
 
-const backgroundStyle = computed(() => {
-  const image = heroContent.value.media.image
-  return image
-    ? {
-        backgroundImage: `linear-gradient(135deg, rgba(15,31,26,0.9), rgba(15,31,26,0.6)), url(${image})`,
-      }
-    : {}
+const slidePoolFallback = [
+  '/images/hero/bottles.jpg',
+  '/images/publication/gingembre.jpg',
+  '/images/publication/bissap-bienfaits-infusion-hibiscus.jpg',
+  '/images/publication/pineapple-ginger-juice.webp',
+]
+
+const backgroundSlides = computed(() => {
+  const configuredSlides = (heroContent.value.media?.carousel || []).filter(
+    (asset) => typeof asset === 'string' && asset.trim().length > 0
+  )
+
+  const slides = configuredSlides.length
+    ? configuredSlides
+    : [heroContent.value.media?.image, ...slidePoolFallback]
+
+  return Array.from(new Set(slides.filter(Boolean).map((asset) => asset.trim())))
 })
+
+const activeSlide = ref(0)
+const autoplayHandle = ref(null)
+
+const stopAutoplay = () => {
+  if (autoplayHandle.value) {
+    clearInterval(autoplayHandle.value)
+    autoplayHandle.value = null
+  }
+}
+
+const startAutoplay = () => {
+  stopAutoplay()
+
+  if (backgroundSlides.value.length <= 1) return
+
+  autoplayHandle.value = setInterval(() => {
+    activeSlide.value = (activeSlide.value + 1) % backgroundSlides.value.length
+  }, 4500)
+}
+
+watch(
+  backgroundSlides,
+  () => {
+    activeSlide.value = 0
+    startAutoplay()
+  },
+  { immediate: true }
+)
+
+onMounted(startAutoplay)
+onBeforeUnmount(stopAutoplay)
 </script>

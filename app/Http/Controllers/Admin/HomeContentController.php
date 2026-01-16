@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LandingSection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -35,12 +37,17 @@ class HomeContentController extends Controller
             'secondary_cta.label' => ['nullable', 'string', 'max:120'],
             'secondary_cta.route' => ['nullable', 'string', 'max:120'],
             'secondary_cta.url' => ['nullable', 'url', 'max:255'],
+            'media' => ['nullable', 'array'],
             'media.image' => ['nullable', 'string', 'max:255'],
+            'media.carousel' => ['nullable', 'array', 'max:6'],
+            'media.carousel.*' => ['nullable', 'string', 'max:255'],
             'stats' => ['nullable', 'array', 'max:4'],
             'stats.*.label' => ['required_with:stats', 'string', 'max:120'],
             'stats.*.value' => ['required_with:stats', 'string', 'max:120'],
             'stats.*.icon' => ['nullable', 'string', 'max:60'],
         ]);
+
+        $mediaInput = $data['media'] ?? [];
 
         $payload = [
             'eyebrow' => $data['eyebrow'] ?? null,
@@ -51,7 +58,12 @@ class HomeContentController extends Controller
             'primary_cta' => $data['primary_cta'] ?? null,
             'secondary_cta' => $data['secondary_cta'] ?? null,
             'media' => [
-                'image' => $data['media']['image'] ?? '/images/hero/bottles.jpg',
+                'image' => $mediaInput['image'] ?? '/images/hero/bottles.jpg',
+                'carousel' => collect($mediaInput['carousel'] ?? [])
+                    ->filter(fn ($url) => is_string($url) && trim($url) !== '')
+                    ->map(fn ($url) => trim($url))
+                    ->values()
+                    ->all(),
             ],
             'stats' => collect($data['stats'] ?? [])
                 ->filter(fn ($stat) => !empty($stat['label']) && !empty($stat['value']))
@@ -76,5 +88,18 @@ class HomeContentController extends Controller
         return redirect()
             ->route('admin.home-content.edit')
             ->with('success', 'Section d’accueil mise à jour.');
+    }
+    public function uploadCarouselImage(Request $request): JsonResponse
+    {
+        $request->validate([
+            'image' => ['required', 'image', 'max:4096'],
+        ]);
+
+        $path = $request->file('image')->store('hero', 'public');
+
+        return response()->json([
+            'url' => Storage::disk('public')->url($path),
+            'path' => $path,
+        ]);
     }
 }

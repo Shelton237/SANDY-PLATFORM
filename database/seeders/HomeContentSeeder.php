@@ -30,6 +30,12 @@ class HomeContentSeeder extends Seeder
                     'media' => [
                         'image' => '/images/hero/bottles.jpg',
                         'theme' => 'sunrise',
+                        'carousel' => [
+                            '/images/hero/bottles.jpg',
+                            '/images/publication/gingembre.jpg',
+                            '/images/publication/bissap-bienfaits-infusion-hibiscus.jpg',
+                            '/images/publication/pineapple-ginger-juice.webp',
+                        ],
                     ],
                     'stats' => [
                         ['label' => 'Commandes/jour', 'value' => '3 200', 'icon' => 'bi bi-bag-check'],
