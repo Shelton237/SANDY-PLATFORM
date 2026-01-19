@@ -70,18 +70,18 @@
           </div>
         </div>
 
-        <div class="flex justify-center">
-          <div class="max-w-lg rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
-            <div class="aspect-[3/2] overflow-hidden rounded-3xl border border-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.35)]">
+        <div class="flex justify-center w-full">
+          <div
+            class="w-full rounded-[32px] bg-white/5 p-6 lg:h-[530px] lg:p-8"
+          >
+            <div
+              class="h-full w-full overflow-hidden rounded-[28px] bg-slate-900"
+            >
               <img
                 :src="heroContent.media.image"
                 alt="Pipeline Sandy"
                 class="h-full w-full object-cover"
               />
-            </div>
-            <div class="mt-4 text-center">
-              <p class="text-xs uppercase tracking-[0.35em] text-white/60">Sandy Platform</p>
-              <p class="mt-2 text-base font-semibold text-white">Minimal, lumineux, prêt pour vos ateliers</p>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@ const heroContent = computed(() => {
     highlight_badge: content.highlight_badge || 'Pipeline 360°',
     highlight_text: content.highlight_text || 'Approvisionnement → Stockage → Production → Commercialisation → Livraison',
     media: {
-      image: content.media?.image || '/images/hero/bottles.jpg',
+      image: content.media?.image || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=80',
       carousel: Array.isArray(content.media?.carousel) ? content.media.carousel : [],
     },
     stats: Array.isArray(content.stats) && content.stats.length
@@ -150,7 +150,9 @@ const heroContent = computed(() => {
 })
 
 const slidePoolFallback = [
-  '/images/hero/bottles.jpg',
+  'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1500&q=80',
+  'https://images.unsplash.com/photo-1459478309857-5d20c8c8d8d0?auto=format&fit=crop&w=1500&q=80',
+  'https://images.unsplash.com/photo-1484980972926-edee96e0960d?auto=format&fit=crop&w=1500&q=80',
   '/images/publication/gingembre.jpg',
   '/images/publication/bissap-bienfaits-infusion-hibiscus.jpg',
   '/images/publication/pineapple-ginger-juice.webp',
