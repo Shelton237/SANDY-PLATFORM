@@ -71,23 +71,62 @@
         </div>
 
         <div class="relative">
-          <div class="relative rounded-[32px] border border-white/10 bg-white/5 p-6 overflow-hidden backdrop-blur-sm">
-            <div class="aspect-[4/3] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
+          <div class="rounded-[36px] border border-white/10 bg-gradient-to-br from-[#15211b]/90 via-[#0b140f]/70 to-[#07100b]/80 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.35)]">
+            <div class="relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10">
               <img
-                :src="heroContent.media.image"
+                :src="backgroundSlides[activeSlide]"
                 alt="Pipeline Sandy"
-                class="h-full w-full object-cover"
+                class="h-full w-full object-cover transition-transform duration-500 ease-out"
               />
+              <div class="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-black/40"></div>
+              <div class="absolute inset-x-4 bottom-4 rounded-2xl bg-white/90 bg-opacity-80 px-4 py-3 text-[#1f3b30] backdrop-blur">
+                <p class="text-xs uppercase tracking-[0.35em] text-slate-500">Pipeline Sandy</p>
+                <p class="text-base font-semibold">Immersion dans chaque étape</p>
+              </div>
             </div>
-            <div class="absolute -bottom-6 inset-x-10 rounded-2xl bg-white text-[#254a29] shadow-xl p-4 flex items-center justify-between">
-              <div>
-                <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Pipeline</p>
-                <p class="text-base font-semibold">Cinq étapes synchronisées</p>
-              </div>
-              <div class="text-right">
-                <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Temps moyen</p>
-                <p class="text-base font-semibold">-35% délai</p>
-              </div>
+
+            <div class="mt-6 flex items-center justify-between text-xs uppercase tracking-[0.3em] text-white/70">
+              <button
+                type="button"
+                class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:border-white/40 hover:text-white"
+                @click="prevSlide"
+              >
+                <i class="bi bi-arrow-left"></i>
+                Précédent
+              </button>
+              <span>{{ activeSlide + 1 }} / {{ backgroundSlides.length }} images</span>
+              <button
+                type="button"
+                class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:border-white/40 hover:text-white"
+                @click="nextSlide"
+              >
+                Suivant
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </div>
+
+            <div class="mt-4 grid grid-cols-3 gap-3">
+              <button
+                v-for="(slide, index) in backgroundSlides"
+                :key="`${slide}-${index}`"
+                type="button"
+                class="relative aspect-[3/2] overflow-hidden rounded-2xl border transition duration-300"
+                :class="index === activeSlide ? 'border-white/80 shadow-[0_15px_45px_rgba(0,0,0,0.45)]' : 'border-white/5 bg-white/5'"
+                @click="setActiveSlide(index)"
+              >
+                <img
+                  :src="slide"
+                  alt="aperçu carousel"
+                  class="h-full w-full object-cover transition-transform group-hover:scale-110"
+                />
+                <span
+                  class="absolute inset-0 flex items-end justify-between p-2 text-[9px] font-semibold uppercase tracking-[0.4em]"
+                  :class="index === activeSlide ? 'text-[#f49926]' : 'text-white/60'"
+                >
+                  <span>Slide {{ index + 1 }}</span>
+                  <span>{{ heroContent.stats[index % heroContent.stats.length]?.value || '' }}</span>
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -176,6 +215,7 @@ const backgroundSlides = computed(() => {
 
 const activeSlide = ref(0)
 const autoplayHandle = ref(null)
+const slideCount = computed(() => backgroundSlides.value.length)
 
 const stopAutoplay = () => {
   if (autoplayHandle.value) {
@@ -190,7 +230,7 @@ const startAutoplay = () => {
   if (backgroundSlides.value.length <= 1) return
 
   autoplayHandle.value = setInterval(() => {
-    activeSlide.value = (activeSlide.value + 1) % backgroundSlides.value.length
+    activeSlide.value = (activeSlide.value + 1) % slideCount.value
   }, 4500)
 }
 
@@ -205,4 +245,22 @@ watch(
 
 onMounted(startAutoplay)
 onBeforeUnmount(stopAutoplay)
+
+const goToSlide = (index) => {
+  if (!slideCount.value) return
+  activeSlide.value = (index + slideCount.value) % slideCount.value
+  startAutoplay()
+}
+
+const nextSlide = () => {
+  goToSlide(activeSlide.value + 1)
+}
+
+const prevSlide = () => {
+  goToSlide(activeSlide.value - 1)
+}
+
+const setActiveSlide = (index) => {
+  goToSlide(index)
+}
 </script>
