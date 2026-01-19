@@ -22,7 +22,14 @@
 
     <div class="grid gap-6 lg:grid-cols-3">
       <div class="lg:col-span-2 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <PostForm :form="form" :categories="categories" :tags="tags" submit-label="Publier" :on-submit="submit" />
+        <PostForm
+          :form="form"
+          :categories="categories"
+          :tags="tags"
+          :excerpt-max-length="excerptMaxLength"
+          submit-label="Publier"
+          :on-submit="submit"
+        />
       </div>
 
       <aside class="space-y-4">
@@ -55,9 +62,11 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import PostForm from './Partials/PostForm.vue'
+import { injectCsrfToken } from '@/Composables/useCsrfToken'
 
 const props = defineProps({
   post: {
@@ -86,6 +95,10 @@ const form = useForm({
   is_featured: props.post.is_featured || false,
   tags: props.post.tags || []
 })
+
+form.transform((data) => injectCsrfToken(data))
+
+const excerptMaxLength = computed(() => props.post.excerpt_max_length ?? 500)
 
 const steps = ['Brief', 'Catégorie', 'Storytelling', 'Publication']
 

@@ -224,6 +224,7 @@
 import { Head, useForm } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
+import { getCsrfToken, injectCsrfToken } from '@/Composables/useCsrfToken'
 
 const props = defineProps({
   hero: {
@@ -256,11 +257,6 @@ const resolveCarouselUploadUrl = () => {
 }
 
 const uploadCarouselUrl = resolveCarouselUploadUrl()
-
-const getMetaCsrfToken = () =>
-  typeof document !== 'undefined'
-    ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
-    : ''
 
 const getXsrfCookie = () => {
   if (typeof document === 'undefined') return ''
@@ -340,7 +336,7 @@ const uploadErrorMessage = 'Import impossible. Reessayez.'
 
 const requestHeaders = () => {
   const headers = {
-    'X-CSRF-TOKEN': getMetaCsrfToken(),
+    'X-CSRF-TOKEN': getCsrfToken(),
     Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
   }
@@ -365,8 +361,8 @@ const handleCarouselUpload = async (event, index) => {
   uploadMeta.error = null
 
   const formData = new FormData()
-  formData.append('_token', getMetaCsrfToken())
   formData.append('image', file)
+  injectCsrfToken(formData)
 
   try {
     const response = await fetch(uploadCarouselUrl, {
@@ -409,8 +405,8 @@ const handleHeroImageUpload = async (event) => {
   heroImageUpload.value.error = null
 
   const formData = new FormData()
-  formData.append('_token', getMetaCsrfToken())
   formData.append('image', file)
+  injectCsrfToken(formData)
 
   try {
     const response = await fetch(uploadCarouselUrl, {

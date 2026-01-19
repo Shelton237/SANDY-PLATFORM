@@ -30,7 +30,12 @@
         placeholder="Résumé affiché sur le front"
         min-height="140px"
       />
-      <ErrorText :message="form.errors.excerpt" />
+      <div class="mt-1 flex flex-col gap-1">
+        <ErrorText :message="form.errors.excerpt" />
+        <p v-if="excerptMaxLength > 0" class="text-xs text-slate-400 text-right">
+          {{ excerptLength }} / {{ excerptMaxLength }} caractères
+        </p>
+      </div>
     </div>
 
     <div>
@@ -191,8 +196,9 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, computed } from 'vue'
 import RichTextEditor from '@/Components/RichTextEditor.vue'
+import { getCsrfToken, injectCsrfToken } from '@/Composables/useCsrfToken'
 
 const props = defineProps({
   form: {
@@ -214,6 +220,10 @@ const props = defineProps({
   onSubmit: {
     type: Function,
     required: true
+  },
+  excerptMaxLength: {
+    type: Number,
+    default: 500
   }
 })
 
@@ -234,24 +244,31 @@ const ErrorText = defineComponent({
   template: `<p v-if="message" class="mt-1 text-xs text-rose-500">{{ message }}</p>`
 })
 
+const normalizeTag = (value) => (value || '').trim()
+const hasTag = (tag) => props.form.tags.some((current) => current.toLowerCase() === tag.toLowerCase())
+
 const addTag = (value) => {
-  const tag = (value || tagDraft.value).trim()
+  const tag = normalizeTag(value || tagDraft.value)
   if (!tag) {
     return
   }
-  if (!props.form.tags.includes(tag)) {
+  if (!hasTag(tag)) {
     props.form.tags.push(tag)
   }
   tagDraft.value = ''
 }
 
 const removeTag = (tag) => {
-  props.form.tags = props.form.tags.filter((item) => item !== tag)
+  const comparison = tag.toLowerCase()
+  props.form.tags = props.form.tags.filter((item) => item.toLowerCase() !== comparison)
 }
 
 const onSubmit = () => {
   props.onSubmit()
 }
+
+const excerptMaxLength = computed(() => Number(props.excerptMaxLength ?? 500))
+const excerptLength = computed(() => (form.excerpt ? form.excerpt.length : 0))
 
 const resolveRouteHelper = () => {
   if (typeof window !== 'undefined' && typeof window.route === 'function') {
@@ -265,10 +282,7 @@ const resolveRouteHelper = () => {
 
 const ziggyRoute = resolveRouteHelper()
 const uploadCoverUrl = ziggyRoute ? ziggyRoute('admin.blog-posts.cover.upload') : '/admin/blog-posts/cover/upload'
-const csrfToken =
-  typeof document !== 'undefined'
-    ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
-    : ''
+const csrfToken = getCsrfToken()
 
 const setCoverPreview = (value) => {
   if (coverPreview.value && coverPreview.value.startsWith('blob:')) {
@@ -290,6 +304,7 @@ const handleCoverUpload = async (event) => {
 
   const formData = new FormData()
   formData.append('cover', file)
+  injectCsrfToken(formData)
 
   try {
     const response = await fetch(uploadCoverUrl, {
