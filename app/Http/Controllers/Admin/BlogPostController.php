@@ -255,8 +255,8 @@ class BlogPostController extends Controller
 
     private function storageUrl(string $relativePath): string
     {
-        $url = request()->getSchemeAndHttpHost();
-        return $url . '/storage/' . ltrim($relativePath, '/');
+        $base = rtrim(config('app.url') ?: request()->getSchemeAndHttpHost(), '/');
+        return $base . '/storage/' . ltrim($relativePath, '/');
     }
 
     private function resolveCoverImageUrl(?string $value): ?string
@@ -271,7 +271,8 @@ class BlogPostController extends Controller
             $path = '/' . $path;
         }
 
+        $base = rtrim(config('app.url') ?: request()->getSchemeAndHttpHost(), '/');
         $query = isset($parsed['query']) ? '?' . $parsed['query'] : '';
-        return request()->getSchemeAndHttpHost() . $path . $query;
+        return $base . $path . $query;
     }
 }
