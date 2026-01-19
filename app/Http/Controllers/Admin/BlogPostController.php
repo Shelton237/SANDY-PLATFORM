@@ -120,7 +120,7 @@ class BlogPostController extends Controller
         $path = $request->file('cover')->store('blog-covers', 'public');
 
         return response()->json([
-            'url' => Storage::disk('public')->url($path),
+            'url' => $this->storageUrl($path),
             'path' => $path,
         ]);
     }
@@ -187,7 +187,7 @@ class BlogPostController extends Controller
             'slug' => $post->slug,
             'excerpt' => $post->excerpt,
             'body' => $post->body,
-            'cover_image' => $post->cover_image,
+            'cover_image' => $this->resolveCoverImageUrl($post->cover_image),
             'is_featured' => (bool) $post->is_featured,
             'published_at' => $post->published_at?->format('Y-m-d\TH:i'),
             'category' => Arr::get($metadata, 'category', ''),
@@ -251,5 +251,27 @@ class BlogPostController extends Controller
             ->unique()
             ->values()
             ->all();
+    }
+
+    private function storageUrl(string $relativePath): string
+    {
+        $url = request()->getSchemeAndHttpHost();
+        return $url . '/storage/' . ltrim($relativePath, '/');
+    }
+
+    private function resolveCoverImageUrl(?string $value): ?string
+    {
+        if (!$value) {
+            return null;
+        }
+
+        $parsed = parse_url($value);
+        $path = $parsed['path'] ?? $value;
+        if (!str_starts_with($path, '/')) {
+            $path = '/' . $path;
+        }
+
+        $query = isset($parsed['query']) ? '?' . $parsed['query'] : '';
+        return request()->getSchemeAndHttpHost() . $path . $query;
     }
 }
