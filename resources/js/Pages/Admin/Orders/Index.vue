@@ -280,7 +280,54 @@
       </p>
     </section>
 
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="space-y-4 md:hidden mb-8">
+      <article
+        v-for="order in orders.data"
+        :key="order.id"
+        class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"
+      >
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Commande</p>
+            <p class="text-lg font-semibold text-[#254a29]">{{ order.number }}</p>
+            <p class="text-xs text-slate-500">{{ order.placed_at }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Total</p>
+            <p class="text-lg font-semibold text-[#f49926]">{{ formatPrice(order.total) }}</p>
+          </div>
+        </div>
+        <div class="grid gap-3 mt-4 text-sm text-slate-600">
+          <div class="flex justify-between">
+            <span class="text-xs uppercase tracking-[0.3em] text-slate-400">Client</span>
+            <span>{{ order.customer_name }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs uppercase tracking-[0.3em] text-slate-400">Email</span>
+            <span>{{ order.customer_email }}</span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs uppercase tracking-[0.3em] text-slate-400">Statut</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+              {{ statusOptions[order.status] || order.status }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs uppercase tracking-[0.3em] text-slate-400">Paiement</span>
+            <span>{{ paymentOptions[order.payment_status] }}</span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs uppercase tracking-[0.3em] text-slate-400">Livraison</span>
+            <span>{{ order.delivery?.status ? deliveryStatuses[order.delivery.status] : 'Non planifiee' }}</span>
+          </div>
+          <Link :href="route('admin.orders.show', order.id)" class="text-sm font-semibold text-[#f49926] underline-offset-4 hover:underline">
+            Voir les détails
+          </Link>
+        </div>
+      </article>
+    </div>
+
+    <div class="hidden md:block bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
       <table class="w-full text-sm">
         <thead class="bg-slate-50 text-xs uppercase tracking-widest text-slate-500">
           <tr>
