@@ -25,6 +25,7 @@
     "dependencies": {
         "@inertiajs/vue3": "^2.1.5",
         "bootstrap-icons": "^1.13.1",
+        "dompurify": "^3.3.1",
         "vite-plugin-pwa": "^1.0.3",
         "ziggy-js": "^2.5.3"
     }

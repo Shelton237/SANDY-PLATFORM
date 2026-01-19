@@ -28,9 +28,12 @@
           <p v-if="post.excerpt" class="text-xl text-[#254a29] font-semibold leading-relaxed">{{ post.excerpt }}</p>
 
           <div class="space-y-6 mt-6">
-            <p v-for="(paragraph, index) in contentSections" :key="index" class="text-slate-700 leading-8">
-              {{ paragraph }}
-            </p>
+            <div v-if="bodyContent.isHtml" class="prose prose-lg max-w-none" v-html="bodyContent.html"></div>
+            <template v-else>
+              <p v-for="(paragraph, index) in bodyContent.paragraphs" :key="index" class="text-slate-700 leading-8">
+                {{ paragraph }}
+              </p>
+            </template>
           </div>
 
           <div class="mt-10 rounded-3xl border border-amber-100 bg-amber-50 p-6 space-y-3">
@@ -99,6 +102,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import DOMPurify from 'dompurify'
 import AppLayout from '@/Layouts/AppLayout.vue'
 
 const props = defineProps({
@@ -115,9 +119,30 @@ const props = defineProps({
 const categoryLabel = computed(() => props.post.metadata?.category ?? 'Blog Sandy Juice')
 const tags = computed(() => props.post.metadata?.tags ?? [])
 
-const contentSections = computed(() => {
-  if (!props.post.body) return []
-  return props.post.body.split(/\n{2,}/).map((section) => section.trim()).filter(Boolean)
+const bodyContent = computed(() => {
+  if (!props.post.body) {
+    return {
+      isHtml: false,
+      html: '',
+      paragraphs: []
+    }
+  }
+
+  const hasHtmlTags = /<\/?[a-z][\s\S]*>/i.test(props.post.body)
+
+  if (hasHtmlTags) {
+    return {
+      isHtml: true,
+      html: DOMPurify.sanitize(props.post.body),
+      paragraphs: []
+    }
+  }
+
+  return {
+    isHtml: false,
+    html: '',
+    paragraphs: props.post.body.split(/\n{2,}/).map((section) => section.trim()).filter(Boolean)
+  }
 })
 
 const formatDate = (value) => {
