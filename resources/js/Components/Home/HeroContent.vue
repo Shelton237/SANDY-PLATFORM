@@ -70,63 +70,18 @@
           </div>
         </div>
 
-        <div class="relative">
-          <div class="rounded-[36px] border border-white/10 bg-gradient-to-br from-[#15211b]/90 via-[#0b140f]/70 to-[#07100b]/80 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.35)]">
-            <div class="relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10">
+        <div class="flex justify-center">
+          <div class="max-w-lg rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur">
+            <div class="aspect-[3/2] overflow-hidden rounded-3xl border border-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.35)]">
               <img
-                :src="backgroundSlides[activeSlide]"
+                :src="heroContent.media.image"
                 alt="Pipeline Sandy"
-                class="h-full w-full object-cover transition-transform duration-500 ease-out"
+                class="h-full w-full object-cover"
               />
-              <div class="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-black/40"></div>
-              <div class="absolute inset-x-4 bottom-4 rounded-2xl bg-white/90 bg-opacity-80 px-4 py-3 text-[#1f3b30] backdrop-blur">
-                <p class="text-xs uppercase tracking-[0.35em] text-slate-500">Pipeline Sandy</p>
-                <p class="text-base font-semibold">Immersion dans chaque étape</p>
-              </div>
             </div>
-
-            <div class="mt-6 flex items-center justify-between text-xs uppercase tracking-[0.3em] text-white/70">
-              <button
-                type="button"
-                class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:border-white/40 hover:text-white"
-                @click="prevSlide"
-              >
-                <i class="bi bi-arrow-left"></i>
-                Précédent
-              </button>
-              <span>{{ activeSlide + 1 }} / {{ backgroundSlides.length }} images</span>
-              <button
-                type="button"
-                class="flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 transition hover:border-white/40 hover:text-white"
-                @click="nextSlide"
-              >
-                Suivant
-                <i class="bi bi-arrow-right"></i>
-              </button>
-            </div>
-
-            <div class="mt-4 grid grid-cols-3 gap-3">
-              <button
-                v-for="(slide, index) in backgroundSlides"
-                :key="`${slide}-${index}`"
-                type="button"
-                class="relative aspect-[3/2] overflow-hidden rounded-2xl border transition duration-300"
-                :class="index === activeSlide ? 'border-white/80 shadow-[0_15px_45px_rgba(0,0,0,0.45)]' : 'border-white/5 bg-white/5'"
-                @click="setActiveSlide(index)"
-              >
-                <img
-                  :src="slide"
-                  alt="aperçu carousel"
-                  class="h-full w-full object-cover transition-transform group-hover:scale-110"
-                />
-                <span
-                  class="absolute inset-0 flex items-end justify-between p-2 text-[9px] font-semibold uppercase tracking-[0.4em]"
-                  :class="index === activeSlide ? 'text-[#f49926]' : 'text-white/60'"
-                >
-                  <span>Slide {{ index + 1 }}</span>
-                  <span>{{ heroContent.stats[index % heroContent.stats.length]?.value || '' }}</span>
-                </span>
-              </button>
+            <div class="mt-4 text-center">
+              <p class="text-xs uppercase tracking-[0.35em] text-white/60">Sandy Platform</p>
+              <p class="mt-2 text-base font-semibold text-white">Minimal, lumineux, prêt pour vos ateliers</p>
             </div>
           </div>
         </div>
