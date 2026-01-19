@@ -25,7 +25,14 @@
     </aside>
 
     <div class="flex-1 flex flex-col">
-      <header class="bg-white border-b border-slate-200 px-4 lg:px-8 py-4 flex items-center justify-between">
+      <header class="bg-white border-b border-slate-200 px-4 lg:px-8 py-4 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          class="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-2xl border border-slate-200 text-slate-500 hover:text-[#254a29]"
+          @click="mobileNavOpen = true"
+        >
+          <i class="bi bi-list text-lg"></i>
+        </button>
         <div>
           <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Espace admin</p>
           <h1 class="text-2xl font-semibold text-[#254a29]">
@@ -48,12 +55,47 @@
         <slot />
       </main>
     </div>
+
+    <transition>
+      <div
+        v-if="mobileNavOpen"
+        class="fixed inset-0 z-40 bg-black/30 lg:hidden"
+        @click.self="mobileNavOpen = false"
+      >
+        <div class="absolute inset-y-0 left-0 w-72 bg-white p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Backoffice</p>
+              <p class="text-lg font-semibold text-[#254a29]">Sandy Platform</p>
+            </div>
+            <button type="button" class="text-slate-400 hover:text-[#254a29]" @click="mobileNavOpen = false">
+              <i class="bi bi-x-lg text-lg"></i>
+            </button>
+          </div>
+          <nav class="space-y-2">
+            <Link
+              v-for="item in navigation"
+              :key="item.route"
+              :href="route(item.route)"
+              class="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition"
+              :class="[
+                isActive(item.routePrefix) ? 'text-[#f49926] bg-[#fef4e7]' : 'text-slate-500 hover:text-[#254a29] hover:bg-slate-100'
+              ]"
+              @click="mobileNavOpen = false"
+            >
+              <i :class="item.icon" class="text-lg"></i>
+              {{ item.label }}
+            </Link>
+          </nav>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup>
 import { Link, usePage } from '@inertiajs/vue3'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   title: {
@@ -82,4 +124,5 @@ const user = computed(() => page.props.auth?.user ?? null)
 
 const isActive = (prefix) => page.url.startsWith(`/${prefix}`)
 const computedTitle = computed(() => props.title)
+const mobileNavOpen = ref(false)
 </script>
