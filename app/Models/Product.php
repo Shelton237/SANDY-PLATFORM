@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -15,6 +16,8 @@ class Product extends Model
     public const STATUS_DRAFT = 'draft';
     public const STATUS_PUBLISHED = 'published';
     public const STATUS_ARCHIVED = 'archived';
+    public const CATALOG_CACHE_KEY = 'catalog:products';
+    public const HOME_FEATURED_CACHE_KEY = 'home:featured-products';
 
     protected $fillable = [
         'name',
@@ -81,6 +84,15 @@ class Product extends Model
                 $product->slug = Str::slug($product->name ?? uniqid('product_', true));
             }
         });
+
+        static::saved(fn () => self::flushCatalogCache());
+        static::deleted(fn () => self::flushCatalogCache());
+    }
+
+    public static function flushCatalogCache(): void
+    {
+        Cache::forget(self::CATALOG_CACHE_KEY);
+        Cache::forget(self::HOME_FEATURED_CACHE_KEY);
     }
 
     public function orderItems(): HasMany

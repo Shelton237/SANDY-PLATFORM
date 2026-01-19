@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ProductCategory extends Model
@@ -32,6 +33,9 @@ class ProductCategory extends Model
         'metadata' => 'array',
     ];
 
+    public const NAV_CACHE_KEY = 'nav:categories';
+    public const HOME_FEATURED_CACHE_KEY = 'home:featured-categories';
+
     protected static function booted(): void
     {
         static::saving(function (self $category) {
@@ -39,6 +43,15 @@ class ProductCategory extends Model
                 $category->slug = Str::slug($category->name);
             }
         });
+
+        static::saved(fn () => self::flushCaches());
+        static::deleted(fn () => self::flushCaches());
+    }
+
+    public static function flushCaches(): void
+    {
+        Cache::forget(self::NAV_CACHE_KEY);
+        Cache::forget(self::HOME_FEATURED_CACHE_KEY);
     }
 
     public function products(): HasMany

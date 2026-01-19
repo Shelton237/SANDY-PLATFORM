@@ -247,7 +247,7 @@ const heroImageUpload = ref({ uploading: false, error: null })
 const resolveCarouselUploadUrl = () => {
   try {
     if (typeof route === 'function') {
-      return route('admin.home-content.carousel.upload')
+      return route('admin.home-content.carousel.upload', {}, false)
     }
   } catch (error) {
     // ignore Ziggy errors and fallback
@@ -365,6 +365,7 @@ const handleCarouselUpload = async (event, index) => {
   uploadMeta.error = null
 
   const formData = new FormData()
+  formData.append('_token', getMetaCsrfToken())
   formData.append('image', file)
 
   try {
@@ -408,6 +409,7 @@ const handleHeroImageUpload = async (event) => {
   heroImageUpload.value.error = null
 
   const formData = new FormData()
+  formData.append('_token', getMetaCsrfToken())
   formData.append('image', file)
 
   try {

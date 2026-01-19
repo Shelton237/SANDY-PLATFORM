@@ -7,6 +7,7 @@ use App\Models\ProductCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -209,13 +210,25 @@ class ProductController extends Controller
 
     private function catalog(): Collection
     {
-        return Product::query()
-            ->published()
-            ->with(['images' => fn ($query) => $query->orderBy('position')->orderBy('id')])
-            ->withCount('orderItems as orders_count')
-            ->latest('created_at')
-            ->get()
-            ->map(fn (Product $product) => $this->transformProduct($product));
+        $key = Product::CATALOG_CACHE_KEY;
+
+        $items = Cache::remember(
+            $key,
+            now()->addMinutes(5),
+            function () {
+                return Product::query()
+                    ->published()
+                    ->with(['images' => fn ($query) => $query->orderBy('position')->orderBy('id')])
+                    ->withCount('orderItems as orders_count')
+                    ->latest('created_at')
+                    ->get()
+                    ->map(fn (Product $product) => $this->transformProduct($product))
+                    ->values()
+                    ->all();
+            }
+        );
+
+        return collect($items);
     }
 
     private function categories(): Collection
