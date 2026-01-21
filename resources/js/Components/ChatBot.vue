@@ -7,6 +7,8 @@
       class="w-16 h-16 rounded-full bg-[#2AB9AF] shadow-lg flex items-center justify-center text-white hover:scale-110 transition-all duration-300 relative"
       :class="{'animate-pulse-ring': !userInteracted}"
       @mouseenter="userInteracted = true"
+      type="button"
+      aria-label="Ouvrir l'assistant Sandy Platform"
     >
       <div class="absolute inset-0 rounded-full bg-[#2AB9AF] animate-ping opacity-75" v-if="!userInteracted"></div>
       <i class="bi bi-chat-dots text-xl relative z-10"></i>
@@ -30,11 +32,16 @@
               <i class="bi bi-robot text-[#33D0C3]"></i>
             </div>
             <div>
-              <span class="font-semibold">Assistant USRA-CARE</span>
+              <span class="font-semibold">Assistant Sandy Platform</span>
               <p class="text-xs opacity-80">En ligne • Prêt à vous aider</p>
             </div>
           </div>
-          <button @click="closeChat" class="text-white hover:text-gray-200 transition-colors">
+          <button
+            type="button"
+            @click="closeChat"
+            class="text-white hover:text-gray-200 transition-colors"
+            aria-label="Fermer l'assistant Sandy Platform"
+          >
             <i class="bi bi-x-lg text-lg"></i>
           </button>
         </div>
@@ -78,7 +85,7 @@
             enter-to-class="opacity-100 translate-y-0"
           >
             <div v-if="showQuoteForm" class="bg-white border border-gray-200 rounded-xl p-4 mt-4 shadow-sm">
-              <h4 class="font-semibold text-[#0E4C59] mb-3 text-sm">Finalisons votre demande de devis</h4>
+              <h3 class="text-sm font-semibold text-[#0E4C59] mb-3">Finalisons votre demande de devis</h3>
               
               <div class="space-y-3">
                 <input 
@@ -130,14 +137,15 @@
           <div v-if="showServiceSuggestions" class="px-4 py-3 bg-white border-t border-gray-100">
             <p class="text-xs text-gray-500 mb-2 font-medium">Choisissez un service :</p>
             <div class="flex flex-wrap gap-2">
-              <button 
-                v-for="service in services" 
-                :key="service.id"
-                @click="selectService(service)"
-                class="px-3 py-1.5 bg-gray-100 hover:bg-[#33D0C3] hover:text-white rounded-full text-xs transition-all duration-200 transform hover:scale-105 shadow-sm"
-              >
-                {{ service.name }}
-              </button>
+            <button 
+              v-for="service in services" 
+              :key="service.id"
+              @click="selectService(service)"
+              class="px-3 py-1.5 bg-gray-100 hover:bg-[#33D0C3] hover:text-white rounded-full text-xs transition-all duration-200 transform hover:scale-105 shadow-sm"
+              type="button"
+            >
+              {{ service.name }}
+            </button>
             </div>
           </div>
         </transition>
@@ -157,6 +165,8 @@
               class="w-11 h-11 rounded-full bg-[#2AB9AF] flex items-center justify-center text-white shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
               :disabled="!userInput.trim()"
               :class="{'opacity-50 cursor-not-allowed': !userInput.trim()}"
+              type="button"
+              aria-label="Envoyer le message"
             >
               <i class="bi bi-send text-sm"></i>
             </button>
@@ -181,11 +191,11 @@ export default {
       conversationStep: 0,
       selectedService: null,
       services: [
-        { id: 1, name: 'Ménage', description: 'Nettoyage complet de votre domicile' },
-        { id: 3, name: 'Garde d\'enfants', description: 'Éveil et sécurité pour vos enfants' },
-        { id: 4, name: 'Auxiliaire de vie', description: 'Maintien à domicile en toute sérénité' },
-        { id: 5, name: 'Jardinage', description: 'Entretien de vos espaces verts' },
-        { id: 6, name: 'Bricolage', description: 'Petites réparations et travaux' }
+        { id: 1, name: 'Cures detox', description: 'Programmes 3 ou 5 jours clés en main' },
+        { id: 3, name: 'Livraison corporate', description: 'Paniers jus & snacks pour vos équipes' },
+        { id: 4, name: 'Kids & famille', description: 'Recettes douces et ateliers découverte' },
+        { id: 5, name: 'Events & traiteur', description: 'Bars à jus, dégustations et animations' },
+        { id: 6, name: 'Approvisionnement', description: 'Sourcing et pressage à façon' }
       ],
       quoteForm: {
         name: '',
@@ -202,7 +212,7 @@ export default {
   mounted() {
     // Message de bienvenue initial après un court délai
     setTimeout(() => {
-      this.addBotMessage("Bonjour ! 👋 Je suis l'assistant USRA-CARE. Comment puis-je vous aider aujourd'hui ?");
+      this.addBotMessage("Bonjour ! 👋 Je suis l'assistant Sandy Platform. Comment puis-je vous aider aujourd'hui ?");
     }, 500);
     
     // Animation d'appel à l'action après 5 secondes
@@ -351,7 +361,7 @@ export default {
         this.addBotMessage("Merci ! Votre demande de devis a été envoyée. 🎉");
         this.addBotMessage(`Service: ${this.selectedService.name}`);
         this.addBotMessage(`Nom: ${this.quoteForm.name}`);
-        this.addBotMessage("Un conseiller USRA-CARE vous contactera sous 24h pour finaliser votre devis personnalisé.");
+        this.addBotMessage("Un conseiller Sandy Platform vous contactera sous 24h pour finaliser votre devis personnalisé.");
         
         // Réinitialiser le formulaire
         this.showQuoteForm = false;

@@ -40,7 +40,7 @@
               <span class="text-[#254a29] font-semibold">AM</span>
             </div>
             <div>
-              <h4 class="font-semibold text-[#254a29]">Aïssa M.</h4>
+              <h3 class="text-lg font-semibold text-[#254a29]">Aïssa M.</h3>
               <p class="text-sm text-[#254a29]/60">Bastos, Yaoundé</p>
             </div>
           </div>
@@ -66,7 +66,7 @@
               <span class="text-[#254a29] font-semibold">KE</span>
             </div>
             <div>
-              <h4 class="font-semibold text-[#254a29]">Kevin E.</h4>
+              <h3 class="text-lg font-semibold text-[#254a29]">Kevin E.</h3>
               <p class="text-sm text-[#254a29]/60">Odza, Yaoundé</p>
             </div>
           </div>
@@ -92,7 +92,7 @@
               <span class="text-[#254a29] font-semibold">NS</span>
             </div>
             <div>
-              <h4 class="font-semibold text-[#254a29]">Nadia S.</h4>
+              <h3 class="text-lg font-semibold text-[#254a29]">Nadia S.</h3>
               <p class="text-sm text-[#254a29]/60">Mvan, Yaoundé</p>
             </div>
           </div>

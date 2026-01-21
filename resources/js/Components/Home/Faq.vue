@@ -1,7 +1,7 @@
 <template>
   <section class="py-4 md:py-8 bg-white">
     <div class="container mx-auto px-5 max-w-5xl">
-      <!-- En-tête de section avec espacement généreux -->
+      <!-- En-tÃªte de section avec espacement gÃ©nÃ©reux -->
       <div class="text-center mb-10 md:mb-12">
         <div class="inline-flex items-center justify-center bg-[#FFF5F0] rounded-full px-6 py-3 mb-8">
           <i class="bi bi-question-circle text-[#FF6B35] text-lg mr-3"></i>
@@ -9,14 +9,14 @@
         </div>
         
         <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0E4C59] mb-8 leading-tight">
-          Questions <span class="text-[#FF6B35]">fréquentes</span>
+          Questions <span class="text-[#FF6B35]">frÃ©quentes</span>
         </h2>
         
         <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          Trouvez rapidement les réponses à toutes vos questions sur nos services
+          Trouvez rapidement les rÃ©ponses Ã  toutes vos questions sur nos services
         </p>
       </div>
-      <!-- Accordéon FAQ avec espacement sur-mesure -->
+      <!-- AccordÃ©on FAQ avec espacement sur-mesure -->
       <div class="space-y-6 max-w-4xl mx-auto">
         <!-- Question 1 -->
         <div class="bg-white rounded-2xl overflow-hidden transition-all duration-500 shadow-lg hover:shadow-xl border border-gray-100"
@@ -31,7 +31,7 @@
               </div>
               <div>
                 <span class="text-xl font-semibold text-[#0E4C59] group-hover:text-[#FF6B35] transition-colors duration-300">Quels services proposez-vous ?</span>
-                <p class="text-gray-500 text-sm mt-2">Découvrez notre gamme complète de services à domicile</p>
+                <p class="text-gray-500 text-sm mt-2">DÃ©couvrez notre gamme complÃ¨te de services Ã  domicile</p>
               </div>
             </div>
             <i class="bi text-2xl text-[#FF6B35] transition-transform duration-500 flex-shrink-0" 
@@ -41,7 +41,7 @@
           <div v-if="activeQuestion === 1" class="px-8 pb-8">
             <div class="border-t border-gray-100 pt-6">
               <div class="text-gray-700 leading-relaxed text-lg space-y-4">
-                <p>Nous proposons une gamme complète de services à domicile adaptés à vos besoins :</p>
+                <p>Nous proposons une gamme complÃ¨te de services Ã  domicile adaptÃ©s Ã  vos besoins :</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                   <div class="flex items-start space-x-4 p-4 bg-[#FFF5F0] rounded-xl">
@@ -49,8 +49,8 @@
                       <i class="bi bi-broom"></i>
                     </div>
                     <div>
-                      <h4 class="font-semibold text-[#0E4C59]">Aide ménagère</h4>
-                      <p class="text-gray-600 text-sm mt-1">Nettoyage régulier et entretien complet</p>
+                      <h3 class="font-semibold text-[#0E4C59]">Aide mÃ©nagÃ¨re</h3>
+                      <p class="text-gray-600 text-sm mt-1">Nettoyage rÃ©gulier et entretien complet</p>
                     </div>
                   </div>
                   
@@ -59,8 +59,8 @@
                       <i class="bi bi-balloon-heart"></i>
                     </div>
                     <div>
-                      <h4 class="font-semibold text-[#0E4C59]">Garde d'enfants</h4>
-                      <p class="text-gray-600 text-sm mt-1">Garde bienveillante et éducative</p>
+                      <h3 class="font-semibold text-[#0E4C59]">Garde d'enfants</h3>
+                      <p class="text-gray-600 text-sm mt-1">Garde bienveillante et Ã©ducative</p>
                     </div>
                   </div>
                   
@@ -69,8 +69,8 @@
                       <i class="bi bi-tree"></i>
                     </div>
                     <div>
-                      <h4 class="font-semibold text-[#0E4C59]">Jardinage & Bricolage</h4>
-                      <p class="text-gray-600 text-sm mt-1">Entretien extérieur et réparations</p>
+                      <h3 class="font-semibold text-[#0E4C59]">Jardinage & Bricolage</h3>
+                      <p class="text-gray-600 text-sm mt-1">Entretien extÃ©rieur et rÃ©parations</p>
                     </div>
                   </div>
                   
@@ -79,13 +79,13 @@
                       <i class="bi bi-heart-pulse"></i>
                     </div>
                     <div>
-                      <h4 class="font-semibold text-[#0E4C59]">Auxiliaire de vie</h4>
-                      <p class="text-gray-600 text-sm mt-1">Accompagnement personnalisé seniors</p>
+                      <h3 class="font-semibold text-[#0E4C59]">Auxiliaire de vie</h3>
+                      <p class="text-gray-600 text-sm mt-1">Accompagnement personnalisÃ© seniors</p>
                     </div>
                   </div>
                 </div>
                 
-                <p class="mt-6 text-gray-600">Tous nos intervenants sont qualifiés, formés régulièrement et rigoureusement sélectionnés pour vous garantir qualité et sérénité.</p>
+                <p class="mt-6 text-gray-600">Tous nos intervenants sont qualifiÃ©s, formÃ©s rÃ©guliÃ¨rement et rigoureusement sÃ©lectionnÃ©s pour vous garantir qualitÃ© et sÃ©rÃ©nitÃ©.</p>
               </div>
             </div>
           </div>
@@ -104,7 +104,7 @@
               </div>
               <div>
                 <span class="text-xl font-semibold text-[#0E4C59] group-hover:text-[#33D0C3] transition-colors duration-300">Comment se passe la facturation ?</span>
-                <p class="text-gray-500 text-sm mt-2">Transparence et simplicité dans nos tarifs</p>
+                <p class="text-gray-500 text-sm mt-2">Transparence et simplicitÃ© dans nos tarifs</p>
               </div>
             </div>
             <i class="bi text-2xl text-[#33D0C3] transition-transform duration-500 flex-shrink-0" 
@@ -114,24 +114,24 @@
           <div v-if="activeQuestion === 2" class="px-8 pb-8">
             <div class="border-t border-gray-100 pt-6">
               <div class="text-gray-700 leading-relaxed text-lg space-y-6">
-                <p>Notre système de facturation est conçu pour être simple et transparent :</p>
+                <p>Notre systÃ¨me de facturation est conÃ§u pour Ãªtre simple et transparent :</p>
                 
                 <div class="bg-[#F9FDFC] p-6 rounded-xl border border-[#33D0C3]/20">
-                  <h4 class="font-semibold text-[#0E4C59] mb-4">Modalités de facturation</h4>
+                  <h3 class="font-semibold text-[#0E4C59] mb-4">ModalitÃ©s de facturation</h3>
                   <ul class="list-disc list-inside space-y-3 pl-4">
-                    <li><span class="font-medium">Facturation à l'heure</span> de service prestée</li>
-                    <li><span class="font-medium">Forfaits avantageux</span> disponibles selon la fréquence</li>
-                    <li><span class="font-medium">Facture détaillée mensuelle</span> avec le détail des heures effectuées</li>
-                    <li><span class="font-medium">Aucun frais caché</span> - tout est inclus dans nos tarifs</li>
+                    <li><span class="font-medium">Facturation Ã  l'heure</span> de service prestÃ©e</li>
+                    <li><span class="font-medium">Forfaits avantageux</span> disponibles selon la frÃ©quence</li>
+                    <li><span class="font-medium">Facture dÃ©taillÃ©e mensuelle</span> avec le dÃ©tail des heures effectuÃ©es</li>
+                    <li><span class="font-medium">Aucun frais cachÃ©</span> - tout est inclus dans nos tarifs</li>
                   </ul>
                 </div>
                 
                 <div class="bg-[#FFF5F0] p-6 rounded-xl">
-                  <h4 class="font-semibold text-[#0E4C59] mb-4">Modes de paiement acceptés</h4>
+                  <h3 class="font-semibold text-[#0E4C59] mb-4">Modes de paiement acceptÃ©s</h3>
                   <div class="flex flex-wrap gap-3">
                     <span class="bg-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">Virement bancaire</span>
-                    <span class="bg-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">Chèques</span>
-                    <span class="bg-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">Espèces (avec reçu)</span>
+                    <span class="bg-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">ChÃ¨ques</span>
+                    <span class="bg-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">EspÃ¨ces (avec reÃ§u)</span>
                     <span class="bg-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">Mobile Money</span>
                   </div>
                 </div>
@@ -153,7 +153,7 @@
               </div>
               <div>
                 <span class="text-xl font-semibold text-[#0E4C59] group-hover:text-[#0E4C59] transition-colors duration-300">Quels sont vos horaires d'intervention ?</span>
-                <p class="text-gray-500 text-sm mt-2">Flexibilité adaptée à vos besoins</p>
+                <p class="text-gray-500 text-sm mt-2">FlexibilitÃ© adaptÃ©e Ã  vos besoins</p>
               </div>
             </div>
             <i class="bi text-2xl text-[#0E4C59] transition-transform duration-500 flex-shrink-0" 
@@ -163,14 +163,14 @@
           <div v-if="activeQuestion === 3" class="px-8 pb-8">
             <div class="border-t border-gray-100 pt-6">
               <div class="text-gray-700 leading-relaxed text-lg space-y-6">
-                <p>Nous nous adaptons à vos contraintes avec des plages horaires étendues :</p>
+                <p>Nous nous adaptons Ã  vos contraintes avec des plages horaires Ã©tendues :</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div class="bg-[#F0F9FF] p-6 rounded-xl">
-                    <h4 class="font-semibold text-[#0E4C59] mb-4 flex items-center">
+                    <h3 class="font-semibold text-[#0E4C59] mb-4 flex items-center">
                       <i class="bi bi-calendar-check mr-3"></i>
                       Horaires standards
-                    </h4>
+                    </h3>
                     <ul class="space-y-3">
                       <li class="flex justify-between">
                         <span>Lundi - Vendredi</span>
@@ -188,10 +188,10 @@
                   </div>
                   
                   <div class="bg-[#FFF5F0] p-6 rounded-xl">
-                    <h4 class="font-semibold text-[#0E4C59] mb-4 flex items-center">
+                    <h3 class="font-semibold text-[#0E4C59] mb-4 flex items-center">
                       <i class="bi bi-lightning-charge mr-3"></i>
                       Interventions urgentes
-                    </h4>
+                    </h3>
                     <ul class="space-y-3">
                       <li class="flex items-start">
                         <i class="bi bi-check-circle text-[#33D0C3] mr-2 mt-1"></i>
@@ -199,18 +199,18 @@
                       </li>
                       <li class="flex items-start">
                         <i class="bi bi-check-circle text-[#33D0C3] mr-2 mt-1"></i>
-                        <span>Contact direct par téléphone</span>
+                        <span>Contact direct par tÃ©lÃ©phone</span>
                       </li>
                       <li class="flex items-start">
                         <i class="bi bi-check-circle text-[#33D0C3] mr-2 mt-1"></i>
-                        <span>Majoration selon le créneau</span>
+                        <span>Majoration selon le crÃ©neau</span>
                       </li>
                     </ul>
                   </div>
                 </div>
                 
                 <p class="text-sm text-gray-500 italic border-t pt-4 mt-4">
-                  * Les interventions le week-end et jours fériés font l'objet de majorations tarifaires spécifiques.
+                  * Les interventions le week-end et jours fÃ©riÃ©s font l'objet de majorations tarifaires spÃ©cifiques.
                 </p>
               </div>
             </div>
@@ -243,7 +243,7 @@ button {
   transform: translateY(-2px);
 }
 
-/* Animation douce pour l'ouverture des réponses */
+/* Animation douce pour l'ouverture des rÃ©ponses */
 .border-t {
   animation: fadeIn 0.5s ease-out;
 }
