@@ -1,13 +1,17 @@
 <template>
   <section class="relative overflow-hidden bg-[#0f1f1a] text-white">
     <div class="absolute inset-0">
-      <div
+      <img
         v-for="(image, index) in backgroundSlides"
         :key="`${image}-${index}`"
-        class="absolute inset-0 bg-cover bg-center transition-all duration-[1500ms] ease-out"
+        :src="image"
+        :alt="`Illustration ${index + 1}`"
+        class="absolute inset-0 h-full w-full object-cover transition-all duration-[1500ms] ease-out"
         :class="index === activeSlide ? 'opacity-40 scale-100' : 'opacity-0 scale-105'"
-        :style="{ backgroundImage: `url(${image})` }"
-      ></div>
+        :loading="index === 0 ? 'eager' : 'lazy'"
+        :fetchpriority="index === 0 ? 'high' : 'auto'"
+        decoding="async"
+      />
       <div class="absolute inset-0 bg-gradient-to-br from-[#0f1f1a]/95 via-[#112920]/70 to-[#0f1f1a]/95 backdrop-blur-sm"></div>
     </div>
 
@@ -41,7 +45,7 @@
             <Link
               v-if="heroContent.primaryCta.label"
               :href="heroContent.primaryCta.url"
-              class="inline-flex items-center gap-2 rounded-2xl bg-[#f49926] px-6 py-3 text-sm font-semibold text-[#1f1307] transition hover:bg-[#f28700]"
+              class="inline-flex items-center gap-2 rounded-2xl bg-brand-accent px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#9a3412]"
             >
               {{ heroContent.primaryCta.label }}
               <i class="bi bi-arrow-up-right"></i>
@@ -81,6 +85,9 @@
                 :src="heroContent.media.image"
                 alt="Pipeline Sandy"
                 class="h-full w-full object-cover"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
               />
             </div>
           </div>

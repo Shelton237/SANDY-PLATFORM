@@ -1,1 +1,37 @@
 @import "tailwindcss";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:root {
+  --sandy-muted-text: #475569;
+  --sandy-brand-accent: #b45309;
+  --sandy-brand-accent-strong: #c2410c;
+}
+
+.text-slate-400 {
+  color: var(--sandy-muted-text) !important;
+}
+
+.placeholder\:text-slate-400::placeholder {
+  color: var(--sandy-muted-text) !important;
+}
+
+.text-brand-accent {
+  color: var(--sandy-brand-accent) !important;
+}
+
+.bg-brand-accent {
+  background-color: var(--sandy-brand-accent-strong) !important;
+  color: #fff !important;
+}

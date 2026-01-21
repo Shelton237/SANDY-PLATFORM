@@ -20,12 +20,13 @@
 
           <!-- Réseaux sociaux -->
           <div class="mt-6">
-            <h4 class="text-xs font-semibold uppercase tracking-wide text-gray-300 mb-3">Suivez-nous</h4>
+            <h3 class="text-xs font-semibold uppercase tracking-wide text-gray-300 mb-3">Suivez-nous</h3>
             <div class="flex gap-3">
               <a v-for="(social, index) in socialLinks" :key="index" :href="social.url"
-                class="w-9 h-9 bg-[#f49926]/10 border border-[#f49926]/30 hover:bg-[#f49926] rounded-xl flex items-center justify-center transition-all duration-300 group"
+                class="w-9 h-9 bg-[#f49926]/10 border border-[#f49926]/30 hover:bg-brand-accent rounded-xl flex items-center justify-center transition-all duration-300 group"
                 :aria-label="social.name">
-                <i :class="social.icon" class="text-[#f49926] group-hover:text-white"></i>
+                <i :class="social.icon" class="text-brand-accent group-hover:text-white" aria-hidden="true"></i>
+                <span class="sr-only">{{ social.name }}</span>
               </a>
             </div>
           </div>
@@ -35,7 +36,7 @@
         <div>
           <h3 class="text-lg font-semibold mb-5 flex items-center gap-3">
             <div class="w-8 h-8 bg-[#f49926]/10 rounded-lg flex items-center justify-center">
-              <i class="bi bi-cup-straw text-[#f49926]"></i>
+              <i class="bi bi-cup-straw text-brand-accent"></i>
             </div>
             <span class="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">Nos Produits</span>
           </h3>
@@ -54,7 +55,7 @@
         <div>
           <h3 class="text-lg font-semibold mb-5 flex items-center gap-3">
             <div class="w-8 h-8 bg-[#f49926]/10 rounded-lg flex items-center justify-center">
-              <i class="bi bi-info-circle text-[#f49926]"></i>
+              <i class="bi bi-info-circle text-brand-accent"></i>
             </div>
             <span class="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">Informations</span>
           </h3>
@@ -73,36 +74,36 @@
         <div>
           <h3 class="text-lg font-semibold mb-5 flex items-center gap-3">
             <div class="w-8 h-8 bg-[#f49926]/10 rounded-lg flex items-center justify-center">
-              <i class="bi bi-geo-alt text-[#f49926]"></i>
+              <i class="bi bi-geo-alt text-brand-accent"></i>
             </div>
             <span class="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">Contact</span>
           </h3>
           <div class="space-y-4 text-sm">
             <div class="flex items-start text-gray-300">
               <div class="w-6 h-6 bg-[#f49926]/10 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                <i class="bi bi-geo-alt text-[#f49926] text-xs"></i>
+                <i class="bi bi-geo-alt text-brand-accent text-xs"></i>
               </div>
               <span>Yaoundé, Cameroun</span>
             </div>
             <a href="tel:+237655699825"
               class="flex items-center text-gray-300 hover:text-white transition-colors group">
               <div class="w-6 h-6 bg-[#f49926]/10 rounded-full flex items-center justify-center mr-3">
-                <i class="bi bi-telephone text-[#f49926] text-xs"></i>
+                <i class="bi bi-telephone text-brand-accent text-xs"></i>
               </div>
-              <span class="group-hover:text-[#f49926] transition-colors">+237 6556998253</span>
+              <span class="group-hover:text-brand-accent transition-colors">+237 6556998253</span>
             </a>
             <a href="mailto:contact@sandy-juice.com"
               class="flex items-center text-gray-300 hover:text-white transition-colors group">
               <div class="w-6 h-6 bg-[#f49926]/10 rounded-full flex items-center justify-center mr-3">
-                <i class="bi bi-envelope text-[#f49926] text-xs"></i>
+                <i class="bi bi-envelope text-brand-accent text-xs"></i>
               </div>
-              <span class="group-hover:text-[#f49926] transition-colors">contact@sandy-juice.com</span>
+              <span class="group-hover:text-brand-accent transition-colors">contact@sandy-juice.com</span>
             </a>
           </div>
 
           <!-- CTA itinéraire -->
           <button
-            class="mt-6 w-full bg-gradient-to-r from-[#f49926] to-[#ffb347] hover:from-[#ffb347] hover:to-[#f49926] text-white py-3 px-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[#f49926]/30 hover:-translate-y-0.5">
+            class="mt-6 w-full bg-brand-accent hover:bg-[#9a3412] text-white py-3 px-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[#f49926]/30 hover:-translate-y-0.5">
             <i class="bi bi-geo-alt mr-2"></i> Itinéraire
           </button>
         </div>
@@ -115,7 +116,7 @@
           <div class="flex-1 text-center lg:text-left">
             <h3 class="font-semibold text-xl mb-2 flex items-center justify-center lg:justify-start gap-2">
               <div class="w-8 h-8 bg-[#f49926]/10 rounded-lg flex items-center justify-center">
-                <i class="bi bi-envelope text-[#f49926]"></i>
+                <i class="bi bi-envelope text-brand-accent"></i>
               </div>
               Restez informé
             </h3>
@@ -126,7 +127,7 @@
               <input type="email" placeholder="Votre email"
                 class="flex-1 bg-white/5 border border-[#f49926]/30 text-white placeholder-gray-400 text-sm py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f49926]/50 focus:border-transparent transition-all" />
               <button
-                class="bg-gradient-to-r from-[#f49926] to-[#ffb347] hover:from-[#ffb347] hover:to-[#f49926] text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-[#f49926]/30 flex items-center justify-center whitespace-nowrap">
+                class="bg-brand-accent hover:bg-[#9a3412] text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-[#f49926]/30 flex items-center justify-center whitespace-nowrap">
                 <i class="bi bi-envelope-open mr-2"></i> S'inscrire
               </button>
             </div>
@@ -142,14 +143,14 @@
         </div>
         <div class="flex flex-wrap gap-5 justify-center">
           <a v-for="(link, index) in legalLinks" :key="index" :href="link.url"
-            class="hover:text-[#f49926] transition-colors flex items-center group">
+            class="hover:text-brand-accent transition-colors flex items-center group">
             <span class="w-1 h-1 bg-[#f49926] rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity"></span>
             {{ link.text }}
           </a>
         </div>
         <div class="flex items-center text-xs">
           <span class="mr-1">Fait avec</span>
-          <i class="bi bi-heart-fill text-[#f49926] mx-1"></i>
+          <i class="bi bi-heart-fill text-brand-accent mx-1"></i>
           <span>pour votre santé</span>
         </div>
       </div>
@@ -157,7 +158,7 @@
 
     <!-- Scroll top -->
     <button @click="scrollToTop"
-      class="fixed bottom-6 right-6 w-12 h-12 bg-gradient-to-br from-[#f49926] to-[#ffb347] hover:from-[#ffb347] hover:to-[#f49926] text-white rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 z-50 group"
+      class="fixed bottom-6 right-6 w-12 h-12 bg-brand-accent hover:bg-[#9a3412] text-white rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 z-50 group"
       aria-label="Retour en haut">
       <i class="bi bi-arrow-up group-hover:-translate-y-0.5 transition-transform"></i>
     </button>

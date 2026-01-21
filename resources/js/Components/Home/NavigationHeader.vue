@@ -8,7 +8,7 @@
             <div class="relative">
               <img src="/images/logo.png" alt="Sandy Juice" class="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg" />
               <!-- Badge fraîcheur -->
-              <span class="absolute -top-1 -right-1 bg-[#f49926] text-white text-[10px] px-2 py-1 rounded-full font-semibold shadow-lg">
+              <span class="absolute -top-1 -right-1 bg-white text-brand-accent text-[10px] px-2 py-1 rounded-full font-semibold shadow-lg border border-[#f49926]/40">
                 Frais
               </span>
             </div>
@@ -119,7 +119,12 @@
         <!-- CTA et Panier amélioré -->
         <div class="flex items-center space-x-3">
           <!-- Recherche (nouveau) -->
-          <button @click="openSearch" class="p-2 text-gray-500 hover:text-[#254a29] transition-colors duration-300 hidden md:block">
+          <button
+            type="button"
+            @click="openSearch"
+            class="p-2 text-gray-500 hover:text-[#254a29] transition-colors duration-300 hidden md:block"
+            aria-label="Ouvrir la recherche"
+          >
             <i class="bi bi-search text-lg"></i>
           </button>
 
@@ -128,7 +133,9 @@
             :href="route('cart')" 
             class="relative p-2.5 text-gray-600 hover:text-[#254a29] transition-all duration-300 group/cart"
             :class="{ 'text-[#254a29]': $page.url === route('cart') }"
+            aria-label="Ouvrir le panier"
           >
+            <span class="sr-only">Aller au panier</span>
             <div class="relative">
               <i class="bi bi-cart3 text-xl group-hover/cart:scale-110 transition-transform"></i>
               <span v-if="cartCount > 0" class="absolute -top-2 -right-2 bg-[#f49926] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-lg transform group-hover/cart:scale-110 transition-transform">
@@ -140,10 +147,15 @@
           <!-- Compte utilisateur amélioré -->
           <div class="relative">
             <button 
+              type="button"
               @click="showAccountDropdown = !showAccountDropdown" 
               class="flex items-center text-gray-600 hover:text-[#254a29] p-2.5 transition-colors duration-300 rounded-xl hover:bg-[#fbe6c8]"
               :class="{ 'text-[#254a29] bg-[#fbe6c8]': showAccountDropdown }"
+              aria-label="Ouvrir le menu compte"
+              aria-haspopup="menu"
+              :aria-expanded="showAccountDropdown ? 'true' : 'false'"
             >
+              <span class="sr-only">Ouvrir ou fermer le menu compte</span>
               <i class="bi bi-person-circle text-xl"></i>
             </button>
             <transition
@@ -188,7 +200,7 @@
           <!-- Bouton CTA amélioré -->
           <Link 
             :href="route('products')" 
-            class="hidden md:flex bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 items-center group/cta"
+            class="hidden md:flex bg-brand-accent hover:bg-[#9a3412] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 items-center group/cta"
           >
             <i class="bi bi-lightning-charge-fill mr-2 group-hover/cta:animate-bounce"></i>
             Commander
@@ -197,10 +209,14 @@
           
           <!-- Menu Mobile Button amélioré -->
           <button 
+            type="button"
             @click="mobileMenuOpen = !mobileMenuOpen" 
             class="lg:hidden text-gray-600 hover:text-[#254a29] p-2.5 rounded-xl transition-colors duration-300 hover:bg-[#fbe6c8]"
             :class="{ 'text-[#254a29] bg-[#fbe6c8]': mobileMenuOpen }"
+            aria-label="Ouvrir le menu mobile"
+            :aria-expanded="mobileMenuOpen ? 'true' : 'false'"
           >
+            <span class="sr-only">Basculer la navigation mobile</span>
             <i class="bi bi-list text-xl"></i>
           </button>
         </div>
@@ -237,7 +253,7 @@
           <!-- Bouton CTA mobile amélioré -->
           <Link 
             :href="route('products')" 
-            class="bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 flex items-center justify-center group/mobile-cta"
+            class="bg-brand-accent hover:bg-[#9a3412] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 flex items-center justify-center group/mobile-cta"
             @click="mobileMenuOpen = false"
           >
             <i class="bi bi-cart-plus mr-2 group-hover/mobile-cta:animate-bounce"></i>

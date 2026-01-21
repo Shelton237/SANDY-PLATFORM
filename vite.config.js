@@ -18,6 +18,6 @@ export default defineConfig({
         }),
     ],
     css: {
-        postcss: './postcss.config.cjs',
+        postcss: './postcss.config.js',
     },
 });

@@ -7,7 +7,7 @@
           Rejoignez <span class="text-[#FF6B35]">notre équipe</span>
         </h2>
         <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
-          Faites carrière dans les services à domicile et participez à une aventure humaine extraordinaire
+          Accélérez la foodtech africaine et rejoignez l’atelier qui transforme la filière jus naturels
         </p>
       </div>
 
@@ -15,7 +15,7 @@
         <!-- Section Avantages -->
         <div>
           <h3 class="text-3xl font-bold text-[#0E4C59] mb-8">
-            Pourquoi travailler <span class="text-[#FF6B35]">chez USRA CARE</span> ?
+            Pourquoi travailler <span class="text-[#FF6B35]">chez Sandy Platform</span> ?
           </h3>
 
           <!-- Liste des avantages -->
@@ -26,9 +26,9 @@
                 <i class="bi bi-shield-check"></i>
               </div>
               <div>
-                <h4 class="text-xl font-bold text-[#0E4C59] mb-2">Stabilité professionnelle</h4>
+                <h3 class="text-xl font-bold text-[#0E4C59] mb-2">Impact terrain</h3>
                 <p class="text-gray-600">
-                  Contrats durables, rémunération attractive et planning régulier pour une sérénité au quotidien.
+                  Vous participez directement à la valorisation des producteurs locaux et à la mise sur le marché de recettes signature.
                 </p>
               </div>
             </div>
@@ -39,9 +39,9 @@
                 <i class="bi bi-mortarboard"></i>
               </div>
               <div>
-                <h4 class="text-xl font-bold text-[#0E4C59] mb-2">Formation continue</h4>
+                <h3 class="text-xl font-bold text-[#0E4C59] mb-2">Apprentissage continu</h3>
                 <p class="text-gray-600">
-                  Formations certifiantes régulières pour développer vos compétences et évoluer dans votre carrière.
+                  Sessions R&D, certifications HACCP et coaching leadership pour faire grandir votre parcours.
                 </p>
               </div>
             </div>
@@ -52,9 +52,9 @@
                 <i class="bi bi-people-fill"></i>
               </div>
               <div>
-                <h4 class="text-xl font-bold text-[#0E4C59] mb-2">Esprit d'équipe</h4>
+                <h3 class="text-xl font-bold text-[#0E4C59] mb-2">Esprit d'équipe</h3>
                 <p class="text-gray-600">
-                  Une communauté bienveillante où l'entraide et le partage d'expérience sont au cœur de notre culture.
+                  Une communauté atelier/logistique soudée, rituels hebdos et partages d’expérience inter-équipe.
                 </p>
               </div>
             </div>
@@ -65,9 +65,9 @@
                 <i class="bi bi-heart"></i>
               </div>
               <div>
-                <h4 class="text-xl font-bold text-[#0E4C59] mb-2">Équilibre vie pro/perso</h4>
+                <h3 class="text-xl font-bold text-[#0E4C59] mb-2">Équilibre vie pro/perso</h3>
                 <p class="text-gray-600">
-                  Horaires adaptés, proximité géographique et congés payés pour concilier travail et vie personnelle.
+                  Horaires maîtrisés, tournées regroupées et jours off garantis après chaque campagne.
                 </p>
               </div>
             </div>
@@ -101,26 +101,26 @@
 
           <!-- Postes disponibles -->
           <div class="mb-8">
-            <h4 class="font-bold text-[#0E4C59] mb-4">Postes disponibles :</h4>
+            <h3 class="font-bold text-[#0E4C59] mb-4">Postes disponibles :</h3>
             <div class="space-y-3">
               <div class="flex items-center justify-between bg-[#FFF5F0] p-4 rounded-lg">
                 <div>
-                  <div class="font-semibold">Auxiliaire de Vie</div>
-                  <div class="text-sm text-gray-600">Yaoundé, Douala, Antananarivo</div>
+                  <div class="font-semibold">Chef·fe d'Atelier Pressage</div>
+                  <div class="text-sm text-gray-600">Yaoundé, Douala</div>
                 </div>
                 <span class="bg-[#FF6B35] text-white text-xs px-3 py-1 rounded-full">5 postes</span>
               </div>
               <div class="flex items-center justify-between bg-[#FFF5F0] p-4 rounded-lg">
                 <div>
-                  <div class="font-semibold">Garde d'Enfants</div>
-                  <div class="text-sm text-gray-600">Yaoundé, Antananarivo</div>
+                  <div class="font-semibold">Community & Sampling Lead</div>
+                  <div class="text-sm text-gray-600">Yaoundé, Douala</div>
                 </div>
                 <span class="bg-[#33D0C3] text-white text-xs px-3 py-1 rounded-full">3 postes</span>
               </div>
               <div class="flex items-center justify-between bg-[#FFF5F0] p-4 rounded-lg">
                 <div>
-                  <div class="font-semibold">Agent d'Entretien</div>
-                  <div class="text-sm text-gray-600">Douala, Antananarivo</div>
+                  <div class="font-semibold">Responsable Logistique Cold Chain</div>
+                  <div class="text-sm text-gray-600">Douala, Kribi</div>
                 </div>
                 <span class="bg-[#0E4C59] text-white text-xs px-3 py-1 rounded-full">4 postes</span>
               </div>
@@ -140,13 +140,13 @@
           <div class="mt-6 text-center">
             <p class="text-gray-600 text-sm mb-4">Ou contactez-nous directement :</p>
             <div class="flex flex-col sm:flex-row gap-3">
-              <a href="mailto:recrutement@usracare.com" class="flex items-center justify-center text-[#0E4C59] hover:text-[#FF6B35] transition-colors">
+              <a href="mailto:talents@sandy-juice.com" class="flex items-center justify-center text-[#0E4C59] hover:text-[#FF6B35] transition-colors">
                 <i class="bi bi-envelope mr-2"></i>
-                recrutement@usracare.com
+                talents@sandy-juice.com
               </a>
-              <a href="tel:+237699999999" class="flex items-center justify-center text-[#0E4C59] hover:text-[#FF6B35] transition-colors">
+              <a href="tel:+237655699825" class="flex items-center justify-center text-[#0E4C59] hover:text-[#FF6B35] transition-colors">
                 <i class="bi bi-telephone mr-2"></i>
-                +237 699 999 999
+                +237 655 69 98 25
               </a>
             </div>
           </div>
@@ -158,7 +158,7 @@
         <div class="max-w-3xl mx-auto">
           <i class="bi bi-quote text-4xl opacity-50 mb-6"></i>
           <p class="text-xl md:text-2xl italic mb-6">
-            "Chez USRA CARE, j'ai trouvé bien plus qu'un emploi : une véritable vocation. La formation continue et l'esprit d'équipe font toute la différence."
+            "Chez Sandy Platform, j’ai découvert une équipe qui mixe rigueur industrielle et énergie créative. Chaque lot raconte une histoire locale."
           </p>
           <div class="flex items-center justify-center">
             <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mr-4">

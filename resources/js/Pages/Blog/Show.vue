@@ -58,7 +58,7 @@
 
         <aside class="space-y-8">
           <div class="rounded-3xl border border-slate-100 bg-slate-50 p-6">
-            <h4 class="text-lg font-semibold text-[#254a29] mb-4">Informations clés</h4>
+            <h3 class="text-lg font-semibold text-[#254a29] mb-4">Informations clés</h3>
             <ul class="space-y-3 text-sm text-slate-600">
               <li class="flex items-center gap-3">
                 <i class="bi bi-calendar text-[#f49926]"></i>
@@ -80,7 +80,7 @@
           </div>
 
           <div v-if="related.length" class="rounded-3xl border border-slate-100 bg-white p-6 space-y-4">
-            <h4 class="text-lg font-semibold text-[#254a29]">À lire aussi</h4>
+            <h3 class="text-lg font-semibold text-[#254a29]">À lire aussi</h3>
             <article v-for="item in related" :key="item.id" class="flex gap-3 border-b border-slate-100 pb-4 last:border-0 last:pb-0">
               <img
                 :src="item.cover_image || '/images/placeholder-blog.jpg'"
