@@ -3,11 +3,11 @@
     <div class="container mx-auto px-4 py-12 lg:py-20 space-y-8">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <p class="text-xs uppercase tracking-[0.3em] text-brand-accent">Nos recettes</p>
+          <p class="text-xs uppercase tracking-[0.3em] text-[#f49926]">Nos recettes</p>
           <h2 class="text-3xl font-semibold text-[#254a29]">Best-sellers du moment</h2>
           <p class="text-sm text-slate-500">Pressés le matin à Yaoundé, livrés dans la journée.</p>
         </div>
-        <Link :href="route('products')" class="inline-flex items-center gap-2 text-brand-accent font-semibold">
+        <Link :href="route('products')" class="inline-flex items-center gap-2 text-[#f49926] font-semibold">
           Voir le catalogue
           <i class="bi bi-arrow-up-right"></i>
         </Link>
@@ -29,17 +29,16 @@
             </span>
           </div>
           <div class="p-5 flex flex-col flex-1">
-            <p class="text-xs uppercase tracking-[0.3em] text-slate-500">{{ product.tagline }}</p>
+            <p class="text-xs uppercase tracking-[0.3em] text-slate-400">{{ product.tagline }}</p>
             <h3 class="text-xl font-semibold text-[#254a29] mt-2">{{ product.name }}</h3>
-            <p class="text-brand-accent text-lg font-semibold mt-4">{{ formatPrice(product.price) }}</p>
+            <p class="text-[#f49926] text-lg font-semibold mt-4">{{ formatPrice(product.price) }}</p>
             <div class="mt-auto pt-4 flex items-center justify-between">
-              <Link :href="route('products.show', product.slug)" class="text-sm font-semibold text-brand-accent">
+              <Link :href="route('products.show', product.slug)" class="text-sm font-semibold text-[#f49926]">
                 Découvrir
               </Link>
               <Link
                 :href="route('products.show', product.slug)"
-                class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#f49926]/30 text-brand-accent"
-                :aria-label="`Ouvrir la fiche ${product.name}`"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#f49926]/30 text-[#f49926]"
               >
                 <i class="bi bi-plus-lg"></i>
               </Link>

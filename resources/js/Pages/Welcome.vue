@@ -2,11 +2,11 @@
   <AppLayout>
     <!-- Balises meta spécifiques à cette page -->
     <Head>
-      <title>USRA-CARE - Services à Domicile de Qualité - Bien-être au Quotidien</title>
-      <meta name="description" content="Découvrez USRA-CARE, spécialiste des services à domicile depuis 2023. Ménage, garde d'enfants, auxiliaire de vie et jardinage par des intervenants qualifiés.">
-      <meta name="keywords" content="services à domicile, aide ménagère, garde d'enfants, auxiliaire de vie, jardinage, USRA-CARE, Madagascar, services de qualité">
-      <meta property="og:title" content="USRA-CARE - Services à Domicile de Qualité - Bien-être au Quotidien">
-      <meta property="og:description" content="Découvrez nos services à domicile pour un quotidien simplifié et plus serein.">
+      <title>Sandy Platform - Jus naturels & pipeline opérationnel</title>
+      <meta name="description" content="Découvrez Sandy Platform, l’atelier camerounais qui pilote sourcing local, pressage à froid et livraison express de jus naturels.">
+      <meta name="keywords" content="Sandy Platform,Sandy Juice,jus naturels,cold chain,pressage à froid,logistique,Yaoundé,Douala">
+      <meta property="og:title" content="Sandy Platform - Jus naturels & pipeline opérationnel">
+      <meta property="og:description" content="Approvisionnement local, atelier pressage et livraison 2h : explorez toute l’expérience Sandy.">
       <meta property="og:image" content="/images/logo.jpg">
       <meta property="og:url" :content="currentUrl">
       <meta property="twitter:card" content="summary_large_image">
@@ -39,9 +39,9 @@ import Testimonials from '@/Components/Home/Testimonials.vue';
 import Faq from '@/Components/Home/Faq.vue';
 
 const stats = ref([
-  { icon: 'bi-calendar-check', value: '2+', label: "ans d'expérience" },
-  { icon: 'bi-people-fill', value: '93%', label: 'clients satisfaits' },
-  { icon: 'bi-percent', value: '50%', label: 'crédit d\'impôt' }
+  { icon: 'bi-droplet', value: '120+', label: 'recettes actives' },
+  { icon: 'bi-truck', value: '2h', label: 'livraison moyenne' },
+  { icon: 'bi-geo-alt', value: '43', label: 'fermes partenaires' }
 ]);
 
 const currentUrl = ref('');
@@ -64,13 +64,12 @@ const handleMenuToggle = () => {
 };
 
 const handleStartProject = () => {
-  window.location.href = route('quote');
+  window.location.href = route('contact');
 };
 
 const handleViewServices = () => {
   console.log('View services clicked');
-  // Redirection vers la page services
-  window.location.href = route('services');
+  window.location.href = route('products');
 };
 
 const handleFormSubmit = (formData) => {
@@ -87,53 +86,53 @@ const handleFormSuccess = () => {
 </script>
 
 <style>
-/* Styles globaux adaptés à USRA-CARE */
+/* Styles globaux inspirés par Sandy Platform */
 .logo-font {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Couleurs de la palette USRA-CARE */
-.bg-usra-dark {
+/* Couleurs de la palette Sandy Platform */
+.bg-sandy-dark {
   background-color: #0E4C59;
 }
 
-.bg-usra-medium {
+.bg-sandy-medium {
   background-color: #1A6D7A;
 }
 
-.bg-usra-light {
+.bg-sandy-light {
   background-color: #33D0C3;
 }
 
-.bg-usra-accent {
+.bg-sandy-accent {
   background-color: #2AB9AF;
 }
 
-.text-usra-dark {
+.text-sandy-dark {
   color: #0E4C59;
 }
 
-.text-usra-medium {
+.text-sandy-medium {
   color: #1A6D7A;
 }
 
-.text-usra-light {
+.text-sandy-light {
   color: #33D0C3;
 }
 
-.text-usra-accent {
+.text-sandy-accent {
   color: #2AB9AF;
 }
 
-.border-usra-light {
+.border-sandy-light {
   border-color: #33D0C3;
 }
 
-.border-usra-dark {
+.border-sandy-dark {
   border-color: #0E4C59;
 }
 
-.hover\:shadow-usra-light\/30:hover {
+.hover\:shadow-sandy-light\/30:hover {
   box-shadow: 0 10px 25px rgba(51, 208, 195, 0.3);
 }
 

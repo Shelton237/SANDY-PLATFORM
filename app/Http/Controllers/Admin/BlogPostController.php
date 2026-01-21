@@ -14,6 +14,8 @@ use Inertia\Response;
 
 class BlogPostController extends Controller
 {
+    private const EXCERPT_MAX_LENGTH = 1000;
+
     public function index(Request $request): Response
     {
         $filters = $request->only('search', 'status', 'category');
@@ -130,7 +132,7 @@ class BlogPostController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255'],
-            'excerpt' => ['nullable', 'string', 'max:500'],
+            'excerpt' => ['nullable', 'string', 'max:' . self::EXCERPT_MAX_LENGTH],
             'body' => ['required', 'string'],
             'cover_image' => ['nullable', 'string', 'max:2048'],
             'is_featured' => ['nullable', 'boolean'],
@@ -195,6 +197,7 @@ class BlogPostController extends Controller
             'reading_time' => Arr::get($metadata, 'reading_time'),
             'updated_at' => $post->updated_at?->toDateTimeString(),
             'author' => $post->author?->only(['id', 'name']),
+            'excerpt_max_length' => self::EXCERPT_MAX_LENGTH,
         ];
     }
 

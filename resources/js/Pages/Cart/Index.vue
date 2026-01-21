@@ -67,6 +67,7 @@
                       class="text-lg text-slate-500 hover:text-[#254a29]"
                       @click="changeQuantity(item, -1)"
                       :disabled="quantities[item.product_id] <= 1 || loading"
+                      :aria-label="'Diminuer la quantité de ' + item.name"
                     >
                       <i class="bi bi-dash-lg"></i>
                     </button>
@@ -83,6 +84,7 @@
                       class="text-lg text-slate-500 hover:text-[#254a29]"
                       @click="changeQuantity(item, 1)"
                       :disabled="quantities[item.product_id] >= maxQuantity || loading"
+                      :aria-label="'Augmenter la quantité de ' + item.name"
                     >
                       <i class="bi bi-plus-lg"></i>
                     </button>

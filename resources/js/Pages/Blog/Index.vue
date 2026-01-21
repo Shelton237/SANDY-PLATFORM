@@ -130,7 +130,7 @@
 
           <aside class="space-y-8">
             <div class="rounded-3xl border border-slate-100 bg-slate-50 p-6">
-              <h3 class="text-lg font-semibold text-[#254a29] mb-4">Articles récents</h3>
+              <h4 class="text-lg font-semibold text-[#254a29] mb-4">Articles récents</h4>
               <ul class="space-y-4">
                 <li v-for="item in recent" :key="item.id" class="border-b border-slate-100 pb-3 last:border-0 last:pb-0">
                   <Link :href="route('blog.show', item.slug)" class="text-sm font-semibold text-[#254a29] hover:text-[#f49926] block">
@@ -143,7 +143,7 @@
 
             <div class="rounded-3xl border border-amber-100 bg-amber-50 p-6">
               <p class="text-xs uppercase tracking-[0.3em] text-amber-600">Newsletter</p>
-              <h3 class="text-xl font-semibold text-[#2d2616] mt-3">Conseils exclusifs & coulisses</h3>
+              <h4 class="text-xl font-semibold text-[#2d2616] mt-3">Conseils exclusifs & coulisses</h4>
               <p class="text-sm text-slate-600 mt-2">Recevez nos actualités produits, promos et alertes production.</p>
               <form class="mt-4 space-y-3">
                 <input type="email" placeholder="Votre email" class="w-full rounded-2xl border border-white/70 px-4 py-3 text-sm focus:outline-none" />

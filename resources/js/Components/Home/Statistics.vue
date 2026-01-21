@@ -4,10 +4,10 @@
       <!-- En-tête de section -->
       <div class="text-center mb-16 md:mb-20">
         <h2 class="text-4xl md:text-5xl font-bold text-[#0E4C59] mb-6">
-          Pourquoi choisir <span class="text-[#FF6B35]">USRA CARE</span> ?
+          Pourquoi choisir <span class="text-[#FF6B35]">Sandy Platform</span> ?
         </h2>
         <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
-          Découvrez les valeurs et engagements qui font notre différence
+          Transparence, cold chain et obsession produit pour vos jus premium
         </p>
       </div>
 
@@ -20,12 +20,12 @@
           </div>
           <h3 class="text-2xl font-bold text-[#0E4C59] text-center mb-4">Confiance & sécurité</h3>
           <p class="text-gray-600 text-center leading-relaxed">
-            Tous nos intervenants sont rigoureusement sélectionnés, formés et suivis pour garantir votre sérénité au quotidien.
+            Lots tracés, analyses labo et audits partenaires pour garantir la qualité jusque dans votre verre.
           </p>
           <div class="mt-6 flex justify-center">
             <span class="inline-flex items-center bg-[#0E4C59]/10 text-[#0E4C59] text-xs font-semibold px-4 py-2 rounded-full">
               <i class="bi bi-fingerprint mr-2"></i>
-              Vérification complète
+              Traçabilité complète
             </span>
           </div>
         </div>
@@ -37,12 +37,12 @@
           </div>
           <h3 class="text-2xl font-bold text-[#0E4C59] text-center mb-4">Intervenants qualifiés</h3>
           <p class="text-gray-600 text-center leading-relaxed">
-            Notre équipe est composée de professionnels expérimentés, régulièrement formés aux meilleures pratiques.
+            Mixologues, nutritionnistes et chefs d’atelier conçoivent des recettes calibrées et réplicables.
           </p>
           <div class="mt-6 flex justify-center">
             <span class="inline-flex items-center bg-[#33D0C3]/10 text-[#33D0C3] text-xs font-semibold px-4 py-2 rounded-full">
               <i class="bi bi-mortarboard mr-2"></i>
-              Formation continue
+              Laboratoire interne
             </span>
           </div>
         </div>
@@ -54,12 +54,12 @@
           </div>
           <h3 class="text-2xl font-bold text-[#0E4C59] text-center mb-4">Flexibilité et proximité</h3>
           <p class="text-gray-600 text-center leading-relaxed">
-            Des solutions adaptées à vos besoins avec une présence locale pour un service réactif et personnalisé.
+            Livraisons 2h à Yaoundé/Douala, créneaux dédiés B2B et support client temps réel.
           </p>
           <div class="mt-6 flex justify-center">
             <span class="inline-flex items-center bg-[#FF6B35]/10 text-[#FF6B35] text-xs font-semibold px-4 py-2 rounded-full">
               <i class="bi bi-clock mr-2"></i>
-              7j/7 selon vos besoins
+              Suivi temps réel
             </span>
           </div>
         </div>
@@ -71,12 +71,12 @@
           </div>
           <h3 class="text-2xl font-bold text-[#0E4C59] text-center mb-4">Aides financières</h3>
           <p class="text-gray-600 text-center leading-relaxed">
-            Bénéficiez de 50% de crédit d'impôt sur l'ensemble de nos services sans conditions de ressources.
+            Tableaux de bord, budgets maîtrisés et alertes supply pour piloter votre marge en toute sérénité.
           </p>
           <div class="mt-6 flex justify-center">
             <span class="inline-flex items-center bg-[#0E4C59]/10 text-[#0E4C59] text-xs font-semibold px-4 py-2 rounded-full">
               <i class="bi bi-percent mr-2"></i>
-              50% de crédit d'impôt
+              Pilotage financier
             </span>
           </div>
         </div>
@@ -87,10 +87,10 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-8">
           <div class="text-center md:text-left">
         <h3 class="text-2xl md:text-3xl font-bold text-[#0E4C59] mb-4">
-          Rejoignez les <span class="text-[#FF6B35]">+500 familles</span> qui nous font confiance
+          Rejoignez les <span class="text-[#FF6B35]">+120 marques</span> qui s’alimentent chez Sandy
         </h3>
         <p class="text-gray-600 text-lg">
-          Découvrez notre accompagnement personnalisé et sans engagement
+          Onboardez votre équipe sur une plateforme qui maîtrise tout le pipeline jus
         </p>
           </div>
           <div class="flex flex-col sm:flex-row gap-4">

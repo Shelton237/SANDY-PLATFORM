@@ -14,8 +14,8 @@ class ServiceController extends Controller
     public function index()
     {
         return Inertia::render('Services/Index', [
-            'pageTitle' => 'Nos Services - USRA-CARE',
-            'metaDescription' => 'Découvrez tous nos services à domicile : ménage, garde d\'enfants, Auxiliaire de vie et jardinage. Des intervenants qualifiés pour votre bien-être.'
+            'pageTitle' => 'Nos Services - Sandy Platform',
+            'metaDescription' => 'Sandy Platform orchestre l’approvisionnement local, le pressage à froid et la livraison express pour vos programmes juice & bien-être.'
         ]);
     }
 
@@ -25,8 +25,8 @@ class ServiceController extends Controller
     public function menage()
     {
         return Inertia::render('Services/Menage', [
-            'pageTitle' => 'Aide Ménagère - USRA-CARE',
-            'metaDescription' => 'Service d\'aide ménagère professionnelle pour l\'entretien de votre maison. Intervenants qualifiés et services personnalisés.'
+            'pageTitle' => 'Atelier Pressage - Sandy Platform',
+            'metaDescription' => 'Accompagnement complet sur vos recettes : sourcing ingrédients, pressage à froid, formulation et contrôle sensoriel.'
         ]);
     }
 
@@ -36,8 +36,8 @@ class ServiceController extends Controller
     public function gardeEnfants()
     {
         return Inertia::render('Services/GardeEnfants', [
-            'pageTitle' => 'Garde d\'Enfants - USRA-CARE',
-            'metaDescription' => 'Service de garde d\'enfants à domicile par des intervenants de confiance. Sécurité et bien-être de vos enfants garantis.'
+            'pageTitle' => 'Kids & Famille - Sandy Platform',
+            'metaDescription' => 'Programmes Kids & Famille : jus doux, snacks frais et ateliers pédagogiques adaptés aux minis gourmands.'
         ]);
     }
 
@@ -47,8 +47,8 @@ class ServiceController extends Controller
     public function jardinage()
     {
         return Inertia::render('Services/Jardinage', [
-            'pageTitle' => 'Jardinage et Bricolage - USRA-CARE',
-            'metaDescription' => 'Service de jardinage et bricolage à domicile. Entretien de vos espaces verts et petites réparations par des professionnels.'
+            'pageTitle' => 'Approvisionnement & Sourcing - Sandy Platform',
+            'metaDescription' => 'Sélection des producteurs, contrôle des lots et logistique amont pour sécuriser vos matières premières premium.'
         ]);
     }
 
@@ -58,8 +58,8 @@ class ServiceController extends Controller
     public function seniors()
     {
         return Inertia::render('Services/Seniors', [
-            'pageTitle' => 'Auxiliaire de vie - USRA-CARE',
-            'metaDescription' => 'Service d\'accompagnement et d\'assistance aux personnes âgées à domicile. Soutien quotidien et maintien à domicile.'
+            'pageTitle' => 'Programmes Bien-être - Sandy Platform',
+            'metaDescription' => 'Solutions nutritionnelles dédiées aux entreprises, spas et clubs santé : cures detox, packs énergie et ateliers éducatifs.'
         ]);
     }
 
@@ -69,16 +69,16 @@ class ServiceController extends Controller
     public function repassage()
     {
         return Inertia::render('Services/Repassage', [
-            'pageTitle' => 'Repassage - USRA-CARE',
-            'metaDescription' => 'Service de repassage à domicile professionnel. Linges impeccables et gain de temps assuré.'
+            'pageTitle' => 'Conditionnement & Packaging - Sandy Platform',
+            'metaDescription' => 'Personnalisation étiquettes, contrôle packaging et préparation des box retail & corporate.'
         ]);
     }
 
     public function chauffeur()
     {
         return Inertia::render('Services/Chauffeurs', [
-            'pageTitle' => 'Chauffeur - USRA-CARE',
-            'metaDescription' => 'Service de chauffeur à domicile pour vos déplacements. Confort, sécurité et ponctualité garantis.'
+            'pageTitle' => 'Livraison & Cold Chain - Sandy Platform',
+            'metaDescription' => 'Planification des tournées, suivi chauffeurs et livraison 2h en caisse isotherme partout à Yaoundé/Douala.'
         ]);
     }
 
@@ -113,7 +113,7 @@ class ServiceController extends Controller
         // et envoyer des emails de confirmation
 
         return redirect()->route('services.confirmation')
-            ->with('success', 'Votre demande a été envoyée avec succès !');
+            ->with('success', 'Votre demande a été envoyée à l’équipe Sandy Platform !');
     }
 
     /**
@@ -122,8 +122,8 @@ class ServiceController extends Controller
     public function confirmation()
     {
         return Inertia::render('Services/Confirmation', [
-            'pageTitle' => 'Confirmation de demande - USRA-CARE',
-            'metaDescription' => 'Confirmation de votre demande de service USRA-CARE'
+            'pageTitle' => 'Confirmation de demande - Sandy Platform',
+            'metaDescription' => 'Confirmation de votre demande de service Sandy Platform'
         ]);
     }
 }

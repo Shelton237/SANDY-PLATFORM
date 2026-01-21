@@ -1,11 +1,12 @@
 <template>
   <div class="app-layout min-h-screen flex flex-col bg-gray-50">
-    <NotificationCenter />
+    <NotificationCenter v-if="shouldShowNotifications" />
     <NavigationHeader 
         @menu-toggle="handleMenuToggle"
       />
     <slot />
-    <Footer />
+    <Footer v-if="footerVisible" />
+    <div ref="footerSentinel" class="h-1 w-full" aria-hidden="true"></div>
     
     <!-- Retour en haut amélioré -->
     <transition
@@ -38,18 +39,27 @@
       class="fixed bottom-16 right-4 z-40 sm:hidden inline-flex items-center justify-center rounded-full bg-[#25D366] p-4 text-white shadow-lg hover:bg-[#1eb053]"
       aria-label="Commander sur WhatsApp"
     >
+      <span class="sr-only">Commander sur WhatsApp</span>
       <i class="bi bi-whatsapp text-2xl"></i>
     </a>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineAsyncComponent, computed, watch } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 import NavigationHeader from '@/Components/Home/NavigationHeader.vue'
-import Footer from '@/Components/Home/Footer.vue'
-import NotificationCenter from '@/Components/NotificationCenter.vue'
+
+const Footer = defineAsyncComponent(() => import('@/Components/Home/Footer.vue'))
+const NotificationCenter = defineAsyncComponent(() => import('@/Components/NotificationCenter.vue'))
 
 const showScrollButton = ref(false)
+const footerVisible = ref(false)
+const footerSentinel = ref(null)
+const shouldShowNotifications = ref(false)
+let footerObserver = null
+const page = usePage()
+const flash = computed(() => page.props?.flash || {})
 
 // Optimisation du scroll avec debounce
 let scrollTimeout = null
@@ -61,21 +71,18 @@ const checkScroll = () => {
 }
 
 // Gestion des transitions
-const beforeEnter = (el) => {
-  el.style.willChange = 'opacity, transform'
-}
-
-const afterEnter = (el) => {
-  el.style.willChange = 'auto'
-}
-
 onMounted(() => {
   window.addEventListener('scroll', checkScroll, { passive: true })
+  initFooterObserver()
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', checkScroll)
   clearTimeout(scrollTimeout)
+  if (footerObserver) {
+    footerObserver.disconnect()
+    footerObserver = null
+  }
 })
 
 const handleMenuToggle = () => {
@@ -88,6 +95,44 @@ const scrollToTop = () => {
     behavior: 'smooth'
   })
 }
+
+const initFooterObserver = () => {
+  if (footerVisible.value) {
+    return
+  }
+
+  if (window.IntersectionObserver && footerSentinel.value) {
+    footerObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            footerVisible.value = true
+            footerObserver?.disconnect()
+          }
+        })
+      },
+      { rootMargin: '200px' }
+    )
+
+    footerObserver.observe(footerSentinel.value)
+  } else {
+    footerVisible.value = true
+  }
+}
+
+watch(
+  flash,
+  (value) => {
+    if (!value) {
+      return
+    }
+
+    if (value.success || value.error || value.info) {
+      shouldShowNotifications.value = true
+    }
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <style scoped>

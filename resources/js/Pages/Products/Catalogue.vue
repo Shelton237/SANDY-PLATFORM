@@ -209,7 +209,12 @@
           >
             <i class="bi bi-filter"></i>
             {{ ingredientMap[selectedIngredient] || selectedIngredient }}
-            <button class="ml-1 text-xs" type="button" @click="clearIngredientFilter">
+            <button
+              class="ml-1 text-xs"
+              type="button"
+              @click="clearIngredientFilter"
+              :aria-label="'Retirer le filtre ' + (ingredientMap[selectedIngredient] || selectedIngredient)"
+            >
               <i class="bi bi-x"></i>
             </button>
           </span>
@@ -219,7 +224,12 @@
           >
             <i class="bi bi-cash-stack"></i>
             <= {{ formatPrice(effectivePriceMax) }}
-            <button class="ml-1 text-xs text-emerald-700" type="button" @click="clearPriceFilter">
+            <button
+              class="ml-1 text-xs text-emerald-700"
+              type="button"
+              @click="clearPriceFilter"
+              aria-label="Réinitialiser le filtre prix"
+            >
               <i class="bi bi-x"></i>
             </button>
           </span>

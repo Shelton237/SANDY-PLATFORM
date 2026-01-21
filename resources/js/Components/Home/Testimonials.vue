@@ -10,7 +10,7 @@
       <!-- En-tête de section -->
       <div class="text-center mb-12 lg:mb-16">
         <h2 class="text-3xl lg:text-4xl font-light text-[#254a29] mb-4">
-          Ce que disent nos <span class="font-bold text-brand-accent">clients</span>
+          Ce que disent nos <span class="font-bold text-[#f49926]">clients</span>
         </h2>
         <p class="text-lg text-[#254a29]/80 max-w-2xl mx-auto">
           Découvrez les expériences de ceux qui ont déjà adopté Sandy Juice à Yaoundé
@@ -41,7 +41,7 @@
             </div>
             <div>
               <h3 class="text-lg font-semibold text-[#254a29]">Aïssa M.</h3>
-              <p class="text-sm text-slate-600">Bastos, Yaoundé</p>
+              <p class="text-sm text-[#254a29]/60">Bastos, Yaoundé</p>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@
             </div>
             <div>
               <h3 class="text-lg font-semibold text-[#254a29]">Kevin E.</h3>
-              <p class="text-sm text-slate-600">Odza, Yaoundé</p>
+              <p class="text-sm text-[#254a29]/60">Odza, Yaoundé</p>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@
             </div>
             <div>
               <h3 class="text-lg font-semibold text-[#254a29]">Nadia S.</h3>
-              <p class="text-sm text-slate-600">Mvan, Yaoundé</p>
+              <p class="text-sm text-[#254a29]/60">Mvan, Yaoundé</p>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@
       <div class="text-center mt-12">
         <Link 
           :href="route('products')" 
-          class="inline-flex items-center gap-2 bg-brand-accent hover:bg-[#9a3412] text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105"
+          class="inline-flex items-center gap-2 bg-[#f49926] hover:bg-[#254a29] text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 transform hover:scale-105"
         >
           <i class="bi bi-cart-plus"></i>
           Découvrir nos produits
