@@ -25,7 +25,11 @@
 
       <div class="container mx-auto px-4 py-12 max-w-5xl grid gap-10 lg:grid-cols-[2fr,1fr]">
         <div class="prose prose-lg max-w-none">
-          <p v-if="post.excerpt" class="text-xl text-[#254a29] font-semibold leading-relaxed">{{ post.excerpt }}</p>
+          <p
+            v-if="sanitizedExcerpt"
+            class="text-xl text-[#254a29] font-semibold leading-relaxed"
+            v-html="sanitizedExcerpt"
+          ></p>
 
           <div class="space-y-6 mt-6">
             <div v-if="bodyContent.isHtml" class="prose prose-lg max-w-none" v-html="bodyContent.html"></div>
@@ -89,7 +93,11 @@
                 <Link :href="route('blog.show', item.slug)" class="text-sm font-semibold text-[#254a29] hover:text-[#f49926]">
                   {{ item.title }}
                 </Link>
-                <p class="text-xs text-slate-500 mt-1">{{ item.excerpt }}</p>
+                <p
+                  v-if="item.excerpt"
+                  class="text-xs text-slate-500 mt-1"
+                  v-html="sanitizeHtml(item.excerpt)"
+                ></p>
               </div>
             </article>
           </div>
@@ -118,6 +126,8 @@ const props = defineProps({
 
 const categoryLabel = computed(() => props.post.metadata?.category ?? 'Blog Sandy Juice')
 const tags = computed(() => props.post.metadata?.tags ?? [])
+const sanitizeHtml = (value) => (value ? DOMPurify.sanitize(value) : '')
+const sanitizedExcerpt = computed(() => sanitizeHtml(props.post.excerpt))
 
 const bodyContent = computed(() => {
   if (!props.post.body) {

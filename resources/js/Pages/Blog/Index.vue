@@ -69,7 +69,11 @@
               <div class="flex-1 p-6 space-y-3">
                 <p class="text-xs uppercase tracking-[0.3em] text-amber-500">{{ formatDate(item.published_at) }}</p>
                 <h3 class="text-2xl font-semibold text-[#254a29]">{{ item.title }}</h3>
-                <p class="text-slate-600 text-sm">{{ item.excerpt }}</p>
+                <p
+                  v-if="item.excerpt"
+                  class="text-slate-600 text-sm"
+                  v-html="sanitizeHtml(item.excerpt)"
+                ></p>
                 <Link :href="route('blog.show', item.slug)" class="inline-flex items-center text-[#f49926] font-semibold group">
                   Lire l'article
                   <i class="bi bi-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
@@ -100,7 +104,11 @@
                 <h3 class="text-2xl font-semibold text-[#254a29] group-hover:text-[#f49926] transition">
                   {{ post.title }}
                 </h3>
-                <p class="text-slate-600 leading-relaxed">{{ post.excerpt }}</p>
+                <p
+                  v-if="post.excerpt"
+                  class="text-slate-600 leading-relaxed"
+                  v-html="sanitizeHtml(post.excerpt)"
+                ></p>
                 <div class="flex items-center justify-between text-sm text-slate-500">
                   <span v-if="post.author">Par {{ post.author.name }}</span>
                   <span v-if="post.metadata?.reading_time">{{ post.metadata.reading_time }} min de lecture</span>
@@ -152,6 +160,7 @@
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
+import DOMPurify from 'dompurify'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import Pagination from '@/Components/Pagination.vue'
 
@@ -213,6 +222,8 @@ const clearCategory = () => {
   selectedCategory.value = ''
   applyFilters()
 }
+
+const sanitizeHtml = (value) => (value ? DOMPurify.sanitize(value) : '')
 
 const formatDate = (value) => {
   if (!value) return ''
