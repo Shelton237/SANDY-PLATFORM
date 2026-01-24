@@ -34,7 +34,7 @@
               <h2 class="mt-4 text-2xl font-semibold text-[#254a29]">{{ heroJuice.name }}</h2>
               <p class="text-sm text-slate-500 mt-1">{{ heroJuice.tagline }}</p>
               <div class="mt-4 rounded-2xl overflow-hidden border border-slate-100">
-                <img :src="coverImage(heroJuice)" :alt="heroJuice.name" class="w-full h-48 object-cover" />
+                <img :src="coverImage(heroJuice)" :alt="heroJuice.name" class="w-full h-full object-cover" />
               </div>
               <div class="mt-6 flex items-center justify-between">
                 <div>
@@ -336,7 +336,7 @@
               </p>
 
               <div class="mt-4 rounded-2xl overflow-hidden border border-slate-100">
-                <img :src="coverImage(juice)" :alt="juice.name" class="w-full h-40 object-cover" />
+                <img :src="coverImage(juice)" :alt="juice.name" class="w-full h-full object-cover" />
               </div>
 
               <div class="mt-4 flex flex-wrap gap-2">
