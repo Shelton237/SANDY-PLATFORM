@@ -26,7 +26,7 @@
           <article class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm lg:col-span-2">
             <div class="mb-6">
               <div class="rounded-3xl border border-slate-100 overflow-hidden bg-slate-50">
-                <img :src="activeImage" :alt="product.name" class="w-full h-80 object-cover" />
+                <img :src="activeImage" :alt="product.name" class="w-full h-full object-cover" />
               </div>
               <div class="mt-4 flex flex-wrap gap-3">
                 <button
