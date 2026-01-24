@@ -30,6 +30,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  const url = new URL(request.url);
+  const acceptsHtml = request.headers.get('accept')?.includes('text/html');
+  const isNavigate = request.mode === 'navigate';
+  const isAdminRoute = url.pathname.startsWith('/admin');
+
+  if (acceptsHtml || isNavigate || isAdminRoute) {
+    event.respondWith(
+      fetch(request).catch(() => caches.match('/'))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) {
@@ -39,7 +51,6 @@ self.addEventListener('fetch', (event) => {
       return fetch(request)
         .then((response) => {
           const copy = response.clone();
-          const url = new URL(request.url);
 
           if (url.origin === self.location.origin && response.ok) {
             caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
