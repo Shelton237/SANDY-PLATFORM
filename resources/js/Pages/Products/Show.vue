@@ -1,6 +1,12 @@
 <template>
   <AppLayout>
-    <Head :title="`${product.name} - Sandy Juice`" />
+    <SeoHead
+      :title="product.name"
+      :description="seoDescription"
+      :keywords="seoKeywords"
+      :image="seoImage"
+      :structured-data="productStructuredData"
+    />
 
     <section class="bg-gradient-to-br from-[#fef7ee] via-white to-[#f2faf0] border-b border-orange-100">
       <div class="container mx-auto px-4 py-12 lg:py-16 space-y-8">
@@ -211,10 +217,11 @@
 </template>
 
 <script setup>
-import { Head, Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import { computed, ref, watch } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import useCart from '@/Composables/useCart'
+import SeoHead from '@/Components/Common/SeoHead.vue'
 
 const props = defineProps({
   product: {
@@ -241,6 +248,9 @@ const props = defineProps({
 
 const { product, category, related, nutritionFocus } = props
 const page = usePage()
+const siteName = computed(() => page.props.seo?.site_name || 'Sandy Juice')
+const defaultSeoDescription = computed(() => page.props.seo?.description || `${siteName.value} - Jus naturels`)
+const defaultSeoKeywords = computed(() => page.props.seo?.keywords || 'sandy juice,jus naturels')
 const maxQuantity = computed(() => Number(page.props.shop?.max_quantity ?? 12))
 const quantity = ref(1)
 const { addToCart, loading: cartLoading } = useCart()
@@ -248,6 +258,20 @@ const { addToCart, loading: cartLoading } = useCart()
 const gallery = computed(() => props.product.images ?? [])
 const placeholderImage = '/images/catalog/placeholder.jpg'
 const coverFallback = computed(() => props.product.image || placeholderImage)
+const resolveAssetUrl = (value) => {
+  if (!value) return null
+  if (/^https?:\/\//i.test(value)) {
+    return value
+  }
+  const baseUrl = page.props.seo?.base_url
+  if (baseUrl) {
+    const normalizedBase = baseUrl.replace(/\/$/, '')
+    const normalizedPath = value.startsWith('/') ? value : `/${value}`
+    return `${normalizedBase}${normalizedPath}`
+  }
+  return value
+}
+const seoImage = computed(() => resolveAssetUrl(gallery.value[0]?.url || coverFallback.value))
 const activeImage = ref(gallery.value[0]?.url || coverFallback.value)
 
 watch([gallery, () => props.product.image], ([images]) => {
@@ -284,6 +308,47 @@ const formatPrice = (value) => {
 
   return `${value.toFixed(0)} FCFA`
 }
+
+const seoDescription = computed(() => product.description || product.tagline || defaultSeoDescription.value)
+const seoKeywords = computed(() => {
+  const keywords = [
+    product.name,
+    category?.name,
+    product.tagline,
+    ...(product.ingredients ?? []).map((ingredient) => ingredient?.name)
+  ]
+    .concat(defaultSeoKeywords.value.split(','))
+    .map((keyword) => (keyword || '').toString().trim())
+    .filter(Boolean)
+
+  return Array.from(new Set(keywords)).join(', ')
+})
+
+const productStructuredData = computed(() => {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: seoDescription.value,
+    sku: product.slug,
+    brand: siteName.value
+  }
+
+  if (seoImage.value) {
+    data.image = [seoImage.value]
+  }
+
+  if (typeof product.price === 'number' && !Number.isNaN(product.price)) {
+    data.offers = {
+      '@type': 'Offer',
+      priceCurrency: page.props.shop?.currency ?? 'FCFA',
+      price: product.price,
+      availability: (product.stock ?? 0) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
+    }
+  }
+
+  return data
+})
 
 const adjustQuantity = (delta) => {
   let next = quantity.value + delta

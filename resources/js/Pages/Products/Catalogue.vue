@@ -1,6 +1,12 @@
 <template>
   <AppLayout>
-    <Head title="Catalogue Sandy Juice" />
+    <SeoHead
+      :title="catalogueTitle"
+      :description="seoDescription"
+      :keywords="seoKeywords"
+      :image="seoImage"
+      :structured-data="catalogueStructuredData"
+    />
 
     <section class="bg-gradient-to-br from-[#fef7ee] via-white to-[#f2faf0] border-b border-orange-100">
       <div class="container mx-auto px-4 py-12 lg:py-16">
@@ -441,11 +447,12 @@
 </template>
 
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3'
+import { Link, router, usePage } from '@inertiajs/vue3'
 import axios from 'axios'
 import { computed, onUnmounted, ref } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import useCart from '@/Composables/useCart'
+import SeoHead from '@/Components/Common/SeoHead.vue'
 
 const props = defineProps({
   juices: {
@@ -501,7 +508,22 @@ const props = defineProps({
   }
 })
 
+const page = usePage()
 const juices = computed(() => props.juices ?? [])
+const siteName = computed(() => page.props.seo?.site_name || 'Sandy Juice')
+const resolveAssetUrl = (value) => {
+  if (!value) return null
+  if (/^https?:\/\//i.test(value)) {
+    return value
+  }
+  const baseUrl = page.props.seo?.base_url
+  if (baseUrl) {
+    const normalizedBase = baseUrl.replace(/\/$/, '')
+    const normalizedPath = value.startsWith('/') ? value : `/${value}`
+    return `${normalizedBase}${normalizedPath}`
+  }
+  return value
+}
 const search = ref(props.filters?.search ?? '')
 const selectedCategory = ref(props.filters?.category ?? props.categoryContext?.slug ?? null)
 const activeMoment = ref(props.filters?.moment ?? null)
@@ -579,6 +601,88 @@ const heroJuice = computed(() => props.featured?.hero ?? null)
 const newJuice = computed(() => props.featured?.new ?? null)
 const limitedJuice = computed(() => props.featured?.limited ?? null)
 
+const catalogueTitle = computed(() => {
+  if (props.categoryContext?.name) {
+    return `Catalogue ${props.categoryContext.name}`
+  }
+  return 'Catalogue Sandy Juice'
+})
+
+const catalogueDescriptionBase = computed(() => {
+  if (props.categoryContext?.tagline) return props.categoryContext.tagline
+  if (props.categoryContext?.description) return props.categoryContext.description
+  if (juices.value.length) {
+    return `Découvrez ${juices.value.length} recettes pressées à froid, prêtes pour la livraison express.`
+  }
+  return 'Découvrez les cures pressées à froid Sandy Juice.'
+})
+
+const seoDescription = computed(() => {
+  const base = catalogueDescriptionBase.value || siteName.value
+  return base.includes(siteName.value) ? base : `${base} ${siteName.value}`
+})
+
+const seoKeywords = computed(() => {
+  const keywords = [
+    'catalogue sandy juice',
+    'jus naturels Cameroun',
+    'pressage a froid',
+    'pipeline logistique',
+    props.categoryContext?.name,
+    props.categoryContext?.slug
+  ]
+
+  ;(props.categories ?? []).forEach((category) => keywords.push(category?.name))
+  juices.value.slice(0, 6).forEach((juice) => {
+    keywords.push(juice?.name)
+    keywords.push(juice?.tagline)
+  })
+
+  const seen = new Set()
+  const unique = []
+
+  keywords.forEach((keyword) => {
+    const value = (keyword || '').toString().trim()
+    if (!value) return
+    const normalized = value.toLowerCase()
+    if (seen.has(normalized)) return
+    seen.add(normalized)
+    unique.push(value)
+  })
+
+  return unique.join(', ')
+})
+
+const heroVisual = computed(() => {
+  const candidate = heroJuice.value ?? juices.value[0] ?? null
+  if (!candidate) {
+    return '/images/catalog/placeholder.jpg'
+  }
+  return coverImage(candidate)
+})
+
+const seoImage = computed(() => resolveAssetUrl(heroVisual.value))
+
+const catalogueStructuredData = computed(() => {
+  const items = juices.value.slice(0, 12).map((juice, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: route('products.show', juice.slug),
+    name: juice.name,
+    description: juice.tagline,
+    image: resolveAssetUrl(coverImage(juice))
+  }))
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: catalogueTitle.value,
+    description: seoDescription.value,
+    numberOfItems: juices.value.length,
+    itemListElement: items
+  }
+})
+
 const heroMetrics = computed(() => [
   { label: 'Cures actives', value: `${props.metrics?.recipes || juices.value.length}+` },
   { label: 'Categories', value: props.metrics?.categories || props.categories.length },
@@ -622,7 +726,7 @@ const accentClass = (accent, type) => {
   return variant[type] ?? accentVariants.default[type]
 }
 
-const coverImage = (item) => {
+function coverImage(item) {
   if (!item) return '/images/catalog/placeholder.jpg'
   return item.images?.[0]?.url || item.image || '/images/catalog/placeholder.jpg'
 }

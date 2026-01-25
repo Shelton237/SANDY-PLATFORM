@@ -1,35 +1,57 @@
 <!DOCTYPE html>
-<html lang="fr" class="{{ ($appearance ?? 'system') == 'dark' ? 'dark' : '' }}">
+@php
+    $appName = config('app.name', 'Sandy Juice');
+    $seoConfig = config('seo', []);
+    $siteName = $seoConfig['site_name'] ?? $appName;
+    $seoDescription = $seoConfig['description']
+        ?? 'Sandy Juice orchestre l\'approvisionnement local, la production a froid et la livraison express de jus naturels au Cameroun.';
+    $seoKeywords = $seoConfig['keywords']
+        ?? 'sandy juice,jus naturels cameroun,pressage a froid,livraison yaounde,pipeline production';
+    $rawImage = $seoConfig['image'] ?? 'images/logo.png';
+    $seoImage = filter_var($rawImage, FILTER_VALIDATE_URL) ? $rawImage : asset(ltrim($rawImage, '/'));
+    $configuredBaseUrl = !empty($seoConfig['base_url']) ? rtrim($seoConfig['base_url'], '/') : null;
+    $pathInfo = '/' . ltrim(request()->getPathInfo(), '/');
+    $canonicalUrl = $configuredBaseUrl
+        ? $configuredBaseUrl . ($pathInfo === '/' ? '' : $pathInfo)
+        : url()->current();
+    $htmlLocale = str_replace('_', '-', app()->getLocale() ?? 'fr');
+    $localeParts = explode('-', $htmlLocale);
+    $ogLocale = count($localeParts) > 1
+        ? strtolower($localeParts[0]) . '_' . strtoupper($localeParts[1])
+        : strtolower($localeParts[0] ?? $htmlLocale);
+    $pageTitle = $siteName . ' - Jus naturels & pipeline logistique';
+@endphp
+<html lang="{{ $htmlLocale }}" class="{{ ($appearance ?? 'system') == 'dark' ? 'dark' : '' }}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @php($appName = config('app.name', 'Sandy Juice'))
-
-    <title>{{ $appName }} - Jus naturels & pipeline logistique</title>
-    <meta name="application-name" content="{{ $appName }}">
-    <meta name="description" content="Sandy Juice orchestre l'approvisionnement local, la production a froid et la livraison express de jus naturels au Cameroun.">
-    <meta name="keywords" content="Sandy Juice, jus naturels Cameroun, pressage a froid, livraison Yaounde, pipeline production">
-    <meta name="author" content="{{ $appName }}">
+    <title>{{ $pageTitle }}</title>
+    <meta name="application-name" content="{{ $siteName }}">
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="keywords" content="{{ $seoKeywords }}">
+    <meta name="author" content="{{ $siteName }}">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#16a34a">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{{ $appName }} - Jus naturels & cold chain">
-    <meta property="og:description" content="Commandez nos cures presses a froid, suivez vos lots et recevez-les en moins de 2h.">
-    <meta property="og:image" content="{{ asset('images/logo.png') }}">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:image" content="{{ $seoImage }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:locale" content="{{ $ogLocale }}">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="{{ $appName }} - Pipeline complet du jus naturel">
-    <meta property="twitter:description" content="Approvisionnement, production, vente et livraison coordonnes depuis Yaounde.">
-    <meta property="twitter:image" content="{{ asset('images/logo.png') }}">
+    <meta property="twitter:title" content="{{ $pageTitle }}">
+    <meta property="twitter:description" content="{{ $seoDescription }}">
+    <meta property="twitter:image" content="{{ $seoImage }}">
 
     <!-- Canonical -->
-    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
     <link rel="manifest" href="{{ asset('manifest.json') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon.png') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
