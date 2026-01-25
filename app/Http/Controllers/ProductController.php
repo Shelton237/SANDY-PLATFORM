@@ -84,6 +84,8 @@ class ProductController extends Controller
             'related' => $related,
             'nutritionFocus' => config('juices.nutrition_focus', []),
             'moments' => config('juices.moments', [])
+        ])->withViewData([
+            'seoOverrides' => $this->buildProductSeo($product, $category),
         ]);
     }
 
@@ -97,7 +99,7 @@ class ProductController extends Controller
             'averageCalories' => (int) round($catalog->avg('calories')),
         ];
 
-        return Inertia::render('Products/Catalogue', [
+        $response = Inertia::render('Products/Catalogue', [
             'juices' => $juices->values()->all(),
             'categories' => $categories->values()->all(),
             'collections' => $this->formatCollections($catalog),
@@ -110,6 +112,10 @@ class ProductController extends Controller
             'metrics' => $metrics,
             'moments' => config('juices.moments', []),
             'sortOptions' => $this->sortOptions(),
+        ]);
+
+        return $response->withViewData([
+            'seoOverrides' => $this->buildCatalogueSeo($categoryContext, $categories, $juices),
         ]);
     }
 
@@ -443,5 +449,89 @@ class ProductController extends Controller
                 ];
             })->values()->all()
         );
+    }
+
+    private function buildProductSeo(array $product, ?array $category): array
+    {
+        $siteName = config('seo.site_name', config('app.name', 'Sandy Juice'));
+        $description = $product['description'] ?? $product['tagline'] ?? config('seo.description');
+        $keywords = collect([
+            $product['name'] ?? null,
+            $category['name'] ?? null,
+            $product['tagline'] ?? null,
+        ])
+            ->merge(collect($product['ingredients'] ?? [])->pluck('name'))
+            ->filter()
+            ->map(fn ($keyword) => trim((string) $keyword))
+            ->filter()
+            ->unique()
+            ->implode(', ');
+
+        $image = $product['images'][0]['url']
+            ?? $product['image']
+            ?? config('seo.image');
+
+        return [
+            'title' => trim(($product['name'] ?? $siteName) . ' | ' . $siteName),
+            'description' => $description,
+            'keywords' => $keywords,
+            'image' => $this->absoluteAssetUrl($image),
+            'canonical' => route('products.show', $product['slug']),
+        ];
+    }
+
+    private function buildCatalogueSeo(?array $categoryContext, Collection $categories, Collection $juices): array
+    {
+        $siteName = config('seo.site_name', config('app.name', 'Sandy Juice'));
+        $titlePrefix = $categoryContext['name'] ?? 'Catalogue';
+        $description = $categoryContext['tagline']
+            ?? $categoryContext['description']
+            ?? sprintf(
+                'Découvrez %d recettes pressées à froid signées %s.',
+                max($juices->count(), 1),
+                $siteName
+            );
+
+        $keywords = collect([
+            'catalogue sandy juice',
+            'jus naturels Cameroun',
+            $categoryContext['name'] ?? null,
+            $categoryContext['slug'] ?? null,
+        ])
+            ->merge($categories->pluck('name')->take(6))
+            ->merge($juices->pluck('name')->take(6))
+            ->filter()
+            ->map(fn ($keyword) => trim((string) $keyword))
+            ->filter()
+            ->unique()
+            ->implode(', ');
+
+        $firstJuice = $juices->first();
+        $image = data_get($firstJuice, 'images.0.url')
+            ?? data_get($firstJuice, 'image')
+            ?? config('seo.image');
+
+        return [
+            'title' => sprintf('%s | %s', $titlePrefix, $siteName),
+            'description' => $description,
+            'keywords' => $keywords,
+            'image' => $this->absoluteAssetUrl($image),
+            'canonical' => $categoryContext
+                ? route('products.category', ['category' => $categoryContext['slug']])
+                : route('products'),
+        ];
+    }
+
+    private function absoluteAssetUrl(?string $path): string
+    {
+        $path = $path ?: config('seo.image', 'images/logo.png');
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        $normalized = ltrim($path, '/');
+
+        return url($normalized);
     }
 }

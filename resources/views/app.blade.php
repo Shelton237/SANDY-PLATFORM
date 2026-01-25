@@ -2,24 +2,37 @@
 @php
     $appName = config('app.name', 'Sandy Juice');
     $seoConfig = config('seo', []);
-    $siteName = $seoConfig['site_name'] ?? $appName;
-    $seoDescription = $seoConfig['description']
+    $seoOverrides = $seoOverrides ?? [];
+    $siteName = $seoOverrides['site_name']
+        ?? $seoConfig['site_name']
+        ?? $appName;
+    $defaultDescription = $seoConfig['description']
         ?? 'Sandy Juice orchestre l\'approvisionnement local, la production a froid et la livraison express de jus naturels au Cameroun.';
-    $seoKeywords = $seoConfig['keywords']
+    $seoDescription = $seoOverrides['description']
+        ?? $defaultDescription;
+    $defaultKeywords = $seoConfig['keywords']
         ?? 'sandy juice,jus naturels cameroun,pressage a froid,livraison yaounde,pipeline production';
-    $rawImage = $seoConfig['image'] ?? 'images/logo.png';
+    $seoKeywords = $seoOverrides['keywords']
+        ?? $defaultKeywords;
+    $rawImage = $seoOverrides['image']
+        ?? $seoConfig['image']
+        ?? 'images/logo.png';
     $seoImage = filter_var($rawImage, FILTER_VALIDATE_URL) ? $rawImage : asset(ltrim($rawImage, '/'));
     $configuredBaseUrl = !empty($seoConfig['base_url']) ? rtrim($seoConfig['base_url'], '/') : null;
     $pathInfo = '/' . ltrim(request()->getPathInfo(), '/');
-    $canonicalUrl = $configuredBaseUrl
-        ? $configuredBaseUrl . ($pathInfo === '/' ? '' : $pathInfo)
-        : url()->current();
+    $canonicalUrl = $seoOverrides['canonical']
+        ?? (
+            $configuredBaseUrl
+                ? $configuredBaseUrl . ($pathInfo === '/' ? '' : $pathInfo)
+                : url()->current()
+        );
     $htmlLocale = str_replace('_', '-', app()->getLocale() ?? 'fr');
     $localeParts = explode('-', $htmlLocale);
     $ogLocale = count($localeParts) > 1
         ? strtolower($localeParts[0]) . '_' . strtoupper($localeParts[1])
         : strtolower($localeParts[0] ?? $htmlLocale);
-    $pageTitle = $siteName . ' - Jus naturels & pipeline logistique';
+    $pageTitle = $seoOverrides['title']
+        ?? ($siteName . ' - Jus naturels & pipeline logistique');
 @endphp
 <html lang="{{ $htmlLocale }}" class="{{ ($appearance ?? 'system') == 'dark' ? 'dark' : '' }}">
   <head>
