@@ -96,7 +96,7 @@
                 <div class="flex flex-wrap justify-between gap-3 text-sm text-slate-500">
                   <p class="flex items-center gap-2">
                     <i class="bi bi-lightning-charge text-[#f49926]"></i>
-                    Livraison sous 2h à Libreville
+                    Livraison sous 2h à Yaoundé
                   </p>
                   <button
                     type="button"

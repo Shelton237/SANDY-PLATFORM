@@ -209,7 +209,7 @@ class OrderController extends Controller
             [
                 'value' => 'delivery',
                 'label' => 'Livraison à domicile',
-                'description' => 'Disponible à Libreville et Akanda en moins de 2h.',
+                'description' => 'Disponible à Yaoundé en moins de 2h.',
                 'fee' => (float) config('shop.delivery_fee', 0),
                 'free_from' => (float) config('shop.free_delivery_threshold', 0),
             ],

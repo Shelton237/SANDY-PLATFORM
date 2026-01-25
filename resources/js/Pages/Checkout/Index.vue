@@ -191,7 +191,7 @@ const form = useForm({
   customer_phone: props.prefill.customer_phone || '',
   address_line1: '',
   address_line2: '',
-  city: 'Libreville',
+  city: 'Yaounde',
   notes: '',
   delivery_type: 'delivery',
   payment_method: Object.keys(paymentOptions.value)[0] || 'cod',
