@@ -37,6 +37,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products/category/{category}', [ProductController::class, 'byCategory'])->name('products.category');
 Route::get('/products/suggestions', [ProductController::class, 'suggestions'])->name('products.suggestions');
+Route::get('/products/{product:slug}/reviews/new', [ProductReviewController::class, 'create'])->name('products.reviews.create');
 Route::post('/products/{product:slug}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 
