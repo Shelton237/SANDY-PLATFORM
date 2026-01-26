@@ -191,7 +191,7 @@
             <p class="text-xs uppercase tracking-[0.3em] text-orange-500">Avis clients</p>
             <h2 class="text-3xl font-semibold text-[#254a29] mt-2">Vos retours d'expérience</h2>
             <p class="text-slate-500 mt-2 max-w-2xl">
-              Partagez comment ce jus vous accompagne au quotidien. Chaque avis aide la communautÃ© Ã  choisir le mix parfait.
+              Partagez comment ce jus vous accompagne au quotidien. Chaque avis aide la communauté à choisir le mix parfait.
             </p>
           </div>
         </div>
@@ -209,7 +209,7 @@
                     </p>
                   </div>
                   <p class="text-sm text-slate-500 mt-1">
-                    {{ reviewStats.count }} {{ reviewStats.count > 1 ? 'avis partagÃ©s' : 'avis' }}
+                    {{ reviewStats.count }} {{ reviewStats.count > 1 ? 'avis partagés' : 'avis' }}
                   </p>
                 </div>
                 <div class="flex gap-1 text-2xl text-[#f49926]">
@@ -227,7 +227,7 @@
                   :key="item.rating"
                   class="flex items-center gap-3"
                 >
-                  <span class="text-sm font-semibold text-[#254a29] w-10">{{ item.rating }} Ã©toile{{ item.rating > 1 ? 's' : '' }}</span>
+                  <span class="text-sm font-semibold text-[#254a29] w-10">{{ item.rating }} étoile{{ item.rating > 1 ? 's' : '' }}</span>
                   <div class="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
                     <div
                       class="h-2 rounded-full bg-[#f49926]"
@@ -264,13 +264,13 @@
               </article>
             </div>
             <div v-else class="rounded-3xl border border-dashed border-slate-200 bg-white/70 p-6 text-sm text-slate-500">
-              Aucun avis pour l'instant. Soyez le premier Ã  partager votre expÃ©rience gustative !
+              Aucun avis pour l'instant. Soyez le premier à partager votre expérience gustative !
             </div>
           </div>
 
           <article class="p-6 rounded-3xl border border-slate-100 bg-white shadow-lg">
             <h3 class="text-xl font-semibold text-[#254a29]">Laisser un avis</h3>
-            <p class="text-sm text-slate-500 mt-1">Dites-nous comment vous consommez ce jus, votre moment prÃ©fÃ©rÃ© ou une astuce mixologie.</p>
+            <p class="text-sm text-slate-500 mt-1">Dites-nous comment vous consommez ce jus, votre moment préféré ou une astuce mixologie.</p>
 
             <div
               v-if="flash.success"
@@ -292,7 +292,7 @@
                     @click="reviewForm.rating = note"
                   >
                     <i :class="['bi', note <= reviewForm.rating ? 'bi-star-fill' : 'bi-star']"></i>
-                    <span class="sr-only">Choisir {{ note }} {{ note > 1 ? 'Ã©toiles' : 'Ã©toile' }}</span>
+                    <span class="sr-only">Choisir {{ note }} {{ note > 1 ? 'étoiles' : 'étoile' }}</span>
                   </button>
                 </div>
                 <p v-if="reviewForm.errors.rating" class="text-xs text-rose-500 mt-1">{{ reviewForm.errors.rating }}</p>
@@ -304,14 +304,14 @@
                   v-model="reviewForm.comment"
                   rows="4"
                   :class="textareaClasses"
-                  placeholder="Texture, goÃ»t, occasion de consommation..."
+                  placeholder="Texture, goût, occasion de consommation..."
                 ></textarea>
                 <p v-if="reviewForm.errors.comment" class="text-xs text-rose-500 mt-1">{{ reviewForm.errors.comment }}</p>
               </div>
 
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label class="text-xs uppercase text-slate-500">PrÃ©nom / Nom</label>
+                  <label class="text-xs uppercase text-slate-500">Prénom / Nom</label>
                   <input v-model="reviewForm.author_name" type="text" :class="inputClasses" placeholder="Ex : Mireille S." />
                   <p v-if="reviewForm.errors.author_name" class="text-xs text-rose-500 mt-1">{{ reviewForm.errors.author_name }}</p>
                 </div>
@@ -328,7 +328,7 @@
                 :disabled="reviewForm.processing"
               >
                 <i class="bi bi-chat-heart mr-2"></i>
-                Envoyer mon expÃ©rience
+                Envoyer mon expérience
               </button>
             </form>
           </article>
