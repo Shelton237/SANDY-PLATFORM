@@ -26,6 +26,8 @@
                 ? $configuredBaseUrl . ($pathInfo === '/' ? '' : $pathInfo)
                 : url()->current()
         );
+    $seoType = $seoOverrides['type']
+        ?? 'website';
     $htmlLocale = str_replace('_', '-', app()->getLocale() ?? 'fr');
     $localeParts = explode('-', $htmlLocale);
     $ogLocale = count($localeParts) > 1
@@ -49,7 +51,7 @@
     <meta name="theme-color" content="#16a34a">
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $seoType }}">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $seoDescription }}">
     <meta property="og:image" content="{{ $seoImage }}">

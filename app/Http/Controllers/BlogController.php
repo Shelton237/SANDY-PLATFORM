@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -80,9 +81,28 @@ class BlogController extends Controller
             ->take(3)
             ->get(['id', 'title', 'slug', 'cover_image', 'excerpt', 'published_at']);
 
+        $descriptionSource = $post->excerpt ?? $post->body ?? '';
+        $seoDescription = Str::of(strip_tags($descriptionSource))
+            ->squish()
+            ->limit(180, '...')
+            ->value() ?: config('seo.description');
+
+        $seoKeywords = collect(Arr::get($post->metadata, 'tags', []))
+            ->filter()
+            ->implode(', ');
+
         return Inertia::render('Blog/Show', [
             'post' => $post,
             'related' => $related,
+        ])->withViewData([
+            'seoOverrides' => [
+                'title' => $post->title,
+                'description' => $seoDescription,
+                'keywords' => $seoKeywords,
+                'image' => $post->cover_image ?? config('seo.image'),
+                'canonical' => route('blog.show', $post->slug),
+                'type' => 'article',
+            ],
         ]);
     }
 }
