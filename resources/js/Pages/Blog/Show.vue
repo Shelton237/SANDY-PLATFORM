@@ -1,6 +1,14 @@
 <template>
   <AppLayout>
-    <Head :title="post.title" />
+    <SeoHead
+      :title="post.title"
+      :description="seoDescription"
+      :keywords="seoKeywords"
+      :image="seoImage"
+      :url="canonicalUrl"
+      type="article"
+      :structured-data="articleSchema"
+    />
 
     <article class="bg-white">
       <div class="relative bg-slate-900">
@@ -108,10 +116,11 @@
 </template>
 
 <script setup>
-import { Head, Link } from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3'
 import { computed } from 'vue'
 import DOMPurify from 'dompurify'
 import AppLayout from '@/Layouts/AppLayout.vue'
+import SeoHead from '@/Components/Common/SeoHead.vue'
 
 const props = defineProps({
   post: {
@@ -128,6 +137,7 @@ const categoryLabel = computed(() => props.post.metadata?.category ?? 'Blog Sand
 const tags = computed(() => props.post.metadata?.tags ?? [])
 const sanitizeHtml = (value) => (value ? DOMPurify.sanitize(value) : '')
 const sanitizedExcerpt = computed(() => sanitizeHtml(props.post.excerpt))
+const excerptText = computed(() => sanitizedExcerpt.value.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim())
 
 const bodyContent = computed(() => {
   if (!props.post.body) {
@@ -166,4 +176,33 @@ const formatDate = (value) => {
     year: 'numeric'
   })
 }
+
+const seoImage = computed(() => props.post.cover_image || '/images/placeholder-blog.jpg')
+const canonicalUrl = computed(() => route('blog.show', props.post.slug))
+const seoDescription = computed(() => excerptText.value || props.post.metadata?.summary || props.post.title)
+const seoKeywords = computed(() => (props.post.metadata?.tags || []).join(', '))
+const articleSchema = computed(() => {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: props.post.title,
+    image: [seoImage.value],
+    datePublished: props.post.published_at,
+    dateModified: props.post.updated_at || props.post.published_at,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl.value
+    },
+    description: seoDescription.value
+  }
+
+  if (props.post.author?.name) {
+    schema.author = {
+      '@type': 'Person',
+      name: props.post.author.name
+    }
+  }
+
+  return schema
+})
 </script>
