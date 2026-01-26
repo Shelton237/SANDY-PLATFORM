@@ -194,6 +194,23 @@
               Partagez comment ce jus vous accompagne au quotidien. Chaque avis aide la communauté à choisir le mix parfait.
             </p>
           </div>
+          <div class="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+            <Link
+              :href="reviewInviteLink"
+              class="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-[#254a29] hover:border-[#f49926] hover:text-[#f49926] transition"
+            >
+              <i class="bi bi-chat-quote"></i>
+              Formulaire public
+            </Link>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#254a29] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1f3d22] transition"
+              @click="copyInviteLink"
+            >
+              <i class="bi bi-link-45deg"></i>
+              {{ inviteCopyLabel }}
+            </button>
+          </div>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-10">
@@ -370,7 +387,7 @@
 
 <script setup>
 import { Link, useForm, usePage } from '@inertiajs/vue3'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onBeforeUnmount } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import useCart from '@/Composables/useCart'
 import SeoHead from '@/Components/Common/SeoHead.vue'
@@ -622,4 +639,32 @@ const submitReview = () => {
     }
   })
 }
+
+const reviewInviteLink = computed(() => route('products.reviews.create', product.slug))
+const inviteCopyLabel = ref('Copier le lien')
+let inviteCopyTimeout = null
+
+const copyInviteLink = async () => {
+  try {
+    if (typeof navigator === 'undefined' || !navigator.clipboard) {
+      throw new Error('Clipboard API not available')
+    }
+    await navigator.clipboard.writeText(reviewInviteLink.value)
+    inviteCopyLabel.value = 'Lien copié !'
+  } catch (error) {
+    console.error(error)
+    inviteCopyLabel.value = 'Impossible de copier'
+  } finally {
+    clearTimeout(inviteCopyTimeout)
+    inviteCopyTimeout = setTimeout(() => {
+      inviteCopyLabel.value = 'Copier le lien'
+    }, 2500)
+  }
+}
+
+onBeforeUnmount(() => {
+  if (inviteCopyTimeout) {
+    clearTimeout(inviteCopyTimeout)
+  }
+})
 </script>
