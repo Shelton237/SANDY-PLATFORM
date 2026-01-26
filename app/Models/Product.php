@@ -87,6 +87,9 @@ class Product extends Model
 
         static::saved(fn () => self::flushCatalogCache());
         static::deleted(fn () => self::flushCatalogCache());
+        static::deleting(function (self $product) {
+            $product->reviews()->delete();
+        });
     }
 
     public static function flushCatalogCache(): void

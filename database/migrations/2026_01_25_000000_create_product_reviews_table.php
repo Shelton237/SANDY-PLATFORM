@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('product_reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->index();
             $table->string('author_name');
             $table->string('author_email')->nullable();
             $table->unsignedTinyInteger('rating');
@@ -22,6 +22,15 @@ return new class extends Migration
             $table->json('metadata')->nullable();
             $table->timestamps();
         });
+
+        if (Schema::hasTable('products')) {
+            Schema::table('product_reviews', function (Blueprint $table) {
+                $table->foreign('product_id')
+                    ->references('id')
+                    ->on('products')
+                    ->cascadeOnDelete();
+            });
+        }
     }
 
     /**
