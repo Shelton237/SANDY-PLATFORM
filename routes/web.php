@@ -8,6 +8,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductReviewController;
 use App\Models\Product;
 use App\Models\BlogPost;
 use App\Http\Controllers\Admin\DashboardController;
@@ -36,6 +37,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products/category/{category}', [ProductController::class, 'byCategory'])->name('products.category');
 Route::get('/products/suggestions', [ProductController::class, 'suggestions'])->name('products.suggestions');
+Route::post('/products/{product:slug}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
 Route::get('/products/{slug}', [ProductController::class, 'show'])->name('products.show');
 
 // Routes du panier

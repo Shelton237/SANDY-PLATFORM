@@ -184,6 +184,158 @@
       </div>
     </section>
 
+    <section class="bg-[#fef7ee]/60 border-y border-orange-50">
+      <div class="container mx-auto px-4 py-12 lg:py-16 space-y-10">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p class="text-xs uppercase tracking-[0.3em] text-orange-500">Avis clients</p>
+            <h2 class="text-3xl font-semibold text-[#254a29] mt-2">Vos retours d'expérience</h2>
+            <p class="text-slate-500 mt-2 max-w-2xl">
+              Partagez comment ce jus vous accompagne au quotidien. Chaque avis aide la communautÃ© Ã  choisir le mix parfait.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-10">
+          <div class="space-y-6">
+            <article class="p-6 rounded-3xl border border-slate-100 bg-white shadow-sm space-y-5">
+              <div class="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Note moyenne</p>
+                  <div class="flex items-baseline gap-2 mt-2">
+                    <p class="text-4xl font-semibold text-[#254a29]">
+                      {{ formattedAverageRating }}
+                      <span class="text-base text-slate-400">/ {{ maxRating }}</span>
+                    </p>
+                  </div>
+                  <p class="text-sm text-slate-500 mt-1">
+                    {{ reviewStats.count }} {{ reviewStats.count > 1 ? 'avis partagÃ©s' : 'avis' }}
+                  </p>
+                </div>
+                <div class="flex gap-1 text-2xl text-[#f49926]">
+                  <i
+                    v-for="(icon, index) in starIconsFor(reviewStats.average ?? 0)"
+                    :key="`summary-${index}`"
+                    :class="['bi', icon]"
+                  ></i>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <div
+                  v-for="item in reviewDistribution"
+                  :key="item.rating"
+                  class="flex items-center gap-3"
+                >
+                  <span class="text-sm font-semibold text-[#254a29] w-10">{{ item.rating }} Ã©toile{{ item.rating > 1 ? 's' : '' }}</span>
+                  <div class="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
+                    <div
+                      class="h-2 rounded-full bg-[#f49926]"
+                      :style="{ width: distributionWidth(item.total) }"
+                    ></div>
+                  </div>
+                  <span class="text-xs text-slate-500 w-8 text-right">{{ item.total }}</span>
+                </div>
+              </div>
+            </article>
+
+            <div v-if="reviewList.length" class="space-y-4">
+              <article
+                v-for="review in reviewList"
+                :key="review.id"
+                class="p-6 rounded-3xl border border-slate-100 bg-white shadow-sm"
+              >
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p class="text-base font-semibold text-[#254a29]">{{ review.author_name }}</p>
+                    <p class="text-xs text-slate-400">{{ formatReviewDate(review.created_at) }}</p>
+                  </div>
+                  <div class="flex gap-1 text-[#f49926] text-lg">
+                    <i
+                      v-for="(icon, index) in starIconsFor(review.rating)"
+                      :key="`review-${review.id}-${index}`"
+                      :class="['bi', icon]"
+                    ></i>
+                  </div>
+                </div>
+                <p class="mt-4 text-sm text-slate-600 leading-relaxed">
+                  {{ review.comment }}
+                </p>
+              </article>
+            </div>
+            <div v-else class="rounded-3xl border border-dashed border-slate-200 bg-white/70 p-6 text-sm text-slate-500">
+              Aucun avis pour l'instant. Soyez le premier Ã  partager votre expÃ©rience gustative !
+            </div>
+          </div>
+
+          <article class="p-6 rounded-3xl border border-slate-100 bg-white shadow-lg">
+            <h3 class="text-xl font-semibold text-[#254a29]">Laisser un avis</h3>
+            <p class="text-sm text-slate-500 mt-1">Dites-nous comment vous consommez ce jus, votre moment prÃ©fÃ©rÃ© ou une astuce mixologie.</p>
+
+            <div
+              v-if="flash.success"
+              class="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+            >
+              {{ flash.success }}
+            </div>
+
+            <form class="mt-5 space-y-4" @submit.prevent="submitReview">
+              <div>
+                <label class="text-xs uppercase text-slate-500">Votre note</label>
+                <div class="flex items-center gap-2 mt-2">
+                  <button
+                    v-for="note in maxRating"
+                    :key="note"
+                    type="button"
+                    class="text-2xl transition"
+                    :class="note <= reviewForm.rating ? 'text-[#f49926]' : 'text-slate-300'"
+                    @click="reviewForm.rating = note"
+                  >
+                    <i :class="['bi', note <= reviewForm.rating ? 'bi-star-fill' : 'bi-star']"></i>
+                    <span class="sr-only">Choisir {{ note }} {{ note > 1 ? 'Ã©toiles' : 'Ã©toile' }}</span>
+                  </button>
+                </div>
+                <p v-if="reviewForm.errors.rating" class="text-xs text-rose-500 mt-1">{{ reviewForm.errors.rating }}</p>
+              </div>
+
+              <div>
+                <label class="text-xs uppercase text-slate-500">Commentaire</label>
+                <textarea
+                  v-model="reviewForm.comment"
+                  rows="4"
+                  :class="textareaClasses"
+                  placeholder="Texture, goÃ»t, occasion de consommation..."
+                ></textarea>
+                <p v-if="reviewForm.errors.comment" class="text-xs text-rose-500 mt-1">{{ reviewForm.errors.comment }}</p>
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="text-xs uppercase text-slate-500">PrÃ©nom / Nom</label>
+                  <input v-model="reviewForm.author_name" type="text" :class="inputClasses" placeholder="Ex : Mireille S." />
+                  <p v-if="reviewForm.errors.author_name" class="text-xs text-rose-500 mt-1">{{ reviewForm.errors.author_name }}</p>
+                </div>
+                <div>
+                  <label class="text-xs uppercase text-slate-500">Email (optionnel)</label>
+                  <input v-model="reviewForm.author_email" type="email" :class="inputClasses" placeholder="Pour un suivi si besoin" />
+                  <p v-if="reviewForm.errors.author_email" class="text-xs text-rose-500 mt-1">{{ reviewForm.errors.author_email }}</p>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full inline-flex items-center justify-center rounded-2xl bg-[#f49926] px-4 py-3 font-semibold text-white hover:bg-[#f28700] transition disabled:opacity-50"
+                :disabled="reviewForm.processing"
+              >
+                <i class="bi bi-chat-heart mr-2"></i>
+                Envoyer mon expÃ©rience
+              </button>
+            </form>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section v-if="related.length" class="container mx-auto px-4 py-12 lg:py-16">
       <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
@@ -217,7 +369,7 @@
 </template>
 
 <script setup>
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, useForm, usePage } from '@inertiajs/vue3'
 import { computed, ref, watch } from 'vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import useCart from '@/Composables/useCart'
@@ -243,11 +395,24 @@ const props = defineProps({
   moments: {
     type: Array,
     default: () => []
+  },
+  reviews: {
+    type: Array,
+    default: () => []
+  },
+  reviewSummary: {
+    type: Object,
+    default: () => ({
+      count: 0,
+      average: null,
+      distribution: []
+    })
   }
 })
 
 const { product, category, related, nutritionFocus } = props
 const page = usePage()
+const flash = computed(() => page.props.flash ?? {})
 const siteName = computed(() => page.props.seo?.site_name || 'Sandy Juice')
 const defaultSeoDescription = computed(() => page.props.seo?.description || `${siteName.value} - Jus naturels`)
 const defaultSeoKeywords = computed(() => page.props.seo?.keywords || 'sandy juice,jus naturels')
@@ -368,5 +533,93 @@ const normalizeQuantity = () => {
 
 const addProductToCart = () => {
   addToCart(product.id, quantity.value)
+}
+
+const maxRating = 5
+const reviewForm = useForm({
+  author_name: '',
+  author_email: '',
+  rating: maxRating,
+  comment: ''
+})
+
+const reviewList = computed(() => props.reviews ?? [])
+const reviewStats = computed(() => {
+  const distribution = props.reviewSummary?.distribution ?? []
+
+  return {
+    count: props.reviewSummary?.count ?? 0,
+    average: typeof props.reviewSummary?.average === 'number' ? props.reviewSummary.average : null,
+    distribution: distribution.length
+      ? distribution
+      : Array.from({ length: maxRating }, (_, index) => ({
+          rating: maxRating - index,
+          total: 0
+        }))
+  }
+})
+
+const reviewDistribution = computed(() =>
+  [...reviewStats.value.distribution].sort((a, b) => b.rating - a.rating)
+)
+
+const formattedAverageRating = computed(() => {
+  if (reviewStats.value.average === null || Number.isNaN(reviewStats.value.average)) {
+    return '—'
+  }
+
+  return Number(reviewStats.value.average).toFixed(1)
+})
+
+const starIconsFor = (value) => {
+  const rating = Number(value ?? 0)
+
+  return Array.from({ length: maxRating }, (_, index) => {
+    const score = index + 1
+    if (rating >= score) {
+      return 'bi-star-fill'
+    }
+    if (rating >= score - 0.5) {
+      return 'bi-star-half'
+    }
+    return 'bi-star'
+  })
+}
+
+const distributionWidth = (total) => {
+  if (!reviewStats.value.count || !total) {
+    return '0%'
+  }
+
+  const percent = Math.round((total / reviewStats.value.count) * 100)
+  return `${percent}%`
+}
+
+const formatReviewDate = (value) => {
+  if (!value) {
+    return ''
+  }
+
+  const date = new Date(value)
+
+  return date.toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
+
+const inputClasses =
+  'w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-[#254a29] bg-white focus:border-[#f49926] focus:ring-2 focus:ring-[#f49926]/20 placeholder:text-slate-400'
+const textareaClasses = `${inputClasses} resize-none`
+
+const submitReview = () => {
+  reviewForm.post(route('products.reviews.store', product.slug), {
+    preserveScroll: true,
+    onSuccess: () => {
+      reviewForm.reset('comment')
+      reviewForm.rating = maxRating
+    }
+  })
 }
 </script>

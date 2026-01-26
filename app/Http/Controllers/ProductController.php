@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductReview;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -78,12 +79,58 @@ class ProductController extends Controller
             ->values()
             ->all();
 
+        $visibleReviewsQuery = ProductReview::query()
+            ->visible()
+            ->where('product_id', $product['id']);
+
+        $reviews = (clone $visibleReviewsQuery)
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(fn (ProductReview $review) => [
+                'id' => $review->id,
+                'author_name' => $review->author_name,
+                'rating' => $review->rating,
+                'comment' => $review->comment,
+                'created_at' => optional($review->created_at)->toIso8601String(),
+            ])
+            ->values()
+            ->all();
+
+        $reviewCount = (clone $visibleReviewsQuery)->count();
+        $averageRating = $reviewCount > 0
+            ? round((float) (clone $visibleReviewsQuery)->avg('rating'), 1)
+            : null;
+
+        $distribution = collect(range(1, 5))
+            ->mapWithKeys(fn ($rating) => [$rating => 0]);
+
+        (clone $visibleReviewsQuery)
+            ->selectRaw('rating, COUNT(*) as total')
+            ->groupBy('rating')
+            ->get()
+            ->each(function ($row) use (&$distribution) {
+                $rating = (int) $row->rating;
+                if ($distribution->has($rating)) {
+                    $distribution[$rating] = (int) $row->total;
+                }
+            });
+
         return Inertia::render('Products/Show', [
             'product' => $product,
             'category' => $category,
             'related' => $related,
             'nutritionFocus' => config('juices.nutrition_focus', []),
-            'moments' => config('juices.moments', [])
+            'moments' => config('juices.moments', []),
+            'reviews' => $reviews,
+            'reviewSummary' => [
+                'count' => $reviewCount,
+                'average' => $averageRating,
+                'distribution' => $distribution->map(fn ($total, $rating) => [
+                    'rating' => (int) $rating,
+                    'total' => (int) $total,
+                ])->values()->all(),
+            ],
         ])->withViewData([
             'seoOverrides' => $this->buildProductSeo($product, $category),
         ]);
@@ -226,6 +273,8 @@ class ProductController extends Controller
                     ->published()
                     ->with(['images' => fn ($query) => $query->orderBy('position')->orderBy('id')])
                     ->withCount('orderItems as orders_count')
+                    ->withCount('visibleReviews as reviews_count')
+                    ->withAvg('visibleReviews as rating_average', 'rating')
                     ->latest('created_at')
                     ->get()
                     ->map(fn (Product $product) => $this->transformProduct($product))
@@ -380,6 +429,10 @@ class ProductController extends Controller
             'metadata' => $product->metadata ?? [],
             'created_at' => $product->created_at,
             'popularity' => $product->orders_count ?? 0,
+            'reviews_count' => (int) ($product->reviews_count ?? 0),
+            'average_rating' => $product->rating_average
+                ? round((float) $product->rating_average, 1)
+                : null,
         ];
     }
 
