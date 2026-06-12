@@ -25,7 +25,12 @@ createInertiaApp({
         const splash = document.getElementById('app-splash');
         if (splash) {
             splash.classList.add('sj-hidden');
-            setTimeout(() => splash.remove(), 380);
+            setTimeout(() => {
+                splash.remove();
+                // Restore body to white after splash is gone
+                document.body.style.background = '';
+                document.documentElement.style.background = '';
+            }, 380);
         }
 
         return vueApp;

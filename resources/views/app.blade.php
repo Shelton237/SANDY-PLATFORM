@@ -90,8 +90,10 @@
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
+    {{-- Fond rouge dès le premier pixel — couvre tout flash avant le CSS bundle --}}
+    <style>html,body{background:#C41717}</style>
   </head>
-  <body class="font-sans antialiased pb-8">
+  <body class="font-sans antialiased pb-8" style="background:#C41717">
 
     <!-- ── Splash loader : visible jusqu'au montage de Vue ─────────────────── -->
     <div id="app-splash" aria-hidden="true">

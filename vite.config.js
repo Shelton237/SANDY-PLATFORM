@@ -67,7 +67,7 @@ export default defineConfig({
                         urlPattern: /^https:\/\/sandyjuice\.cm\//,
                         handler: 'NetworkFirst',
                         options: {
-                            cacheName: 'pages-cache',
+                            cacheName: 'pages-cache-v2',
                             expiration: { maxEntries: 20, maxAgeSeconds: 300 },
                         },
                     },
