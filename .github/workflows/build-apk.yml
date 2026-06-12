@@ -52,25 +52,13 @@ jobs:
         run: |
           BASE="https://sandyjuice.cm/pwa-icons"
 
-          # mdpi: 48x48  → use 72
-          curl -fsSL "$BASE/icon-72x72.png"   -o /tmp/icon-72.png
-          # hdpi: 72x72
-          curl -fsSL "$BASE/icon-72x72.png"   -o /tmp/icon-72.png
-          # xhdpi: 96x96
-          curl -fsSL "$BASE/icon-96x96.png"   -o /tmp/icon-96.png
-          # xxhdpi: 144x144
-          curl -fsSL "$BASE/icon-144x144.png" -o /tmp/icon-144.png
-          # xxxhdpi: 192x192
-          curl -fsSL "$BASE/icon-192x192.png" -o /tmp/icon-192.png
-
-          # Resize to exact mipmap pixel densities with ImageMagick
-          apt-get install -y imagemagick -q 2>/dev/null || true
-
-          convert /tmp/icon-72.png  -resize 48x48   twa/app/src/main/res/mipmap-mdpi/ic_launcher.png
-          convert /tmp/icon-72.png  -resize 72x72   twa/app/src/main/res/mipmap-hdpi/ic_launcher.png
-          convert /tmp/icon-96.png  -resize 96x96   twa/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-          convert /tmp/icon-144.png -resize 144x144 twa/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-          convert /tmp/icon-192.png -resize 192x192 twa/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          # Download directly at matching sizes — no ImageMagick needed
+          # mdpi=48 (use 72 as closest), hdpi=72, xhdpi=96, xxhdpi=144, xxxhdpi=192
+          curl -fsSL --retry 3 "$BASE/icon-72x72.png"   -o twa/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          curl -fsSL --retry 3 "$BASE/icon-72x72.png"   -o twa/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          curl -fsSL --retry 3 "$BASE/icon-96x96.png"   -o twa/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          curl -fsSL --retry 3 "$BASE/icon-144x144.png" -o twa/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          curl -fsSL --retry 3 "$BASE/icon-192x192.png" -o twa/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 
           echo "Icons ready:"
           ls -lh twa/app/src/main/res/mipmap-*/ic_launcher.png
