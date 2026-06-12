@@ -119,6 +119,17 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      # ─── Deploy APK to production server ────────────────────────────────────
+      - name: Deploy APK to server
+        run: |
+          apt-get install -y sshpass -q 2>/dev/null || true
+          sshpass -p 'tTW4vLpR3KY5Led7M3tu' scp \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=15 \
+            sandy-juice.apk \
+            root@38.242.223.70:/var/www/sandyjuice/public/downloads/sandy-juice.apk
+          echo "APK deployed to https://sandyjuice.cm/downloads/sandy-juice.apk"
+
       # ─── Print SHA-256 for assetlinks.json ───────────────────────────────────
       - name: Print certificate SHA-256 (for assetlinks.json)
         run: |
@@ -130,5 +141,5 @@ jobs:
             -alias sandyjuice \
             -storepass sandyjuice2024 2>/dev/null | grep "SHA256:"
           echo "========================================================"
-          echo "  Add this to: https://sandyjuice.cm/.well-known/assetlinks.json"
+          echo "  APK accessible at: https://sandyjuice.cm/downloads/sandy-juice.apk"
           echo "========================================================"

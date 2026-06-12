@@ -153,9 +153,19 @@
             </transition>
           </div>
           
+          <!-- Télécharger APK Android -->
+          <a
+            href="/downloads/sandy-juice.apk"
+            class="hidden md:flex items-center gap-2 bg-[#254a29] hover:bg-[#1e3e23] text-white font-semibold py-3 px-5 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg group/apk"
+            title="Télécharger l'app Android"
+          >
+            <i class="bi bi-android2 text-lg group-hover/apk:animate-pulse"></i>
+            <span class="hidden xl:inline text-sm">Installer</span>
+          </a>
+
           <!-- Bouton CTA amélioré -->
-          <Link 
-            :href="route('products')" 
+          <Link
+            :href="route('products')"
             class="hidden md:flex bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 items-center group/cta"
           >
             <i class="bi bi-lightning-charge-fill mr-2 group-hover/cta:animate-bounce"></i>
@@ -202,9 +212,23 @@
           <!-- Séparateur -->
           <div class="my-4 border-t border-[#f49926]/30"></div>
 
+          <!-- Télécharger APK Android (mobile) -->
+          <a
+            href="/downloads/sandy-juice.apk"
+            class="flex items-center py-3 px-4 text-white bg-[#254a29] hover:bg-[#1e3e23] rounded-xl transition-all duration-300 group/apk-mobile mb-2"
+            @click="mobileMenuOpen = false"
+          >
+            <i class="bi bi-android2 mr-3 text-lg text-[#4ade80]"></i>
+            <div>
+              <span class="font-semibold block text-sm">Installer l'app Android</span>
+              <span class="text-xs text-white/60">Télécharger le fichier APK</span>
+            </div>
+            <i class="bi bi-download ml-auto text-white/60 group-hover/apk-mobile:text-white transition-colors"></i>
+          </a>
+
           <!-- Bouton CTA mobile amélioré -->
-          <Link 
-            :href="route('products')" 
+          <Link
+            :href="route('products')"
             class="bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#f49926]/40 flex items-center justify-center group/mobile-cta"
             @click="mobileMenuOpen = false"
           >
