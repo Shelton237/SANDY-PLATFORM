@@ -52,8 +52,14 @@ jobs:
         run: |
           BASE="https://sandyjuice.cm/pwa-icons"
 
+          # Ensure mipmap dirs exist (git doesn't track empty dirs)
+          mkdir -p twa/app/src/main/res/mipmap-mdpi
+          mkdir -p twa/app/src/main/res/mipmap-hdpi
+          mkdir -p twa/app/src/main/res/mipmap-xhdpi
+          mkdir -p twa/app/src/main/res/mipmap-xxhdpi
+          mkdir -p twa/app/src/main/res/mipmap-xxxhdpi
+
           # Download directly at matching sizes — no ImageMagick needed
-          # mdpi=48 (use 72 as closest), hdpi=72, xhdpi=96, xxhdpi=144, xxxhdpi=192
           curl -fsSL --retry 3 "$BASE/icon-72x72.png"   -o twa/app/src/main/res/mipmap-mdpi/ic_launcher.png
           curl -fsSL --retry 3 "$BASE/icon-72x72.png"   -o twa/app/src/main/res/mipmap-hdpi/ic_launcher.png
           curl -fsSL --retry 3 "$BASE/icon-96x96.png"   -o twa/app/src/main/res/mipmap-xhdpi/ic_launcher.png

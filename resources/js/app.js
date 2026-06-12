@@ -16,13 +16,22 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
+        const vueApp = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
             .mount(el);
+
+        // Fade out splash loader once Vue has mounted
+        const splash = document.getElementById('app-splash');
+        if (splash) {
+            splash.classList.add('sj-hidden');
+            setTimeout(() => splash.remove(), 380);
+        }
+
+        return vueApp;
     },
     progress: {
-        color: '#4B5563',
+        color: '#f49926',
     },
 });
 

@@ -92,6 +92,43 @@
     @inertiaHead
   </head>
   <body class="font-sans antialiased pb-8">
+
+    <!-- ── Splash loader : visible jusqu'au montage de Vue ─────────────────── -->
+    <div id="app-splash" aria-hidden="true">
+      <img src="{{ asset('pwa-icons/icon-192x192.png') }}" alt="Sandy Juice">
+      <p>Sandy Juice</p>
+      <div class="sj-spinner"></div>
+    </div>
+    <style>
+      #app-splash {
+        position: fixed; inset: 0; z-index: 9999;
+        background: #254a29;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 16px;
+        transition: opacity .35s ease;
+      }
+      #app-splash img {
+        width: 96px; height: 96px;
+        border-radius: 22px;
+        box-shadow: 0 8px 32px rgba(0,0,0,.35);
+      }
+      #app-splash p {
+        color: #fff; font-family: sans-serif;
+        font-size: 1.25rem; font-weight: 700;
+        letter-spacing: .04em; margin: 0;
+      }
+      .sj-spinner {
+        width: 38px; height: 38px;
+        border: 4px solid rgba(255,255,255,.25);
+        border-top-color: #f49926;
+        border-radius: 50%;
+        animation: sj-spin .75s linear infinite;
+      }
+      @keyframes sj-spin { to { transform: rotate(360deg); } }
+      #app-splash.sj-hidden { opacity: 0; pointer-events: none; }
+    </style>
+    <!-- ────────────────────────────────────────────────────────────────────── -->
+
     @inertia
     <noscript>
       <div style="text-align: center; padding: 2rem; background: #f8f9fa;">

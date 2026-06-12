@@ -31,7 +31,7 @@ export default defineConfig({
                 short_name: 'Sandy Juice',
                 description: 'Jus naturels pressés à froid — commandez en ligne',
                 theme_color: '#254a29',
-                background_color: '#ffffff',
+                background_color: '#254a29',
                 display: 'standalone',
                 orientation: 'portrait',
                 scope: '/',
