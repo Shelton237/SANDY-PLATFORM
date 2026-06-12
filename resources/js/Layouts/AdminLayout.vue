@@ -106,17 +106,9 @@ const props = defineProps({
 
 const navigation = [
   { label: 'Dashboard', route: 'admin.dashboard', routePrefix: 'admin/dashboard', icon: 'bi bi-speedometer2' },
-  { label: 'Approvisionnement', route: 'admin.supply', routePrefix: 'admin/supply', icon: 'bi bi-box-seam' },
-  { label: 'Stockage', route: 'admin.inventory', routePrefix: 'admin/inventory', icon: 'bi bi-archive' },
-  { label: 'Production', route: 'admin.production', routePrefix: 'admin/production', icon: 'bi bi-bezier' },
-  { label: 'Comptabilité', route: 'admin.finance', routePrefix: 'admin/finance', icon: 'bi bi-cash-coin' },
   { label: 'Produits', route: 'admin.products.index', routePrefix: 'admin/products', icon: 'bi bi-cup-straw' },
   { label: 'Catégories', route: 'admin.product-categories.index', routePrefix: 'admin/product-categories', icon: 'bi bi-tags' },
-  { label: 'Blog', route: 'admin.blog-posts.index', routePrefix: 'admin/blog-posts', icon: 'bi bi-journal-text' },
   { label: 'Commandes', route: 'admin.orders.index', routePrefix: 'admin/orders', icon: 'bi bi-receipt' },
-  { label: 'Livraisons', route: 'admin.deliveries.index', routePrefix: 'admin/deliveries', icon: 'bi bi-truck' },
-  { label: 'Messages Contact', route: 'admin.contact-messages.index', routePrefix: 'admin/contact-messages', icon: 'bi bi-envelope' },
-  { label: 'Accueil', route: 'admin.home-content.edit', routePrefix: 'admin/experience/home', icon: 'bi bi-display' },
 ]
 
 const page = usePage()

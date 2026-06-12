@@ -82,38 +82,6 @@
             </transition>
           </div>
 
-          <Link 
-            :href="route('about')" 
-            class="px-4 py-2.5 text-gray-700 hover:text-[#254a29] font-medium rounded-xl transition-all duration-300 group/nav-item"
-            :class="{ 'text-[#254a29] bg-[#f49926]/10': $page.url === route('about') }"
-          >
-            <span class="relative">
-              Notre Histoire
-              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#f49926] transition-all duration-300 group-hover/nav-item:w-full"></span>
-            </span>
-          </Link>
-
-          <Link 
-            :href="route('blog')" 
-            class="px-4 py-2.5 text-gray-700 hover:text-[#254a29] font-medium rounded-xl transition-all duration-300 group/nav-item"
-            :class="{ 'text-[#254a29] bg-[#f49926]/10': $page.url === route('blog') }"
-          >
-            <span class="relative">
-              Blog
-              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#f49926] transition-all duration-300 group-hover/nav-item:w-full"></span>
-            </span>
-          </Link>
-
-          <Link 
-            :href="route('contact')" 
-            class="px-4 py-2.5 text-gray-700 hover:text-[#254a29] font-medium rounded-xl transition-all duration-300 group/nav-item"
-            :class="{ 'text-[#254a29] bg-[#f49926]/10': $page.url === route('contact') }"
-          >
-            <span class="relative">
-              Contact
-              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#f49926] transition-all duration-300 group-hover/nav-item:w-full"></span>
-            </span>
-          </Link>
         </div>
 
         <!-- CTA et Panier amélioré -->
@@ -160,7 +128,7 @@
                     <p class="text-sm font-medium text-[#254a29]">Bonjour, {{ $page.props.auth.user.name }}</p>
                     <p class="text-xs text-gray-500">{{ $page.props.auth.user.email }}</p>
                   </div>
-                  <Link :href="route('account.profile')" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:text-[#254a29] hover:bg-[#fbe6c8] transition-colors">
+                  <Link :href="route('profile.edit')" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:text-[#254a29] hover:bg-[#fbe6c8] transition-colors">
                     <i class="bi bi-person mr-3 text-[#254a29]"></i>Mon Compte
                   </Link>
                   <Link :href="route('account.orders')" class="flex items-center px-4 py-3 text-sm text-gray-700 hover:text-[#254a29] hover:bg-[#fbe6c8] transition-colors">
@@ -279,9 +247,7 @@ const productCategories = computed(() => {
 const mobileMenuItems = computed(() => [
   { name: 'Accueil', href: route('home'), icon: 'bi bi-house' },
   { name: 'Nos Produits', href: route('products'), icon: 'bi bi-grid' },
-  { name: 'Notre Histoire', href: route('about'), icon: 'bi bi-info-circle' },
-  { name: 'Blog', href: route('blog'), icon: 'bi bi-journal' },
-  { name: 'Contact', href: route('contact'), icon: 'bi bi-envelope' }
+  { name: 'Mon Panier', href: route('cart'), icon: 'bi bi-cart3' },
 ])
 
 // Compteur du panier
