@@ -375,27 +375,28 @@
       </div>
     </section>
 
-    <!-- ── Actions ───────────────────────────────────────────────────────── -->
-    <div class="flex items-center justify-between gap-3 py-2">
+    <!-- ── Barre d'actions sticky ──────────────────────────────────────── -->
+    <div class="sticky bottom-0 z-30 -mx-1 bg-white/95 backdrop-blur border-t border-slate-200 px-4 py-3 flex items-center justify-between gap-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
       <Link
         :href="route('admin.products.index')"
         class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition"
       >
         <i class="bi bi-arrow-left"></i>
-        Retour au catalogue
+        <span class="hidden sm:inline">Retour au catalogue</span>
       </Link>
-      <div class="flex gap-3">
+      <div class="flex gap-2">
         <button
           type="button"
-          class="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:border-slate-300 transition"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:border-slate-300 transition"
           :disabled="form.processing"
           @click="saveDraft"
         >
-          Enregistrer brouillon
+          <i class="bi bi-save"></i>
+          <span class="hidden sm:inline">Brouillon</span>
         </button>
         <button
           type="submit"
-          class="inline-flex items-center gap-2 rounded-xl bg-[#E85A14] hover:bg-[#c44010] text-white px-6 py-2.5 text-sm font-semibold shadow-sm transition disabled:opacity-60"
+          class="inline-flex items-center gap-2 rounded-xl bg-[#E85A14] hover:bg-[#c44010] text-white px-5 py-2.5 text-sm font-semibold shadow-sm transition disabled:opacity-60"
           :disabled="form.processing"
         >
           <i v-if="form.processing" class="bi bi-arrow-repeat animate-spin"></i>
