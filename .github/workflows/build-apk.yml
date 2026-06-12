@@ -1,0 +1,130 @@
+name: Build Android APK (TWA)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-apk.yml'
+      - 'twa/**'
+
+jobs:
+  build-apk:
+    name: Build Sandy Juice APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ─── Java 17 ────────────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # ─── Node 22 ────────────────────────────────────────────────────────────
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # ─── Android SDK command-line tools ─────────────────────────────────────
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools & platform
+        run: |
+          yes | sdkmanager --licenses
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      # ─── Bubblewrap CLI ──────────────────────────────────────────────────────
+      - name: Install bubblewrap
+        run: npm install -g @bubblewrap/cli@latest
+
+      # ─── Generate keystore (auto, no interaction) ───────────────────────────
+      - name: Generate signing keystore
+        run: |
+          keytool -genkeypair \
+            -v \
+            -keystore sandyjuice.keystore \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -alias sandyjuice \
+            -dname "CN=Sandy Juice, OU=App, O=SandyJuice, L=Yaounde, ST=Centre, C=CM" \
+            -storepass sandyjuice2024 \
+            -keypass sandyjuice2024
+
+      # ─── Bubblewrap init (TWA from live PWA manifest) ────────────────────────
+      - name: Initialize TWA project
+        run: |
+          mkdir twa-build && cd twa-build
+          bubblewrap init \
+            --manifest "https://sandyjuice.cm/build/manifest.webmanifest" \
+            --directory .
+        env:
+          BUBBLEWRAP_DISABLE_TELEMETRY: 1
+
+      # ─── Patch twa-manifest.json with signing config ─────────────────────────
+      - name: Patch TWA manifest (signing + app ID)
+        run: |
+          cd twa-build
+          node -e "
+            const fs = require('fs');
+            const m = JSON.parse(fs.readFileSync('twa-manifest.json', 'utf8'));
+            m.packageId         = 'cm.sandyjuice.app';
+            m.appVersion        = '1';
+            m.appVersionName    = '1.0.0';
+            m.signingKey.path   = '../sandyjuice.keystore';
+            m.signingKey.alias  = 'sandyjuice';
+            m.signingKey.keyPassword      = 'sandyjuice2024';
+            m.signingKey.storePassword    = 'sandyjuice2024';
+            m.backgroundColor   = '#254a29';
+            m.themeColor        = '#254a29';
+            m.navigationColor   = '#254a29';
+            m.navigationColorDark  = '#1e3e23';
+            m.navigationDividerColor     = '#254a29';
+            m.navigationDividerColorDark = '#1e3e23';
+            m.splashScreenFadeOutDuration = 300;
+            m.enableNotifications = false;
+            m.orientation       = 'portrait';
+            m.display           = 'standalone';
+            m.minSdkVersion     = 21;
+            fs.writeFileSync('twa-manifest.json', JSON.stringify(m, null, 2));
+            console.log('packageId:', m.packageId);
+          "
+
+      # ─── Build APK ───────────────────────────────────────────────────────────
+      - name: Build APK
+        run: |
+          cd twa-build
+          bubblewrap build \
+            --skipPwaValidation
+        env:
+          BUBBLEWRAP_DISABLE_TELEMETRY: 1
+
+      # ─── Show what was generated ─────────────────────────────────────────────
+      - name: List generated files
+        run: find twa-build/app/build/outputs -type f 2>/dev/null || find twa-build -name "*.apk" -o -name "*.aab" 2>/dev/null
+
+      # ─── Upload APK artifact ─────────────────────────────────────────────────
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: sandy-juice-apk
+          path: |
+            twa-build/app/build/outputs/apk/**/*.apk
+            twa-build/*.apk
+          if-no-files-found: warn
+          retention-days: 30
+
+      # ─── Upload AAB artifact (Play Store) ────────────────────────────────────
+      - name: Upload AAB (Play Store bundle)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sandy-juice-aab
+          path: |
+            twa-build/app/build/outputs/bundle/**/*.aab
+            twa-build/*.aab
+          if-no-files-found: warn
+          retention-days: 30
