@@ -89,7 +89,7 @@
               <div class="w-6 h-6 bg-[#f49926]/10 rounded-full flex items-center justify-center mr-3">
                 <i class="bi bi-telephone text-[#f49926] text-xs"></i>
               </div>
-              <span class="group-hover:text-[#f49926] transition-colors">+237 6556998253</span>
+              <span class="group-hover:text-[#f49926] transition-colors">+237 655699825</span>
             </a>
             <a href="mailto:contact@sandy-juice.com"
               class="flex items-center text-gray-300 hover:text-white transition-colors group">
