@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue';
-import { usePushNotifications } from '@/composables/usePushNotifications';
+import { usePushNotifications } from '@/Composables/usePushNotifications';
 
 const { isSupported, permission, subscribed, subscribe, checkStatus } = usePushNotifications();
 
