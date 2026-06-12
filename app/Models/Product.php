@@ -63,6 +63,11 @@ class Product extends Model
         'stock' => 'integer',
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public static function statuses(): array
     {
         return [
