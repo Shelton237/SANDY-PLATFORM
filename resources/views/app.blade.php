@@ -78,7 +78,7 @@
 
     <!-- Canonical -->
     <link rel="canonical" href="{{ $canonicalUrl }}">
-    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+    <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
