@@ -7,30 +7,42 @@
         <h1 class="text-xl font-bold text-[#254a29]">{{ form.name || 'Éditer le produit' }}</h1>
         <p class="text-sm text-slate-500 mt-0.5">Modifiez les informations puis enregistrez.</p>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <!-- Bouton publier rapide si brouillon -->
+        <button
+          v-if="!isPublished"
+          type="button"
+          class="inline-flex items-center gap-1.5 text-sm font-semibold bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-1.5 rounded-lg transition"
+          :disabled="form.processing"
+          @click="publishNow"
+        >
+          <i class="bi bi-send-check"></i>
+          Publier
+        </button>
+        <span v-else class="inline-flex items-center gap-1.5 text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Publié
+        </span>
         <Link
-          :href="route('admin.products.show', product.id)"
-          class="text-sm text-slate-500 hover:text-[#254a29] flex items-center gap-1.5 transition"
+          :href="route('admin.products.show', product.slug)"
+          class="text-sm text-slate-500 hover:text-[#254a29] flex items-center gap-1.5 transition px-2 py-1.5"
         >
           <i class="bi bi-eye"></i>
-          Voir
         </Link>
         <Link
           :href="route('admin.products.index')"
-          class="text-sm text-slate-500 hover:text-[#254a29] flex items-center gap-1.5 transition"
+          class="text-sm text-slate-500 hover:text-[#254a29] flex items-center gap-1.5 transition px-2 py-1.5"
         >
           <i class="bi bi-arrow-left"></i>
-          Catalogue
         </Link>
         <Link
           as="button"
           method="delete"
-          :href="route('admin.products.destroy', product.id)"
+          :href="route('admin.products.destroy', product.slug)"
           class="inline-flex items-center gap-1.5 text-sm font-semibold text-red-500 hover:text-red-600 border border-red-200 hover:border-red-300 px-3 py-1.5 rounded-lg transition"
           onclick="return confirm('Supprimer ce produit ?')"
         >
           <i class="bi bi-trash"></i>
-          Supprimer
         </Link>
       </div>
     </div>
@@ -123,5 +135,10 @@ const checklist = computed(() => [
   { label: 'Description',        done: Boolean(form.description || form.tagline) },
 ])
 
-const submit = () => form.put(route('admin.products.update', props.product.id))
+const submit = () => form.put(route('admin.products.update', props.product.slug))
+
+const publishNow = () => {
+  form.status = 'published'
+  submit()
+}
 </script>
