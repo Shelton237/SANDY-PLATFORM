@@ -48,7 +48,7 @@
     <meta name="keywords" content="{{ $seoKeywords }}">
     <meta name="author" content="{{ $siteName }}">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#254a29">
+    <meta name="theme-color" content="#C41717">
 
     <!-- PWA iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -102,7 +102,7 @@
     <style>
       #app-splash {
         position: fixed; inset: 0; z-index: 9999;
-        background: #254a29;
+        background: #C41717;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center; gap: 16px;
         transition: opacity .35s ease;
