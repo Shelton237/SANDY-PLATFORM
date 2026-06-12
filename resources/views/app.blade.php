@@ -48,7 +48,7 @@
     <meta name="keywords" content="{{ $seoKeywords }}">
     <meta name="author" content="{{ $siteName }}">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#C41717">
+    <meta name="theme-color" content="#E85A14">
 
     <!-- PWA iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -91,9 +91,9 @@
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
     {{-- Fond rouge dès le premier pixel — couvre tout flash avant le CSS bundle --}}
-    <style>html,body{background:#C41717}</style>
+    <style>html,body{background:#E85A14}</style>
   </head>
-  <body class="font-sans antialiased pb-8" style="background:#C41717">
+  <body class="font-sans antialiased pb-8" style="background:#E85A14">
 
     <!-- ── Splash loader : visible jusqu'au montage de Vue ─────────────────── -->
     <div id="app-splash" aria-hidden="true">
@@ -104,7 +104,7 @@
     <style>
       #app-splash {
         position: fixed; inset: 0; z-index: 9999;
-        background: #C41717;
+        background: #E85A14;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center; gap: 16px;
         transition: opacity .35s ease;

@@ -30,8 +30,8 @@ export default defineConfig({
                 name: 'Sandy Juice',
                 short_name: 'Sandy Juice',
                 description: 'Jus naturels pressés à froid — commandez en ligne',
-                theme_color: '#C41717',
-                background_color: '#C41717',
+                theme_color: '#E85A14',
+                background_color: '#E85A14',
                 display: 'standalone',
                 orientation: 'portrait',
                 scope: '/',
@@ -47,7 +47,7 @@ export default defineConfig({
                     { src: '/pwa-icons/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
                     { src: '/pwa-icons/icon-384x384.png', sizes: '384x384', type: 'image/png', purpose: 'any' },
                     { src: '/pwa-icons/icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-                    // maskable — logo sur fond rouge #C41717 (adaptatif Android)
+                    // maskable — logo sur fond rouge #E85A14 (adaptatif Android)
                     { src: '/pwa-icons/icon-192x192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
                     { src: '/pwa-icons/icon-512x512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
                 ],
