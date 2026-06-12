@@ -18,6 +18,9 @@ export default defineConfig({
             },
         }),
         VitePWA({
+            strategies: 'injectManifest',
+            srcDir: 'resources/js',
+            filename: 'sw.js',
             registerType: 'autoUpdate',
             injectRegister: 'auto',
             includeAssets: [
@@ -38,7 +41,6 @@ export default defineConfig({
                 start_url: '/',
                 lang: 'fr',
                 icons: [
-                    // any — fond transparent, logo visible tel quel
                     { src: '/pwa-icons/icon-72x72.png',   sizes: '72x72',   type: 'image/png', purpose: 'any' },
                     { src: '/pwa-icons/icon-96x96.png',   sizes: '96x96',   type: 'image/png', purpose: 'any' },
                     { src: '/pwa-icons/icon-128x128.png', sizes: '128x128', type: 'image/png', purpose: 'any' },
@@ -47,31 +49,12 @@ export default defineConfig({
                     { src: '/pwa-icons/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
                     { src: '/pwa-icons/icon-384x384.png', sizes: '384x384', type: 'image/png', purpose: 'any' },
                     { src: '/pwa-icons/icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-                    // maskable — logo sur fond rouge #E85A14 (adaptatif Android)
                     { src: '/pwa-icons/icon-192x192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
                     { src: '/pwa-icons/icon-512x512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
                 ],
             },
-            workbox: {
+            injectManifest: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
-                runtimeCaching: [
-                    {
-                        urlPattern: /^https:\/\/sandyjuice\.cm\/products/,
-                        handler: 'NetworkFirst',
-                        options: {
-                            cacheName: 'products-cache',
-                            expiration: { maxEntries: 50, maxAgeSeconds: 300 },
-                        },
-                    },
-                    {
-                        urlPattern: /^https:\/\/sandyjuice\.cm\//,
-                        handler: 'NetworkFirst',
-                        options: {
-                            cacheName: 'pages-cache-v2',
-                            expiration: { maxEntries: 20, maxAgeSeconds: 300 },
-                        },
-                    },
-                ],
             },
         }),
     ],

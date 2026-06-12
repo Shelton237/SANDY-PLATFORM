@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PushSubscriptionController;
 use Inertia\Inertia;
 
 // Accueil
@@ -37,6 +38,10 @@ Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
 Route::post('/checkout/process', [OrderController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success/{order}', [OrderController::class, 'success'])->name('checkout.success');
 Route::get('/checkout/cancel', [OrderController::class, 'cancel'])->name('checkout.cancel');
+
+// Push notifications
+Route::post('/push/subscribe', [PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
+Route::post('/push/unsubscribe', [PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
 
 // Sitemap
 Route::get('/sitemap.xml', function () {

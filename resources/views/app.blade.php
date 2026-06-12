@@ -91,6 +91,8 @@
     @routes
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
+    {{-- VAPID key exposed for push subscription --}}
+    <script>window.VAPID_PUBLIC_KEY='{{ env("VAPID_PUBLIC_KEY","") }}'</script>
     {{-- Fond rouge dès le premier pixel — couvre tout flash avant le CSS bundle --}}
     <style>html,body{background:#E85A14}</style>
   </head>

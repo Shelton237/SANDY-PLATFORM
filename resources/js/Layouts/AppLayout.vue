@@ -42,6 +42,8 @@
       <span class="sr-only">Commander sur WhatsApp</span>
       <i class="bi bi-whatsapp text-2xl"></i>
     </a>
+
+    <PushNotificationBanner />
   </div>
 </template>
 
@@ -52,6 +54,7 @@ import NavigationHeader from '@/Components/Home/NavigationHeader.vue'
 
 const Footer = defineAsyncComponent(() => import('@/Components/Home/Footer.vue'))
 const NotificationCenter = defineAsyncComponent(() => import('@/Components/NotificationCenter.vue'))
+const PushNotificationBanner = defineAsyncComponent(() => import('@/Components/PushNotificationBanner.vue'))
 
 const showScrollButton = ref(false)
 const footerVisible = ref(false)
