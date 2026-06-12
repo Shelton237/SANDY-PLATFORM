@@ -74,7 +74,7 @@ jobs:
         run: |
           keytool -genkeypair \
             -v \
-            -keystore twa/sandyjuice.keystore \
+            -keystore twa/app/sandyjuice.keystore \
             -keyalg RSA \
             -keysize 2048 \
             -validity 10000 \
@@ -85,7 +85,7 @@ jobs:
 
           # Print SHA-256 fingerprint (needed for assetlinks.json later)
           keytool -list -v \
-            -keystore twa/sandyjuice.keystore \
+            -keystore twa/app/sandyjuice.keystore \
             -alias sandyjuice \
             -storepass sandyjuice2024 2>/dev/null | grep "SHA256:"
 
@@ -126,7 +126,7 @@ jobs:
           echo "  SHA-256 fingerprint for Digital Asset Links:"
           echo "========================================================"
           keytool -list -v \
-            -keystore twa/sandyjuice.keystore \
+            -keystore twa/app/sandyjuice.keystore \
             -alias sandyjuice \
             -storepass sandyjuice2024 2>/dev/null | grep "SHA256:"
           echo "========================================================"
