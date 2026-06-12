@@ -1,63 +1,105 @@
 <template>
-  <AdminLayout title="Nouvelle recette">
-    <Head title="Créer un produit" />
+  <AdminLayout title="Nouveau produit">
+    <Head title="Ajouter un produit — Sandy Juice" />
 
-    <section class="mb-8 rounded-3xl border border-slate-200 bg-gradient-to-r from-[#fef7ee] via-white to-[#f0faf2] p-6 shadow-sm">
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="space-y-3">
-          <p class="text-xs uppercase tracking-[0.4em] text-slate-400">Pipeline innovation</p>
-          <h1 class="text-3xl font-semibold text-[#254a29]">Composer une nouvelle recette Sandy</h1>
-          <p class="text-sm text-slate-500 max-w-2xl">
-            Définissez les informations de base, affinez l’histoire produit, puis chargez les visuels en haute résolution.
-            Un récapitulatif s’actualise à droite pour vous guider.
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span v-for="(step, index) in steps" :key="step" class="px-4 py-2 rounded-full text-xs font-semibold"
-            :class="index === 0 ? 'bg-[#f49926] text-white' : 'bg-white border border-slate-200 text-slate-500'">
-            {{ index + 1 }}. {{ step }}
-          </span>
-        </div>
+    <!-- En-tête -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-xl font-bold text-[#254a29]">Nouveau produit</h1>
+        <p class="text-sm text-slate-500 mt-0.5">Remplissez les infos puis publiez dans le catalogue.</p>
       </div>
-    </section>
+      <Link :href="route('admin.products.index')" class="text-sm text-slate-500 hover:text-[#254a29] flex items-center gap-1.5 transition">
+        <i class="bi bi-arrow-left"></i>
+        Catalogue
+      </Link>
+    </div>
 
     <div class="grid gap-6 lg:grid-cols-3">
-      <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
-        <ProductForm :form="form" :statuses="statuses" :categories="categories" submit-label="Créer" :on-submit="submit" />
+
+      <!-- Formulaire -->
+      <div class="lg:col-span-2">
+        <ProductForm
+          :form="form"
+          :statuses="statuses"
+          :categories="categories"
+          submit-label="Publier le produit"
+          :on-submit="submit"
+        />
       </div>
 
-      <aside class="space-y-4">
-        <article class="rounded-3xl border border-slate-200 bg-white shadow-sm p-5 space-y-3">
-          <p class="text-xs uppercase tracking-[0.4em] text-slate-400">Checklist</p>
-          <h2 class="text-lg font-semibold text-[#254a29]">Avant publication</h2>
-          <ul class="space-y-2 text-sm text-slate-600">
-            <li v-for="item in checklist" :key="item" class="flex items-start gap-2">
-              <i class="bi bi-check-circle-fill text-[#f49926] mt-0.5"></i>
-              <span>{{ item }}</span>
-            </li>
-          </ul>
-        </article>
-        <article class="rounded-3xl border border-slate-200 bg-white shadow-sm p-5">
-          <p class="text-xs uppercase tracking-[0.4em] text-slate-400 mb-3">Récapitulatif live</p>
-          <dl class="space-y-2 text-sm text-slate-600">
-            <div class="flex justify-between">
-              <dt>Statut</dt>
-              <dd class="font-semibold text-[#254a29]">{{ statuses[form.status] || 'Brouillon' }}</dd>
+      <!-- Preview live -->
+      <aside class="lg:col-span-1">
+        <div class="sticky top-24 space-y-4">
+
+          <!-- Carte aperçu -->
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
+              <i class="bi bi-eye text-slate-400 text-sm"></i>
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Aperçu catalogue</span>
             </div>
-            <div class="flex justify-between">
-              <dt>Catégorie</dt>
-              <dd class="font-semibold text-[#254a29]">{{ displayCategory }}</dd>
+            <!-- Image -->
+            <div class="aspect-[4/3] bg-slate-50 overflow-hidden relative">
+              <img
+                v-if="form.image_path"
+                :src="form.image_path"
+                class="w-full h-full object-cover"
+                alt="Aperçu"
+              >
+              <div v-else class="w-full h-full flex items-center justify-center">
+                <i class="bi bi-image text-5xl text-slate-200"></i>
+              </div>
+              <!-- Badge statut -->
+              <span
+                class="absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-full"
+                :class="isPublished ? 'bg-emerald-500 text-white' : 'bg-slate-500 text-white'"
+              >
+                {{ isPublished ? 'Publié' : 'Brouillon' }}
+              </span>
+              <!-- Badge catégorie -->
+              <span v-if="displayCategory" class="absolute top-3 left-3 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white/80 backdrop-blur-sm text-[#254a29] border border-slate-200">
+                {{ displayCategory }}
+              </span>
             </div>
-            <div class="flex justify-between">
-              <dt>Prix indicatif</dt>
-              <dd class="font-semibold text-[#f49926]">{{ formatPrice(form.price) }}</dd>
+            <!-- Infos -->
+            <div class="p-4">
+              <h3 class="font-semibold text-[#254a29] text-base leading-snug">
+                {{ form.name || 'Nom du produit' }}
+              </h3>
+              <p class="text-xs text-slate-400 mt-1 line-clamp-2">
+                {{ form.tagline || 'Tagline du produit…' }}
+              </p>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="text-lg font-bold text-[#E85A14]">
+                  {{ form.price ? formatPrice(form.price) : '— FCFA' }}
+                </span>
+                <span v-if="form.size" class="text-xs text-slate-400">{{ form.size }}</span>
+              </div>
+              <div class="mt-3 flex gap-2">
+                <div class="flex-1 h-9 rounded-xl bg-[#E85A14]/10 flex items-center justify-center text-xs font-semibold text-[#E85A14]">
+                  <i class="bi bi-cart-plus mr-1"></i> Ajouter
+                </div>
+                <div class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400">
+                  <i class="bi bi-eye text-sm"></i>
+                </div>
+              </div>
             </div>
-            <div class="flex justify-between">
-              <dt>Images</dt>
-              <dd class="font-semibold text-[#254a29]">{{ (form.images ?? []).length }}</dd>
-            </div>
-          </dl>
-        </article>
+          </div>
+
+          <!-- Checklist -->
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Checklist publication</p>
+            <ul class="space-y-2">
+              <li v-for="item in checklist" :key="item.label" class="flex items-center gap-2.5 text-sm">
+                <i
+                  class="bi text-base shrink-0"
+                  :class="item.done ? 'bi-check-circle-fill text-emerald-500' : 'bi-circle text-slate-300'"
+                ></i>
+                <span :class="item.done ? 'text-slate-700' : 'text-slate-400'">{{ item.label }}</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
       </aside>
     </div>
   </AdminLayout>
@@ -65,46 +107,33 @@
 
 <script setup>
 import { computed } from 'vue'
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import ProductForm from './Partials/ProductForm.vue'
 
 const props = defineProps({
-  product: {
-    type: Object,
-    required: true
-  },
-  statuses: {
-    type: Object,
-    default: () => ({})
-  },
-  categories: {
-    type: Array,
-    default: () => []
-  }
+  product:    { type: Object, required: true },
+  statuses:   { type: Object, default: () => ({}) },
+  categories: { type: Array,  default: () => [] },
 })
 
 const form = useForm({ ...props.product })
 
-const steps = ['Base', 'Commerce', 'Storytelling', 'Galerie']
-const checklist = [
-  'Renseigner description + tagline',
-  'Ajouter au moins une image HD',
-  'Vérifier disponibilité / stock',
-  'Valider la catégorie marketing'
-]
-
+const isPublished   = computed(() => form.status === 'published')
 const displayCategory = computed(() => {
-  const found = props.categories.find((cat) => cat.slug === form.category)
-  return found ? found.name : 'Non catégorisé'
+  const found = props.categories.find(c => c.slug === form.category)
+  return found ? found.name : form.category || null
 })
 
-const formatPrice = (value) => {
-  const number = Number(value) || 0
-  return `${number.toFixed(0)} FCFA`
-}
+const formatPrice = (value) => `${(Number(value) || 0).toFixed(0)} FCFA`
 
-const submit = () => {
-  form.post(route('admin.products.store'))
-}
+const checklist = computed(() => [
+  { label: 'Nom du produit',     done: Boolean(form.name) },
+  { label: 'Catégorie choisie',  done: Boolean(form.category) },
+  { label: 'Prix renseigné',     done: Boolean(form.price) },
+  { label: 'Photo principale',   done: Boolean(form.image_path) },
+  { label: 'Description',        done: Boolean(form.description || form.tagline) },
+])
+
+const submit = () => form.post(route('admin.products.store'))
 </script>

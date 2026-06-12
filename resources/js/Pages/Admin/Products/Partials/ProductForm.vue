@@ -1,439 +1,395 @@
 <template>
-  <form @submit.prevent="onSubmit" class="space-y-8">
-    <section :class="ui.section">
-      <div class="flex items-start gap-4">
-        <span :class="ui.sectionIcon">
-          <i class="bi bi-cup-straw"></i>
-        </span>
-        <div>
-          <p :class="ui.eyebrow">Base</p>
-          <h2 class="text-lg font-semibold text-slate-900">Informations produit</h2>
-          <p class="text-sm text-slate-500">Definissez le socle du jus presente dans le catalogue.</p>
-        </div>
+  <form @submit.prevent="onSubmit" class="space-y-6">
+
+    <!-- ── 1. Photo principale ────────────────────────────────────────────── -->
+    <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+      <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
+        <i class="bi bi-image text-[#E85A14]"></i>
+        <span class="text-sm font-semibold text-slate-700">Photo principale</span>
       </div>
-      <div class="mt-6 grid gap-5 md:grid-cols-12">
-        <div class="md:col-span-6">
-          <label :class="ui.label" for="product-name">
-            <i class="bi bi-type text-emerald-500"></i>
-            Nom
-            <span class="text-emerald-500">*</span>
-          </label>
-          <p :class="ui.hint">Nom public affiche sur la boutique.</p>
-          <input
-            id="product-name"
-            v-model="form.name"
-            type="text"
-            required
-            :class="ui.input"
-            placeholder="Nectar mangue gingembre"
-          />
+      <div class="p-5">
+        <label
+          class="relative flex flex-col items-center justify-center w-full rounded-xl border-2 border-dashed transition cursor-pointer overflow-hidden"
+          :class="form.image_path ? 'border-transparent h-56' : 'border-slate-200 hover:border-[#E85A14]/50 h-40 bg-slate-50'"
+        >
+          <!-- Preview -->
+          <img
+            v-if="form.image_path"
+            :src="form.image_path"
+            class="absolute inset-0 w-full h-full object-cover"
+            alt="Aperçu"
+          >
+          <div
+            class="relative z-10 flex flex-col items-center gap-2 text-center"
+            :class="form.image_path ? 'bg-black/40 px-4 py-2 rounded-xl' : ''"
+          >
+            <i class="bi bi-cloud-arrow-up text-2xl" :class="form.image_path ? 'text-white' : 'text-slate-400'"></i>
+            <span class="text-sm font-semibold" :class="form.image_path ? 'text-white' : 'text-slate-500'">
+              {{ form.image_path ? 'Changer la photo' : 'Cliquer ou glisser une photo ici' }}
+            </span>
+            <span class="text-xs" :class="form.image_path ? 'text-white/70' : 'text-slate-400'">JPG, PNG, WebP — max 5 Mo</span>
+          </div>
+          <input type="file" class="hidden" accept="image/*" @change="handlePrimaryImageUpload">
+        </label>
+        <div v-if="heroImageUpload.uploading" class="mt-2 flex items-center gap-2 text-xs text-slate-500">
+          <i class="bi bi-arrow-repeat animate-spin text-[#E85A14]"></i> Upload en cours…
         </div>
-        <div class="md:col-span-6">
-          <label :class="ui.label" for="product-slug">
-            <i class="bi bi-link-45deg text-emerald-500"></i>
-            Slug
-          </label>
-          <p :class="ui.hint">Laissez vide pour generer automatiquement.</p>
-          <input id="product-slug" v-model="form.slug" type="text" :class="ui.input" placeholder="nectar-mangue" />
-        </div>
-        <div class="md:col-span-6">
-          <label :class="ui.label" for="product-category">
-            <i class="bi bi-tags text-emerald-500"></i>
-            Categorie
-            <span class="text-emerald-500">*</span>
-          </label>
-          <p :class="ui.hint">Choisissez la famille de jus.</p>
-          <template v-if="categoryOptions.length">
-            <select id="product-category" v-model="form.category" required :class="ui.select">
-              <option value="">Choisir une categorie</option>
-              <option v-for="option in categoryOptions" :key="option.slug" :value="option.slug">
-                {{ option.name }}
-              </option>
-            </select>
-          </template>
-          <template v-else>
-            <input
-              id="product-category"
-              v-model="form.category"
-              type="text"
-              required
-              :class="ui.input"
-              placeholder="Defaut"
-            />
-          </template>
-        </div>
-        <div class="md:col-span-3">
-          <label :class="ui.label" for="product-status">
-            <i class="bi bi-flag text-emerald-500"></i>
-            Statut
-          </label>
-          <select id="product-status" v-model="form.status" :class="[ui.select, 'mt-2']">
-            <option v-for="(label, value) in statuses" :key="value" :value="value">
-              {{ label }}
-            </option>
-          </select>
-        </div>
-        <div class="md:col-span-3">
-          <label :class="ui.label" for="product-badge">
-            <i class="bi bi-award text-emerald-500"></i>
-            Badge
-          </label>
-          <p :class="ui.hint">Ex: best seller, promo.</p>
-          <input id="product-badge" v-model="form.badge" type="text" :class="ui.input" placeholder="Best seller" />
-        </div>
+        <p v-if="heroImageUpload.error" class="mt-2 text-xs text-red-500">{{ heroImageUpload.error }}</p>
+        <input
+          v-model="form.image_path"
+          type="text"
+          class="mt-3 block w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-500 placeholder:text-slate-400 focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+          placeholder="Ou collez une URL d'image…"
+        >
       </div>
     </section>
 
-    <section :class="ui.section">
-      <div class="flex items-start gap-4">
-        <span :class="ui.sectionIcon">
-          <i class="bi bi-cash-stack"></i>
-        </span>
-        <div>
-          <p :class="ui.eyebrow">Commerce</p>
-          <h2 class="text-lg font-semibold text-slate-900">Tarification & disponibilite</h2>
-          <p class="text-sm text-slate-500">Suivez vos stocks et tarifs exprimes en FCFA.</p>
-        </div>
+    <!-- ── 2. Infos essentielles ──────────────────────────────────────────── -->
+    <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+      <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
+        <i class="bi bi-cup-straw text-[#E85A14]"></i>
+        <span class="text-sm font-semibold text-slate-700">Informations essentielles</span>
       </div>
-      <div class="mt-6 grid gap-5 md:grid-cols-12">
-        <div class="md:col-span-4">
-          <label :class="ui.label" for="product-price">
-            <i class="bi bi-currency-exchange text-emerald-500"></i>
-            Prix (FCFA)
-            <span class="text-emerald-500">*</span>
-          </label>
-          <input
-            id="product-price"
-            v-model.number="form.price"
-            type="number"
-            min="0"
-            step="0.1"
-            required
-            :class="ui.input"
-          />
-        </div>
-        <div class="md:col-span-4">
-          <label :class="ui.label" for="product-stock">
-            <i class="bi bi-box-seam text-emerald-500"></i>
-            Stock
-          </label>
-          <input
-            id="product-stock"
-            v-model.number="form.stock"
-            type="number"
-            min="0"
-            step="1"
-            :class="ui.input"
-          />
-        </div>
-        <div class="md:col-span-4">
-          <label :class="ui.label" for="product-size">
-            <i class="bi bi-arrows-collapse text-emerald-500"></i>
-            Taille / format
-          </label>
-          <input
-            id="product-size"
-            v-model="form.size"
-            type="text"
-            :class="ui.input"
-            placeholder="330 ml"
-          />
-        </div>
-        <div class="md:col-span-6">
-          <label :class="ui.label" for="product-availability">
-            <i class="bi bi-clock text-emerald-500"></i>
-            Disponibilite
-          </label>
-          <p :class="ui.hint">Plage de pressage ou limites.</p>
-          <input
-            id="product-availability"
-            v-model="form.availability"
-            type="text"
-            :class="ui.input"
-            placeholder="Pressage quotidien 6h-12h"
-          />
-        </div>
-        <div class="md:col-span-3">
-          <label :class="ui.label" for="product-accent">
-            <i class="bi bi-droplet text-emerald-500"></i>
-            Accent couleur
-          </label>
-          <input
-            id="product-accent"
-            v-model="form.accent"
-            type="text"
-            :class="ui.input"
-            placeholder="emerald, orange..."
-          />
-        </div>
-        <div class="md:col-span-3">
-          <label :class="ui.label" for="product-image">
-            <i class="bi bi-image text-emerald-500"></i>
-            Image principale
-          </label>
-          <p :class="ui.hint">URL du visuel hero.</p>
-          <input
-            id="product-image"
-            v-model="form.image_path"
-            type="text"
-            :class="ui.input"
-            placeholder="https://..."
-          />
-          <div class="mt-2 flex flex-wrap items-center gap-3 text-xs">
-            <label class="inline-flex items-center gap-2 font-semibold text-[#254a29] cursor-pointer">
-              <i class="bi bi-cloud-arrow-up"></i>
-              Importer
-              <input type="file" class="hidden" accept="image/*" @change="handlePrimaryImageUpload" />
+      <div class="p-5 space-y-5">
+
+        <!-- Nom + statut -->
+        <div class="flex items-start gap-4">
+          <div class="flex-1">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">
+              Nom du produit <span class="text-[#E85A14]">*</span>
             </label>
-            <span v-if="heroImageUpload.uploading" class="text-slate-500">Import en cours...</span>
-            <a
-              v-if="form.image_path"
-              :href="form.image_path"
-              class="text-[#f49926] hover:underline"
-              target="_blank"
-              rel="noopener"
-            >
-              Previsualiser
-            </a>
-          </div>
-          <p v-if="heroImageUpload.error" class="text-xs text-red-500 mt-1">
-            {{ heroImageUpload.error }}
-          </p>
-        </div>
-      </div>
-      <div class="mt-6 grid gap-4 md:grid-cols-4">
-        <label
-          class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm"
-        >
-          <input v-model="form.is_new" type="checkbox" :class="ui.checkbox" />
-          Nouveaute
-        </label>
-        <label
-          class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm"
-        >
-          <input v-model="form.is_limited" type="checkbox" :class="ui.checkbox" />
-          Edition limitee
-        </label>
-        <div>
-          <label :class="ui.label" for="product-energy">Energie (0-10)</label>
-          <input
-            id="product-energy"
-            v-model.number="form.energy_index"
-            type="number"
-            min="0"
-            max="10"
-            :class="ui.input"
-          />
-        </div>
-        <div>
-          <label :class="ui.label" for="product-calories">Calories</label>
-          <input
-            id="product-calories"
-            v-model.number="form.calories"
-            type="number"
-            min="0"
-            :class="ui.input"
-          />
-        </div>
-      </div>
-    </section>
-
-    <section :class="ui.section">
-      <div class="flex items-start gap-4">
-        <span :class="ui.sectionIcon">
-          <i class="bi bi-journal-richtext"></i>
-        </span>
-        <div>
-          <p :class="ui.eyebrow">Description</p>
-          <h2 class="text-lg font-semibold text-slate-900">Contenu & storytelling</h2>
-          <p class="text-sm text-slate-500">Racontez l'histoire, les ingredients et les benefices.</p>
-        </div>
-      </div>
-      <div class="mt-6 space-y-5">
-        <div>
-          <label :class="ui.label" for="product-tagline">Tagline</label>
-          <p :class="ui.hint">Baseline courte.</p>
-          <input
-            id="product-tagline"
-            v-model="form.tagline"
-            type="text"
-            :class="ui.input"
-            placeholder="Shot green ultra clean"
-          />
-        </div>
-        <div>
-          <label :class="ui.label" for="product-description">Description detaillee</label>
-          <textarea
-            id="product-description"
-            v-model="form.description"
-            rows="4"
-            :class="ui.textarea"
-          ></textarea>
-        </div>
-        <div class="grid gap-5 md:grid-cols-2">
-          <div>
-            <label :class="ui.label" for="product-ingredients">Ingredients (un par ligne)</label>
-            <textarea
-              id="product-ingredients"
-              v-model="ingredientsText"
-              rows="4"
-              :class="ui.textarea"
-            ></textarea>
-          </div>
-          <div>
-            <label :class="ui.label" for="product-benefits">Bienfaits (un par ligne)</label>
-            <textarea
-              id="product-benefits"
-              v-model="benefitsText"
-              rows="4"
-              :class="ui.textarea"
-            ></textarea>
-          </div>
-        </div>
-        <div class="grid gap-5 md:grid-cols-3">
-          <div>
-            <label :class="ui.label" for="product-moments">Moments de consommation</label>
-            <p :class="ui.hint">Separez par virgule.</p>
             <input
-              id="product-moments"
-              v-model="momentsText"
+              v-model="form.name"
               type="text"
-              :class="ui.input"
-              placeholder="matin, apres sport..."
-            />
-          </div>
-          <div>
-            <label :class="ui.label" for="product-taste">Notes de gout</label>
-            <input
-              id="product-taste"
-              v-model="tasteText"
-              type="text"
-              :class="ui.input"
-              placeholder="tropical, epice"
-            />
-          </div>
-          <div>
-            <label :class="ui.label" for="product-batch-note">Note atelier / batch</label>
-            <input
-              id="product-batch-note"
-              v-model="form.batch_note"
-              type="text"
-              :class="ui.input"
-              placeholder="Pressage 6h-11h"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section :class="ui.section">
-      <div class="flex items-start gap-4">
-        <span :class="ui.sectionIcon">
-          <i class="bi bi-images"></i>
-        </span>
-        <div>
-          <p :class="ui.eyebrow">Media</p>
-          <h2 class="text-lg font-semibold text-slate-900">Galerie photos</h2>
-          <p class="text-sm text-slate-500">Associez plusieurs visuels pour l'affichage produit.</p>
-        </div>
-      </div>
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <p class="text-sm text-slate-500">Collez les URLs de vos visuels (S3, CDN, asset interne).</p>
-        <button
-          type="button"
-          class="inline-flex items-center gap-2 rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-emerald-400 hover:text-emerald-600"
-          @click="addImage"
-        >
-          <i class="bi bi-plus-circle"></i>
-          Ajouter une image
-        </button>
-      </div>
-      <div v-if="form.images?.length" class="mt-5 grid gap-4">
-        <div
-          v-for="(image, index) in form.images"
-          :key="index"
-          class="grid gap-4 rounded-2xl border border-slate-100 bg-slate-50/60 p-4 md:grid-cols-12"
-        >
-          <div class="md:col-span-5">
-            <label :class="ui.label" :for="`image-url-${index}`">URL *</label>
-            <input
-              :id="`image-url-${index}`"
-              v-model="image.url"
-              type="url"
               required
-              :class="ui.input"
-              placeholder="https://..."
-            />
-            <div class="mt-2 flex flex-wrap items-center gap-3 text-xs">
-              <label class="inline-flex items-center gap-2 font-semibold text-[#254a29] cursor-pointer">
-                <i class="bi bi-cloud-arrow-up"></i>
-                Importer
-                <input type="file" class="hidden" accept="image/*" @change="handleGalleryUpload($event, index)" />
-              </label>
-              <span v-if="image.__upload?.uploading" class="text-slate-500">Import en cours...</span>
-              <a
-                v-if="image.url"
-                :href="image.url"
-                class="text-[#f49926] hover:underline"
-                target="_blank"
-                rel="noopener"
-              >
-                Prévisualiser
-              </a>
-            </div>
-            <p v-if="image.__upload?.error" class="text-xs text-red-500 mt-1">
-              {{ image.__upload.error }}
-            </p>
+              class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+              placeholder="Ex : Nectar mangue gingembre"
+            >
           </div>
-          <div class="md:col-span-5">
-            <label :class="ui.label" :for="`image-alt-${index}`">Texte alternatif</label>
-            <input
-              :id="`image-alt-${index}`"
-              v-model="image.alt"
-              type="text"
-              :class="ui.input"
-              placeholder="Bouteille studio"
-            />
-          </div>
-          <div class="md:col-span-2 flex items-end justify-between gap-2">
-            <div class="flex-1">
-              <label :class="ui.label" :for="`image-position-${index}`">Ordre</label>
-              <input
-                :id="`image-position-${index}`"
-                v-model.number="image.position"
-                type="number"
-                min="0"
-                :class="ui.input"
-              />
-            </div>
+          <!-- Toggle statut -->
+          <div class="shrink-0 pt-5">
             <button
               type="button"
-              class="text-sm font-semibold text-red-500 hover:text-red-600"
-              @click="removeImage(index)"
+              class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold border transition"
+              :class="isPublished
+                ? 'bg-emerald-50 border-emerald-300 text-emerald-700'
+                : 'bg-slate-50 border-slate-200 text-slate-500'"
+              @click="toggleStatus"
             >
-              Supprimer
+              <span class="w-2 h-2 rounded-full" :class="isPublished ? 'bg-emerald-500' : 'bg-slate-300'"></span>
+              {{ isPublished ? 'Publié' : 'Brouillon' }}
             </button>
           </div>
         </div>
+
+        <!-- Catégorie — chips -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-2">
+            Catégorie <span class="text-[#E85A14]">*</span>
+          </label>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="cat in categoryOptions"
+              :key="cat.slug"
+              type="button"
+              class="px-4 py-1.5 rounded-full text-sm font-medium border transition"
+              :class="form.category === cat.slug
+                ? 'bg-[#254a29] text-white border-[#254a29]'
+                : 'border-slate-200 text-slate-500 hover:border-[#254a29]/40'"
+              @click="form.category = cat.slug"
+            >
+              {{ cat.name }}
+            </button>
+            <!-- Saisie libre si pas de catégories -->
+            <input
+              v-if="!categoryOptions.length"
+              v-model="form.category"
+              type="text"
+              required
+              class="rounded-full border border-slate-200 px-4 py-1.5 text-sm focus:border-[#E85A14] focus:outline-none"
+              placeholder="Catégorie"
+            >
+          </div>
+        </div>
+
+        <!-- Prix / Stock / Format -->
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">
+              Prix (FCFA) <span class="text-[#E85A14]">*</span>
+            </label>
+            <input
+              v-model.number="form.price"
+              type="number"
+              min="0"
+              step="50"
+              required
+              class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-[#E85A14] focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+              placeholder="1500"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Stock</label>
+            <input
+              v-model.number="form.stock"
+              type="number"
+              min="0"
+              class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+              placeholder="0"
+            >
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Format</label>
+            <input
+              v-model="form.size"
+              type="text"
+              class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+              placeholder="330 ml"
+            >
+          </div>
+        </div>
+
+        <!-- Tagline -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Tagline</label>
+          <input
+            v-model="form.tagline"
+            type="text"
+            class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+            placeholder="Ex : Le shot vert qui réveille"
+          >
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">Description</label>
+          <textarea
+            v-model="form.description"
+            rows="3"
+            class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm resize-none focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+            placeholder="Décrivez le produit, ses saveurs, son origine…"
+          ></textarea>
+        </div>
       </div>
-      <p v-else class="mt-5 text-sm text-slate-500">Aucune image pour le moment.</p>
     </section>
 
-    <div class="flex items-center justify-end gap-3">
+    <!-- ── 3. Ingrédients & bienfaits ─────────────────────────────────────── -->
+    <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+      <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
+        <i class="bi bi-list-check text-[#E85A14]"></i>
+        <span class="text-sm font-semibold text-slate-700">Ingrédients & bienfaits</span>
+      </div>
+      <div class="p-5 grid gap-4 md:grid-cols-2">
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">
+            Ingrédients <span class="text-slate-400 font-normal">(un par ligne)</span>
+          </label>
+          <textarea
+            v-model="ingredientsText"
+            rows="5"
+            class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm resize-none focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+            placeholder="Mangue fraîche&#10;Gingembre&#10;Citron vert&#10;Eau de coco"
+          ></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">
+            Bienfaits <span class="text-slate-400 font-normal">(un par ligne)</span>
+          </label>
+          <textarea
+            v-model="benefitsText"
+            rows="5"
+            class="block w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm resize-none focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20"
+            placeholder="Riche en vitamine C&#10;Anti-inflammatoire&#10;Booste l'immunité"
+          ></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4. Options avancées (collapsible) ─────────────────────────────── -->
+    <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+      <button
+        type="button"
+        class="w-full px-5 py-3 flex items-center justify-between border-b border-slate-100 hover:bg-slate-50 transition"
+        @click="showAdvanced = !showAdvanced"
+      >
+        <div class="flex items-center gap-2">
+          <i class="bi bi-sliders text-slate-400"></i>
+          <span class="text-sm font-semibold text-slate-700">Options avancées</span>
+          <span class="text-xs text-slate-400">(badge, calories, notes…)</span>
+        </div>
+        <i class="bi text-slate-400 transition-transform" :class="showAdvanced ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+      </button>
+      <div v-show="showAdvanced" class="p-5 space-y-5">
+
+        <!-- Flags -->
+        <div class="flex flex-wrap gap-3">
+          <label class="flex items-center gap-2.5 px-4 py-2 rounded-xl border cursor-pointer transition select-none"
+            :class="form.is_new ? 'border-[#f49926] bg-[#fef4e7] text-[#f49926]' : 'border-slate-200 text-slate-500 hover:border-[#f49926]/40'">
+            <input v-model="form.is_new" type="checkbox" class="hidden">
+            <i class="bi bi-stars"></i>
+            Nouveauté
+          </label>
+          <label class="flex items-center gap-2.5 px-4 py-2 rounded-xl border cursor-pointer transition select-none"
+            :class="form.is_limited ? 'border-purple-400 bg-purple-50 text-purple-700' : 'border-slate-200 text-slate-500 hover:border-purple-300'">
+            <input v-model="form.is_limited" type="checkbox" class="hidden">
+            <i class="bi bi-gem"></i>
+            Édition limitée
+          </label>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Badge</label>
+            <input v-model="form.badge" type="text" class="block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20" placeholder="Best seller">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Calories (kcal)</label>
+            <input v-model.number="form.calories" type="number" min="0" class="block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Énergie (0-10)</label>
+            <input v-model.number="form.energy_index" type="number" min="0" max="10" class="block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Disponibilité</label>
+            <input v-model="form.availability" type="text" class="block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20" placeholder="Quotidien 6h-12h">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">
+              Notes de goût <span class="font-normal text-slate-400">(séparées par virgule)</span>
+            </label>
+            <input v-model="tasteText" type="text" class="block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20" placeholder="tropical, épicé, sucré">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">
+              Moments de consommation <span class="font-normal text-slate-400">(virgule)</span>
+            </label>
+            <input v-model="momentsText" type="text" class="block w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-[#E85A14] focus:outline-none focus:ring-2 focus:ring-[#E85A14]/20" placeholder="matin, après sport">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. Galerie photos ──────────────────────────────────────────────── -->
+    <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+      <div class="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="bi bi-images text-[#E85A14]"></i>
+          <span class="text-sm font-semibold text-slate-700">Galerie</span>
+          <span class="text-xs text-slate-400">(photos supplémentaires)</span>
+        </div>
+        <button
+          type="button"
+          class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#254a29] border border-[#254a29]/30 px-3 py-1.5 rounded-lg hover:bg-[#254a29]/5 transition"
+          @click="addImage"
+        >
+          <i class="bi bi-plus-lg"></i>
+          Ajouter
+        </button>
+      </div>
+      <div class="p-5">
+        <div v-if="form.images?.length" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div
+            v-for="(image, index) in form.images"
+            :key="index"
+            class="relative group rounded-xl overflow-hidden border border-slate-200 aspect-square bg-slate-50"
+          >
+            <!-- Thumbnail -->
+            <img
+              v-if="image.url"
+              :src="image.url"
+              :alt="image.alt || 'Photo ' + (index + 1)"
+              class="w-full h-full object-cover"
+            >
+            <div v-else class="w-full h-full flex items-center justify-center">
+              <i class="bi bi-image text-3xl text-slate-300"></i>
+            </div>
+
+            <!-- Overlay actions -->
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center gap-2 p-2">
+              <label class="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg cursor-pointer transition">
+                <i class="bi bi-cloud-arrow-up"></i>
+                Changer
+                <input type="file" class="hidden" accept="image/*" @change="handleGalleryUpload($event, index)">
+              </label>
+              <button
+                type="button"
+                class="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-red-500/80 hover:bg-red-600/80 px-3 py-1.5 rounded-lg transition"
+                @click="removeImage(index)"
+              >
+                <i class="bi bi-trash"></i>
+                Supprimer
+              </button>
+            </div>
+
+            <!-- Loading overlay -->
+            <div v-if="image.__upload?.uploading" class="absolute inset-0 bg-black/60 flex items-center justify-center">
+              <i class="bi bi-arrow-repeat animate-spin text-white text-2xl"></i>
+            </div>
+
+            <!-- URL input (replié sous la thumbnail) -->
+            <div class="absolute bottom-0 left-0 right-0 bg-white/90 px-2 py-1 opacity-0 group-hover:opacity-100 transition">
+              <input
+                v-model="image.url"
+                type="text"
+                class="w-full text-[10px] border-0 bg-transparent outline-none text-slate-600 truncate"
+                placeholder="URL…"
+              >
+            </div>
+          </div>
+
+          <!-- Bouton d'ajout rapide -->
+          <label class="relative rounded-xl border-2 border-dashed border-slate-200 hover:border-[#E85A14]/50 aspect-square flex flex-col items-center justify-center gap-1 cursor-pointer bg-slate-50 transition">
+            <i class="bi bi-plus-lg text-2xl text-slate-300"></i>
+            <span class="text-xs text-slate-400">Ajouter</span>
+            <input type="file" class="hidden" accept="image/*" @change="handleQuickGalleryAdd">
+          </label>
+        </div>
+
+        <div v-else class="flex flex-col items-center justify-center py-10 gap-2">
+          <label class="flex flex-col items-center gap-2 cursor-pointer">
+            <i class="bi bi-images text-3xl text-slate-300"></i>
+            <span class="text-sm text-slate-400">Aucune photo de galerie</span>
+            <span class="text-xs font-semibold text-[#254a29] hover:underline">
+              Cliquer pour ajouter
+            </span>
+            <input type="file" class="hidden" accept="image/*" @change="handleQuickGalleryAdd">
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Actions ───────────────────────────────────────────────────────── -->
+    <div class="flex items-center justify-between gap-3 py-2">
       <Link
         :href="route('admin.products.index')"
-        class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-emerald-400 hover:text-emerald-600"
+        class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700 transition"
       >
-        Annuler
+        <i class="bi bi-arrow-left"></i>
+        Retour au catalogue
       </Link>
-      <button
-        type="submit"
-        class="inline-flex items-center gap-2 rounded-2xl bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 focus:outline-none focus:ring-4 focus:ring-emerald-200 disabled:opacity-60"
-        :disabled="form.processing"
-      >
-        <i class="bi bi-save"></i>
-        {{ submitLabel }}
-      </button>
+      <div class="flex gap-3">
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:border-slate-300 transition"
+          :disabled="form.processing"
+          @click="saveDraft"
+        >
+          Enregistrer brouillon
+        </button>
+        <button
+          type="submit"
+          class="inline-flex items-center gap-2 rounded-xl bg-[#E85A14] hover:bg-[#c44010] text-white px-6 py-2.5 text-sm font-semibold shadow-sm transition disabled:opacity-60"
+          :disabled="form.processing"
+        >
+          <i v-if="form.processing" class="bi bi-arrow-repeat animate-spin"></i>
+          <i v-else class="bi bi-check-lg"></i>
+          {{ submitLabel }}
+        </button>
+      </div>
     </div>
   </form>
 </template>
@@ -442,245 +398,153 @@
 import { Link } from '@inertiajs/vue3'
 import { computed, ref, watch } from 'vue'
 
-const ui = {
-  section: 'rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm ring-1 ring-black/5',
-  sectionIcon: 'inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 text-xl',
-  eyebrow: 'text-xs font-semibold uppercase tracking-wide text-emerald-500',
-  label: 'flex items-center gap-2 text-sm font-semibold text-slate-700',
-  hint: 'mt-1 text-xs text-slate-500',
-  input:
-    'mt-2 block w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-100',
-  select:
-    'block w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-100',
-  textarea:
-    'mt-2 block w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-100',
-  checkbox: 'h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500'
-}
-
 const props = defineProps({
-  form: {
-    type: Object,
-    required: true
-  },
-  statuses: {
-    type: Object,
-    default: () => ({})
-  },
-  categories: {
-    type: Array,
-    default: () => []
-  },
-  submitLabel: {
-    type: String,
-    default: 'Enregistrer'
-  },
-  onSubmit: {
-    type: Function,
-    required: true
-  }
+  form:        { type: Object,   required: true },
+  statuses:    { type: Object,   default: () => ({}) },
+  categories:  { type: Array,    default: () => [] },
+  submitLabel: { type: String,   default: 'Enregistrer' },
+  onSubmit:    { type: Function, required: true },
 })
 
 const categoryOptions = computed(() => props.categories ?? [])
+const showAdvanced = ref(false)
+
+// ── Statut toggle ──────────────────────────────────────────────────────────
+const PUBLISHED_STATUS = 'published'
+const isPublished = computed(() => props.form.status === PUBLISHED_STATUS)
+const toggleStatus = () => {
+  props.form.status = isPublished.value ? 'draft' : PUBLISHED_STATUS
+}
+
+// ── Listes (ingrédients, bienfaits, moments, goût) ────────────────────────
+const parseList = (value, byLine = false) => {
+  if (!value) return []
+  return (byLine ? value.split(/\r?\n/) : value.split(','))
+    .map(s => s.trim()).filter(Boolean)
+}
 
 const ingredientsText = computed({
   get: () => (props.form.ingredients || []).join('\n'),
-  set: (value) => {
-    props.form.ingredients = parseList(value, true)
-  }
+  set: v => { props.form.ingredients = parseList(v, true) },
 })
-
 const benefitsText = computed({
   get: () => (props.form.benefits || []).join('\n'),
-  set: (value) => {
-    props.form.benefits = parseList(value, true)
-  }
+  set: v => { props.form.benefits = parseList(v, true) },
 })
-
 const momentsText = computed({
   get: () => (props.form.moments || []).join(', '),
-  set: (value) => {
-    props.form.moments = parseList(value)
-  }
+  set: v => { props.form.moments = parseList(v) },
 })
-
 const tasteText = computed({
   get: () => (props.form.taste_notes || []).join(', '),
-  set: (value) => {
-    props.form.taste_notes = parseList(value)
-  }
+  set: v => { props.form.taste_notes = parseList(v) },
 })
 
-const onSubmit = () => {
-  props.onSubmit()
-}
+// ── Upload ─────────────────────────────────────────────────────────────────
+const csrfToken = typeof document !== 'undefined'
+  ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
+  : ''
+const uploadUrl = typeof window !== 'undefined' && typeof window.route === 'function'
+  ? window.route('admin.products.images.upload')
+  : '/admin/products/images/upload'
 
-const resolveRouteHelper = () => {
-  if (typeof window !== 'undefined' && typeof window.route === 'function') {
-    return window.route
-  }
-  if (typeof route === 'function') {
-    return route
-  }
-  return null
-}
-
-const ziggyRoute = resolveRouteHelper()
-const uploadImageUrl = ziggyRoute ? ziggyRoute('admin.products.images.upload') : '/admin/products/images/upload'
-const csrfToken =
-  typeof document !== 'undefined'
-    ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? ''
-    : ''
 const heroImageUpload = ref({ uploading: false, error: null })
 
-const assignUploadMeta = (image) => {
-  if (image && typeof image === 'object' && !image.__upload) {
-    image.__upload = {
-      uploading: false,
-      error: null
-    }
+const doUpload = async (file) => {
+  const fd = new FormData()
+  fd.append('image', file)
+  const res = await fetch(uploadUrl, {
+    method: 'POST',
+    headers: { 'X-CSRF-TOKEN': csrfToken, Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+    credentials: 'same-origin',
+    body: fd,
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err?.message ?? 'Upload échoué')
   }
-}
-
-const ensureImagesArray = () => {
-  if (!Array.isArray(props.form.images)) {
-    props.form.images = []
-  }
-  props.form.images.forEach(assignUploadMeta)
-}
-
-const addImage = () => {
-  ensureImagesArray()
-  const newImage = {
-    url: '',
-    alt: '',
-    position: props.form.images.length
-  }
-  assignUploadMeta(newImage)
-  props.form.images.push(newImage)
-}
-
-const removeImage = (index) => {
-  ensureImagesArray()
-  props.form.images.splice(index, 1)
+  return (await res.json())?.url ?? null
 }
 
 const handlePrimaryImageUpload = async (event) => {
   const file = event?.target?.files?.[0]
   if (!file) return
-
-  heroImageUpload.value.uploading = true
-  heroImageUpload.value.error = null
-
-  const formData = new FormData()
-  formData.append('image', file)
-
+  heroImageUpload.value = { uploading: true, error: null }
   try {
-    const response = await fetch(uploadImageUrl, {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': csrfToken,
-        Accept: 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      credentials: 'same-origin',
-      body: formData
-    })
-
-    if (!response.ok) {
-      let message = 'Upload echoue'
-      try {
-        const payload = await response.json()
-        message = payload?.message ?? message
-      } catch (error) {
-        // ignore parse errors
-      }
-      throw new Error(message)
-    }
-
-    const payload = await response.json()
-    if (payload?.url) {
-      form.image_path = payload.url
-    }
-  } catch (error) {
-    heroImageUpload.value.error = error?.message ?? 'Import impossible. Reessayez.'
+    const url = await doUpload(file)
+    if (url) props.form.image_path = url
+  } catch (e) {
+    heroImageUpload.value.error = e?.message ?? 'Import impossible'
   } finally {
     heroImageUpload.value.uploading = false
-    if (event?.target) {
-      event.target.value = ''
-    }
+    if (event?.target) event.target.value = ''
   }
 }
+
+// ── Galerie ────────────────────────────────────────────────────────────────
+const ensureImages = () => {
+  if (!Array.isArray(props.form.images)) props.form.images = []
+  props.form.images.forEach(img => { if (!img.__upload) img.__upload = { uploading: false, error: null } })
+}
+
+const addImage = () => {
+  ensureImages()
+  const img = { url: '', alt: '', position: props.form.images.length, __upload: { uploading: false, error: null } }
+  props.form.images.push(img)
+}
+
+const removeImage = (index) => { ensureImages(); props.form.images.splice(index, 1) }
 
 const handleGalleryUpload = async (event, index) => {
   const file = event?.target?.files?.[0]
-  const image = form.images?.[index]
-
-  if (!file || !image) {
-    return
-  }
-
-  assignUploadMeta(image)
-  image.__upload.uploading = true
-  image.__upload.error = null
-
-  const formData = new FormData()
-  formData.append('image', file)
-
+  ensureImages()
+  const image = props.form.images[index]
+  if (!file || !image) return
+  image.__upload.uploading = true; image.__upload.error = null
   try {
-    const response = await fetch(uploadImageUrl, {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': csrfToken,
-        Accept: 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      credentials: 'same-origin',
-      body: formData
-    })
-
-    if (!response.ok) {
-      let message = 'Upload failed'
-      try {
-        const errorPayload = await response.json()
-        message = errorPayload?.message ?? message
-      } catch (error) {
-        // ignore
-      }
-      throw new Error(message)
-    }
-
-    const payload = await response.json()
-
-    if (payload?.url) {
-      image.url = payload.url
-    }
-  } catch (error) {
-    image.__upload.error = error?.message ?? 'Import impossible. Réessayez.'
+    const url = await doUpload(file)
+    if (url) image.url = url
+  } catch (e) {
+    image.__upload.error = e?.message ?? 'Import impossible'
   } finally {
     image.__upload.uploading = false
-    if (event?.target) {
-      event.target.value = ''
-    }
+    if (event?.target) event.target.value = ''
   }
 }
 
-const parseList = (value, useLineBreak = false) => {
-  if (!value) {
-    return []
+const handleQuickGalleryAdd = async (event) => {
+  const file = event?.target?.files?.[0]
+  if (!file) return
+  ensureImages()
+  const img = { url: '', alt: '', position: props.form.images.length, __upload: { uploading: true, error: null } }
+  props.form.images.push(img)
+  const index = props.form.images.length - 1
+  try {
+    const url = await doUpload(file)
+    if (url) props.form.images[index].url = url
+  } catch (e) {
+    props.form.images[index].__upload.error = e?.message ?? 'Import impossible'
+  } finally {
+    props.form.images[index].__upload.uploading = false
+    if (event?.target) event.target.value = ''
   }
-  const items = useLineBreak ? value.split(/\r?\n/) : value.split(',')
-  return items.map((item) => item.trim()).filter(Boolean)
 }
 
+// ── Brouillon ──────────────────────────────────────────────────────────────
+const saveDraft = () => {
+  const prev = props.form.status
+  props.form.status = 'draft'
+  props.onSubmit()
+  // Restaure si annulé — Inertia gère l'erreur
+}
+
+const onSubmit = () => props.onSubmit()
+
+// ── Init ───────────────────────────────────────────────────────────────────
 const form = props.form
-ensureImagesArray()
+ensureImages()
 
-watch(
-  () => form.ingredients,
-  (val) => {
-    if (!Array.isArray(val)) {
-      form.ingredients = parseList(val)
-    }
-  },
-)
+watch(() => form.ingredients, val => {
+  if (!Array.isArray(val)) form.ingredients = parseList(val)
+})
 </script>
