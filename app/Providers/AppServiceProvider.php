@@ -26,14 +26,18 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Vite::prefetch(concurrency: 3);
 
-        $categories = cache()->remember('nav_categories', 3600, function () {
-            return ProductCategory::query()
-                ->select(['id', 'name', 'slug', 'icon', 'description'])
-                ->orderBy('position')
-                ->orderBy('name')
-                ->get();
-        });
+        if (Schema::hasTable('cache') && Schema::hasTable('product_categories')) {
+            $categories = cache()->remember('nav_categories', 3600, function () {
+                return ProductCategory::query()
+                    ->select(['id', 'name', 'slug', 'icon', 'description'])
+                    ->orderBy('position')
+                    ->orderBy('name')
+                    ->get();
+            });
 
-        View::share('navCategories', $categories);
+            View::share('navCategories', $categories);
+        } else {
+            View::share('navCategories', collect());
+        }
     }
 }
