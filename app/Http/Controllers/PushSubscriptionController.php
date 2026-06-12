@@ -18,7 +18,7 @@ class PushSubscriptionController extends Controller
 
         PushSubscription::updateOrCreate(
             ['endpoint' => $data['endpoint']],
-            ['p256dh' => $data['p256dh'], 'auth' => $data['auth']],
+            ['p256dh' => $data['p256dh'], 'auth' => $data['auth'], 'user_id' => $request->user()?->id],
         );
 
         return response()->json(['status' => 'subscribed']);

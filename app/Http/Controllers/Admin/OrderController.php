@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Delivery;
 use App\Models\Order;
 use App\Models\FinanceTransaction;
+use App\Services\PushService;
 use App\Support\Finance\FinanceRecorder;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
@@ -186,8 +187,10 @@ class OrderController extends Controller
             ->with('success', 'Commande créée avec succès.');
     }
 
-    public function update(Request $request, Order $order): RedirectResponse
+    public function update(Request $request, Order $order, PushService $push): RedirectResponse
     {
+        $previousStatus = $order->status;
+
         $data = $request->validate([
             'status' => ['nullable', 'string', 'in:' . implode(',', array_keys(Order::statuses()))],
             'payment_status' => ['nullable', 'string', 'in:' . implode(',', array_keys(Order::paymentStatuses()))],
@@ -251,9 +254,35 @@ class OrderController extends Controller
             }
         }
 
+        // Notification push au client si le statut a changé
+        if (!empty($data['status']) && $data['status'] !== $previousStatus && $order->user_id) {
+            $this->notifyOrderStatus($push, $order);
+        }
+
         return redirect()
             ->route('admin.orders.show', $order)
             ->with('success', 'Commande mise à jour.');
+    }
+
+    private function notifyOrderStatus(PushService $push, Order $order): void
+    {
+        $messages = [
+            Order::STATUS_CONFIRMED     => ['🎉 Commande confirmée !',        "Votre commande #{$order->number} est confirmée. Nous préparons vos jus."],
+            Order::STATUS_IN_PRODUCTION => ['🥤 Jus en cours de préparation', "Votre commande #{$order->number} est en cours de préparation."],
+            Order::STATUS_READY         => ['✅ Commande prête !',             "Votre commande #{$order->number} est prête. La livraison arrive bientôt."],
+            Order::STATUS_COMPLETED     => ['🚀 Commande livrée !',            "Votre commande #{$order->number} a bien été livrée. Merci et bonne dégustation !"],
+            Order::STATUS_CANCELLED     => ['❌ Commande annulée',             "Votre commande #{$order->number} a été annulée. Contactez-nous pour plus d'infos."],
+        ];
+
+        [$title, $body] = $messages[$order->status] ?? [null, null];
+        if (!$title) return;
+
+        $push->notifyUser(
+            $order->user_id,
+            $title,
+            $body,
+            '/account/orders/' . $order->id,
+        );
     }
 
     private function shouldRecordRevenue(Order $order): bool
