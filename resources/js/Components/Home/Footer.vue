@@ -50,13 +50,13 @@
           </ul>
         </div>
 
-        <!-- Informations -->
+        <!-- Navigation rapide -->
         <div>
           <h3 class="text-lg font-semibold mb-5 flex items-center gap-3">
             <div class="w-8 h-8 bg-[#f49926]/10 rounded-lg flex items-center justify-center">
-              <i class="bi bi-info-circle text-[#f49926]"></i>
+              <i class="bi bi-compass text-[#f49926]"></i>
             </div>
-            <span class="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">Informations</span>
+            <span class="bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">Navigation</span>
           </h3>
           <ul class="space-y-3">
             <li v-for="(link, index) in quickLinks" :key="index">
@@ -108,45 +108,10 @@
         </div>
       </div>
 
-      <!-- Newsletter -->
-      <div
-        class="mt-12 bg-gradient-to-r from-[#2a5530] to-[#1e3e23] border border-[#f49926]/30 rounded-2xl p-6 shadow-xl backdrop-blur-md">
-        <div class="flex flex-col lg:flex-row items-center gap-6">
-          <div class="flex-1 text-center lg:text-left">
-            <h3 class="font-semibold text-xl mb-2 flex items-center justify-center lg:justify-start gap-2">
-              <div class="w-8 h-8 bg-[#f49926]/10 rounded-lg flex items-center justify-center">
-                <i class="bi bi-envelope text-[#f49926]"></i>
-              </div>
-              Restez informé
-            </h3>
-            <p class="text-sm text-gray-300 max-w-md">Recevez nos nouveautés, offres spéciales et conseils santé directement dans votre boîte mail.</p>
-          </div>
-          <div class="flex-1 w-full max-w-md">
-            <div class="flex flex-col sm:flex-row gap-3">
-              <input type="email" placeholder="Votre email"
-                class="flex-1 bg-white/5 border border-[#f49926]/30 text-white placeholder-gray-400 text-sm py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#f49926]/50 focus:border-transparent transition-all" />
-              <button
-                class="bg-gradient-to-r from-[#f49926] to-[#ffb347] hover:from-[#ffb347] hover:to-[#f49926] text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-[#f49926]/30 flex items-center justify-center whitespace-nowrap">
-                <i class="bi bi-envelope-open mr-2"></i> S'inscrire
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Bas de page -->
       <div
         class="mt-12 pt-8 border-t border-[#f49926]/20 flex flex-col md:flex-row justify-between items-center text-sm text-gray-300 gap-4">
-        <div class="flex items-center">
-          <span>© 2025 Sandy Juice. Tous droits réservés.</span>
-        </div>
-        <div class="flex flex-wrap gap-5 justify-center">
-          <a v-for="(link, index) in legalLinks" :key="index" :href="link.url"
-            class="hover:text-[#f49926] transition-colors flex items-center group">
-            <span class="w-1 h-1 bg-[#f49926] rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-            {{ link.text }}
-          </a>
-        </div>
+        <span>© {{ new Date().getFullYear() }} Sandy Juice. Tous droits réservés.</span>
         <div class="flex items-center text-xs">
           <span class="mr-1">Fait avec</span>
           <i class="bi bi-heart-fill text-[#f49926] mx-1"></i>
@@ -182,18 +147,12 @@ const products = [
 ]
 
 const quickLinks = [
-  { text: 'Notre histoire', url: '/about' },
-  { text: 'Engagement qualité', url: '/quality' },
-  { text: 'Blog santé', url: '/blog' },
-  { text: 'Livraison', url: '/delivery' },
-  { text: 'FAQ', url: '/faq' }
+  { text: 'Nos produits', url: '/products' },
+  { text: 'Mon panier', url: '/cart' },
+  { text: 'Mes commandes', url: '/account/orders' },
+  { text: 'Mon compte', url: '/profile' },
 ]
 
-const legalLinks = [
-  { text: 'Confidentialité', url: '/privacy' },
-  { text: 'Conditions d\'utilisation', url: '/terms' },
-  { text: 'Politique cookies', url: '/cookies' }
-]
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })

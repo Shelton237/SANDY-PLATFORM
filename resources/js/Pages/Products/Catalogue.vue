@@ -427,8 +427,8 @@
               <p class="text-xs uppercase text-white/50">Pack</p>
               <p class="text-2xl font-semibold text-white">{{ formatPrice(collection.price) }}</p>
             </div>
-            <Link :href="route('contact')" class="inline-flex items-center gap-2 text-sm font-semibold text-orange-200 hover:text-orange-100">
-              Demander
+            <Link :href="route('cart')" class="inline-flex items-center gap-2 text-sm font-semibold text-orange-200 hover:text-orange-100">
+              Commander
               <i class="bi bi-arrow-up-right"></i>
             </Link>
           </div>
