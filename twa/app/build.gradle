@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'cm.sandyjuice.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'cm.sandyjuice.app'
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            storeFile     file(project.hasProperty('KEYSTORE_PATH') ? KEYSTORE_PATH : '../sandyjuice.keystore')
+            storePassword project.hasProperty('KEYSTORE_PASSWORD') ? KEYSTORE_PASSWORD : 'sandyjuice2024'
+            keyAlias      project.hasProperty('KEY_ALIAS')         ? KEY_ALIAS         : 'sandyjuice'
+            keyPassword   project.hasProperty('KEY_PASSWORD')      ? KEY_PASSWORD       : 'sandyjuice2024'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled   false
+            signingConfig   signingConfigs.release
+        }
+        debug {
+            minifyEnabled   false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+}

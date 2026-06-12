@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sandy Juice</string>
+    <string name="asset_statements">[{"include": "https://sandyjuice.cm/.well-known/assetlinks.json"}]</string>
+    <bool name="enableNotification">false</bool>
+</resources>
