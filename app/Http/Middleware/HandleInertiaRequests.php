@@ -43,10 +43,10 @@ class HandleInertiaRequests extends Middleware
                 function () {
                     return ProductCategory::query()
                         ->active()
+                        ->whereHas('products', fn ($q) => $q->published())
                         ->withCount([
                             'products as products_count' => fn ($query) => $query->published(),
                         ])
-                        ->having('products_count', '>', 0)
                         ->orderBy('position')
                         ->orderBy('name')
                         ->get()
