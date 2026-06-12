@@ -1,6 +1,19 @@
 <template>
   <form @submit.prevent="onSubmit" class="space-y-6">
 
+    <!-- ── Erreurs de validation ─────────────────────────────────────────── -->
+    <div v-if="hasErrors" class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 flex gap-3">
+      <i class="bi bi-exclamation-triangle-fill text-red-500 mt-0.5 shrink-0"></i>
+      <div>
+        <p class="text-sm font-semibold text-red-700">Corrigez les erreurs suivantes :</p>
+        <ul class="mt-1 space-y-0.5">
+          <li v-for="(error, field) in form.errors" :key="field" class="text-sm text-red-600">
+            {{ error }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <!-- ── 1. Photo principale ────────────────────────────────────────────── -->
     <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
       <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
@@ -408,6 +421,7 @@ const props = defineProps({
 
 const categoryOptions = computed(() => props.categories ?? [])
 const showAdvanced = ref(false)
+const hasErrors = computed(() => Object.keys(props.form.errors ?? {}).length > 0)
 
 // ── Statut toggle ──────────────────────────────────────────────────────────
 const PUBLISHED_STATUS = 'published'
