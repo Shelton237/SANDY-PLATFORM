@@ -34,7 +34,7 @@
         ? strtolower($localeParts[0]) . '_' . strtoupper($localeParts[1])
         : strtolower($localeParts[0] ?? $htmlLocale);
     $pageTitle = $seoOverrides['title']
-        ?? ($siteName . ' - Jus naturels & pipeline logistique');
+        ?? ($siteName . ' — Jus naturels pressés à froid | Yaoundé, Cameroun');
 @endphp
 <html lang="{{ $htmlLocale }}" class="{{ ($appearance ?? 'system') == 'dark' ? 'dark' : '' }}">
   <head>
@@ -78,6 +78,7 @@
 
     <!-- Canonical -->
     <link rel="canonical" href="{{ $canonicalUrl }}">
+    <link rel="preload" as="image" href="{{ asset('images/publication/pineapple-ginger-juice.webp') }}" type="image/webp">
     <link rel="manifest" href="{{ asset('build/manifest.webmanifest') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">

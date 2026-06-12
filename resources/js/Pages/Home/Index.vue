@@ -1,28 +1,56 @@
 <template>
   <AppLayout>
     <SeoHead
-      title="Jus naturels pressés à froid — Sandy Juice"
-      description="Découvrez nos jus 100% naturels pressés à froid. Commandez en ligne et recevez à domicile."
+      title="Jus naturels pressés à froid — Livraison Yaoundé & Douala"
+      description="Sandy Juice : jus 100% naturels pressés à froid, livrés à domicile à Yaoundé et Douala. Sans conservateurs, sans compromis. Commandez en ligne."
+      keywords="jus naturels cameroun, jus pressé à froid, sandy juice yaounde, livraison jus domicile, smoothie cameroun, commande jus en ligne, boisson naturelle"
+      image="https://sandyjuice.cm/images/publication/pineapple-ginger-juice.webp"
+      :structuredData="localBusinessSchema"
     />
 
     <!-- Hero -->
-    <section class="bg-gradient-to-br from-[#254a29] to-[#3a6b3f] text-white py-20 px-4">
-      <div class="container mx-auto max-w-4xl text-center">
-        <h1 class="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-          100% Naturel.<br/>
-          <span class="text-[#f49926]">Pressé à froid.</span>
+    <section class="relative text-white overflow-hidden min-h-[420px] md:min-h-[520px] flex items-center">
+      <!-- Image de fond -->
+      <img
+        src="/images/publication/pineapple-ginger-juice.webp"
+        alt="Jus naturels Sandy Juice"
+        class="absolute inset-0 w-full h-full object-cover object-center"
+        loading="eager"
+        fetchpriority="high"
+        aria-hidden="true"
+      />
+      <!-- Overlay dégradé vert brand -->
+      <div class="absolute inset-0 bg-gradient-to-br from-[#254a29]/88 via-[#254a29]/75 to-[#3a6b3f]/65"></div>
+
+      <!-- Contenu -->
+      <div class="relative z-10 container mx-auto max-w-4xl text-center px-4 py-20">
+        <span class="inline-block bg-[#f49926]/20 border border-[#f49926]/40 text-[#f49926] text-xs font-semibold px-4 py-1.5 rounded-full mb-6 tracking-widest uppercase">
+          100% Naturel · Pressé à froid
+        </span>
+        <h1 class="text-4xl md:text-6xl font-bold mb-5 leading-tight drop-shadow-lg">
+          Des jus frais<br/>
+          <span class="text-[#f49926]">livrés chez vous.</span>
         </h1>
-        <p class="text-lg md:text-xl text-white/80 mb-8 max-w-xl mx-auto">
-          Des jus frais livrés directement chez vous, sans conservateurs, sans compromis.
+        <p class="text-lg md:text-xl text-white/85 mb-10 max-w-xl mx-auto drop-shadow">
+          Sans conservateurs, sans compromis — directement de la presse à votre porte à Yaoundé et Douala.
         </p>
-        <Link
-          :href="route('products')"
-          class="inline-flex items-center gap-2 bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-4 px-8 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-[#f49926]/40 hover:scale-105"
-        >
-          <i class="bi bi-grid"></i>
-          Voir tous les produits
-          <i class="bi bi-arrow-right"></i>
-        </Link>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            :href="route('products')"
+            class="inline-flex items-center justify-center gap-2 bg-[#f49926] hover:bg-[#f7a345] text-white font-semibold py-4 px-8 rounded-xl text-lg transition-all duration-300 shadow-xl hover:shadow-[#f49926]/40 hover:scale-105"
+          >
+            <i class="bi bi-grid"></i>
+            Voir nos produits
+            <i class="bi bi-arrow-right"></i>
+          </Link>
+          <Link
+            :href="route('cart')"
+            class="inline-flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur text-white font-semibold py-4 px-8 rounded-xl text-lg transition-all duration-300 border border-white/30"
+          >
+            <i class="bi bi-cart3"></i>
+            Mon panier
+          </Link>
+        </div>
       </div>
     </section>
 
@@ -127,4 +155,43 @@ const props = defineProps({
 
 const products   = computed(() => props.featuredProducts ?? [])
 const categories = computed(() => props.featuredCategories ?? [])
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FoodEstablishment',
+  name: 'Sandy Juice',
+  description: 'Jus naturels 100% pressés à froid, livrés à domicile à Yaoundé et Douala.',
+  url: 'https://sandyjuice.cm',
+  image: 'https://sandyjuice.cm/images/publication/pineapple-ginger-juice.webp',
+  logo: 'https://sandyjuice.cm/images/logo.png',
+  telephone: '+237655699825',
+  email: 'contact@sandy-juice.com',
+  servesCuisine: 'Jus naturels, Smoothies, Snacks healthy',
+  priceRange: '$$',
+  currenciesAccepted: 'XAF',
+  paymentAccepted: 'Cash, Mobile Money',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Yaoundé',
+    addressLocality: 'Yaoundé',
+    addressRegion: 'Centre',
+    addressCountry: 'CM',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 3.8480,
+    longitude: 11.5021,
+  },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+    opens: '08:00',
+    closes: '20:00',
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Catalogue Sandy Juice',
+    url: 'https://sandyjuice.cm/products',
+  },
+}
 </script>

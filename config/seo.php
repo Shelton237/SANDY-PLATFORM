@@ -2,8 +2,8 @@
 
 return [
     'site_name' => env('APP_NAME', 'Sandy Juice'),
-    'description' => env('SEO_DESCRIPTION', 'Sandy Juice orchestre l\'approvisionnement local, le pressage a froid et la livraison express de jus naturels au Cameroun.'),
-    'keywords' => env('SEO_KEYWORDS', 'sandy juice,jus naturels cameroun,pressage a froid,livraison yaounde,cold chain'),
-    'image' => env('SEO_IMAGE', '/images/logo.png'),
+    'description' => env('SEO_DESCRIPTION', 'Sandy Juice — Jus 100% naturels pressés à froid, livrés à domicile à Yaoundé et Douala. Sans conservateurs. Commandez en ligne.'),
+    'keywords' => env('SEO_KEYWORDS', 'jus naturels cameroun,jus pressé à froid,sandy juice yaounde,livraison jus domicile,smoothie cameroun,boisson naturelle,commande jus en ligne,cold pressed juice'),
+    'image' => env('SEO_IMAGE', 'https://sandyjuice.cm/images/publication/pineapple-ginger-juice.webp'),
     'base_url' => env('APP_URL', config('app.url')),
 ];
