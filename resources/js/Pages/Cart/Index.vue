@@ -2,32 +2,98 @@
   <AppLayout>
     <Head title="Mon panier" />
 
-    <section class="bg-gradient-to-br from-[#fef7ee] via-white to-[#f2faf0] border-b border-orange-100">
-      <div class="container mx-auto px-4 py-10 lg:py-16 space-y-8">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p class="text-xs uppercase tracking-[0.4em] text-[#f49926]">
-              Panier
-            </p>
-            <h1 class="text-3xl lg:text-4xl font-semibold text-[#254a29] mt-2">
-              Vos jus sélectionnés
-            </h1>
-            <p class="text-slate-500 mt-2">
-              Retrouvez ici les recettes ajoutées depuis le catalogue Sandy Juice.
-            </p>
-            <p class="text-sm text-slate-500 mt-1">
-              {{ cartCountLabel }}
-            </p>
-          </div>
-          <div class="flex items-center gap-3 text-sm">
-            <Link :href="route('products')" class="inline-flex items-center text-[#f49926] font-semibold hover:text-[#f28700]">
-              <i class="bi bi-plus-circle mr-2"></i>
-              Ajouter d'autres produits
+    <div class="container mx-auto px-4 py-6 lg:py-10 max-w-5xl">
+
+      <!-- En-tête -->
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-[#254a29]">Mon panier</h1>
+          <p class="text-sm text-slate-400 mt-0.5">{{ cartCountLabel }}</p>
+        </div>
+        <Link :href="route('products')" class="text-sm text-[#f49926] hover:text-[#f28700] font-semibold flex items-center gap-1.5 transition">
+          <i class="bi bi-plus-circle"></i>
+          Ajouter des produits
+        </Link>
+      </div>
+
+      <!-- Panier non vide -->
+      <div v-if="items.length" class="grid lg:grid-cols-3 gap-6 items-start">
+
+        <!-- Liste des articles -->
+        <div class="lg:col-span-2 space-y-3">
+          <article
+            v-for="item in items"
+            :key="item.product_id"
+            class="flex gap-4 bg-white rounded-2xl border border-slate-100 shadow-sm p-4 transition hover:border-slate-200"
+          >
+            <!-- Image -->
+            <Link :href="route('products.show', item.slug)" class="shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-[#fef7ee] border border-orange-100">
+              <img
+                :src="item.image || placeholder"
+                :alt="item.name"
+                class="w-full h-full object-cover"
+              />
             </Link>
+
+            <!-- Infos -->
+            <div class="flex-1 min-w-0 flex flex-col justify-between gap-2">
+              <div class="flex items-start justify-between gap-2">
+                <div class="min-w-0">
+                  <Link :href="route('products.show', item.slug)" class="font-semibold text-[#254a29] hover:text-[#f49926] transition text-sm leading-tight truncate block">
+                    {{ item.name }}
+                  </Link>
+                  <p v-if="item.size" class="text-xs text-slate-400 mt-0.5">{{ item.size }}</p>
+                </div>
+                <span class="font-bold text-[#E85A14] shrink-0 text-sm">{{ formatPrice(item.price) }}</span>
+              </div>
+
+              <div class="flex items-center justify-between gap-3">
+                <!-- Quantité -->
+                <div class="flex items-center border border-slate-200 rounded-xl bg-slate-50">
+                  <button
+                    type="button"
+                    class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-[#254a29] transition disabled:opacity-30"
+                    :disabled="quantities[item.product_id] <= 1 || loading"
+                    @click="changeQuantity(item, -1)"
+                  >
+                    <i class="bi bi-dash text-sm"></i>
+                  </button>
+                  <span class="w-8 text-center font-semibold text-[#254a29] text-sm select-none">
+                    {{ quantities[item.product_id] ?? item.quantity }}
+                  </span>
+                  <button
+                    type="button"
+                    class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-[#254a29] transition disabled:opacity-30"
+                    :disabled="quantities[item.product_id] >= maxQuantity || loading"
+                    @click="changeQuantity(item, 1)"
+                  >
+                    <i class="bi bi-plus text-sm"></i>
+                  </button>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-semibold text-slate-600">
+                    {{ formatPrice(item.total) }}
+                  </span>
+                  <button
+                    type="button"
+                    class="text-slate-300 hover:text-rose-400 transition"
+                    :disabled="loading"
+                    @click="removeItem(item.product_id)"
+                    title="Retirer"
+                  >
+                    <i class="bi bi-trash text-sm"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Vider le panier -->
+          <div class="flex justify-end pt-1">
             <button
-              v-if="items.length"
               type="button"
-              class="inline-flex items-center gap-2 text-slate-500 hover:text-rose-500"
+              class="text-xs text-slate-400 hover:text-rose-500 transition flex items-center gap-1.5"
               @click="clearCart()"
             >
               <i class="bi bi-trash"></i>
@@ -36,148 +102,81 @@
           </div>
         </div>
 
-        <div v-if="items.length" class="grid lg:grid-cols-3 gap-8">
-          <div class="lg:col-span-2 space-y-4">
-            <article
-              v-for="item in items"
-              :key="item.product_id"
-              class="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm flex flex-col sm:flex-row gap-4"
-            >
-              <div class="w-full sm:w-32 shrink-0">
-                <div class="rounded-2xl border border-slate-100 overflow-hidden bg-slate-50 aspect-square flex items-center justify-center">
-                  <img
-                    :src="item.image || placeholderImage"
-                    :alt="item.name"
-                    class="object-cover w-full h-full"
-                  />
-                </div>
-              </div>
-              <div class="flex-1 space-y-3">
-                <div class="flex flex-wrap justify-between gap-3">
-                  <div>
-                    <p class="text-xs uppercase tracking-wide text-slate-400">{{ item.size || 'Format standard' }}</p>
-                    <h2 class="text-lg font-semibold text-[#254a29]">{{ item.name }}</h2>
-                  </div>
-                  <p class="text-lg font-semibold text-[#f49926]">{{ formatPrice(item.price) }}</p>
-                </div>
-                <div class="flex flex-wrap gap-3 items-center">
-                  <div class="flex items-center border border-slate-200 rounded-2xl px-3 py-2">
-                    <button
-                      type="button"
-                      class="text-lg text-slate-500 hover:text-[#254a29]"
-                      @click="changeQuantity(item, -1)"
-                      :disabled="quantities[item.product_id] <= 1 || loading"
-                      :aria-label="'Diminuer la quantité de ' + item.name"
-                    >
-                      <i class="bi bi-dash-lg"></i>
-                    </button>
-                    <input
-                      v-model.number="quantities[item.product_id]"
-                      type="number"
-                      min="1"
-                      :max="maxQuantity"
-                      class="w-16 text-center border-0 focus:ring-0 font-semibold text-[#254a29]"
-                      @change="manualUpdate(item)"
-                    />
-                    <button
-                      type="button"
-                      class="text-lg text-slate-500 hover:text-[#254a29]"
-                      @click="changeQuantity(item, 1)"
-                      :disabled="quantities[item.product_id] >= maxQuantity || loading"
-                      :aria-label="'Augmenter la quantité de ' + item.name"
-                    >
-                      <i class="bi bi-plus-lg"></i>
-                    </button>
-                  </div>
-                  <p class="text-sm text-slate-500">
-                    Total : <span class="font-semibold text-[#254a29]">{{ formatPrice(item.total) }}</span>
-                  </p>
-                </div>
-                <div class="flex flex-wrap justify-between gap-3 text-sm text-slate-500">
-                  <p class="flex items-center gap-2">
-                    <i class="bi bi-lightning-charge text-[#f49926]"></i>
-                    Livraison sous 2h à Yaoundé
-                  </p>
-                  <button
-                    type="button"
-                    class="inline-flex items-center gap-2 text-rose-500 hover:text-rose-600"
-                    @click="removeItem(item.product_id)"
-                  >
-                    <i class="bi bi-x-circle"></i>
-                    Retirer
-                  </button>
-                </div>
-              </div>
-            </article>
-          </div>
-          <aside class="space-y-4">
-            <article class="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
-              <h3 class="text-sm uppercase tracking-[0.3em] text-slate-400">Résumé</h3>
-              <ul class="mt-4 space-y-3 text-sm text-slate-600">
-                <li class="flex justify-between">
-                  <span>Sous-total</span>
-                  <span class="font-semibold text-[#254a29]">{{ formatPrice(cart.subtotal) }}</span>
-                </li>
-                <li class="flex justify-between">
-                  <span>Livraison estimée</span>
-                  <span>
-                    <template v-if="cart.delivery_fee === 0">
-                      <span class="font-semibold text-emerald-600">Offerte</span>
-                    </template>
-                    <template v-else>
-                      <span class="font-semibold text-[#254a29]">{{ formatPrice(cart.delivery_fee) }}</span>
-                    </template>
-                  </span>
-                </li>
-              </ul>
-              <div class="mt-4 border-t border-dashed border-slate-200 pt-4">
-                <div class="flex justify-between text-base">
-                  <span class="font-semibold text-[#254a29]">Total TTC</span>
-                  <span class="text-2xl font-bold text-[#f49926]">{{ formatPrice(cart.total) }}</span>
-                </div>
-                <p class="text-xs text-slate-500 mt-2">
-                  Paiement à la livraison (espèces ou Mobile Money)
-                </p>
-              </div>
-              <button
-                type="button"
-                class="mt-6 w-full inline-flex items-center justify-center rounded-2xl bg-[#f49926] px-4 py-3 text-white font-semibold hover:bg-[#f28700] transition disabled:opacity-50"
-                :disabled="!items.length || loading"
-                @click="gotoCheckout()"
-              >
-                <i class="bi bi-bag-check mr-2"></i>
-                Passer au checkout
-              </button>
-              <p v-if="cart.free_delivery_threshold" class="text-xs text-slate-500 mt-3">
-                Livraison offerte dès {{ formatPrice(cart.free_delivery_threshold) }} d’achat.
-              </p>
-            </article>
-            <article class="rounded-3xl border border-slate-100 bg-slate-900 text-white p-6 space-y-3">
-              <p class="text-xs uppercase tracking-[0.3em] text-orange-200">Engagement</p>
-              <h3 class="text-xl font-semibold">Production du matin</h3>
-              <p class="text-sm text-white/70">
-                Nos jus sont pressés chaque jour. Commandez avant 15h pour une livraison dans la journée.
-              </p>
-            </article>
-          </aside>
-        </div>
+        <!-- Résumé commande -->
+        <aside class="lg:col-span-1 space-y-4 lg:sticky lg:top-24">
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-4">
+            <h2 class="font-bold text-[#254a29]">Résumé</h2>
 
-        <div v-else class="text-center py-16 border border-dashed border-slate-200 rounded-3xl bg-white">
-          <div class="w-20 h-20 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-3xl text-slate-400">
-            <i class="bi bi-bag"></i>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between text-slate-500">
+                <span>Sous-total ({{ cart.count }} article{{ cart.count > 1 ? 's' : '' }})</span>
+                <span class="font-medium text-slate-700">{{ formatPrice(cart.subtotal) }}</span>
+              </div>
+              <div class="flex justify-between text-slate-500">
+                <span>Livraison</span>
+                <span v-if="cart.delivery_fee === 0" class="font-medium text-emerald-600">Offerte</span>
+                <span v-else class="font-medium text-slate-700">{{ formatPrice(cart.delivery_fee) }}</span>
+              </div>
+            </div>
+
+            <!-- Seuil livraison gratuite -->
+            <div v-if="cart.free_delivery_threshold > 0 && cart.delivery_fee > 0" class="rounded-xl bg-[#f2faf0] border border-[#254a29]/10 px-3 py-2.5 text-xs text-[#254a29]">
+              <i class="bi bi-gift text-[#f49926] mr-1"></i>
+              Livraison offerte dès {{ formatPrice(cart.free_delivery_threshold) }} d'achat
+              <span class="block mt-0.5 text-slate-400">Il vous manque {{ formatPrice(cart.free_delivery_threshold - cart.subtotal) }}</span>
+            </div>
+
+            <div class="border-t border-dashed border-slate-200 pt-3 flex items-center justify-between">
+              <span class="font-semibold text-[#254a29]">Total</span>
+              <span class="text-2xl font-bold text-[#E85A14]">{{ formatPrice(cart.total) }}</span>
+            </div>
+
+            <button
+              type="button"
+              class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#E85A14] hover:bg-[#d45012] text-white font-bold py-3.5 transition disabled:opacity-50 text-base"
+              :disabled="loading"
+              @click="gotoCheckout()"
+            >
+              <i class="bi bi-bag-check"></i>
+              Passer commande
+            </button>
+
+            <p class="text-center text-xs text-slate-400 flex items-center justify-center gap-1.5">
+              <i class="bi bi-shield-check text-emerald-500"></i>
+              Paiement à la livraison uniquement
+            </p>
           </div>
-          <h2 class="text-2xl font-semibold text-[#254a29] mt-4">Panier vide</h2>
-          <p class="text-slate-500 mt-2">Ajoutez vos jus préférés depuis le catalogue pour commencer votre commande.</p>
-          <Link
-            :href="route('products')"
-            class="mt-6 inline-flex items-center gap-2 bg-[#f49926] text-white px-6 py-3 rounded-2xl font-semibold hover:bg-[#f28700]"
-          >
-            Découvrir le catalogue
-            <i class="bi bi-arrow-right"></i>
-          </Link>
-        </div>
+
+          <!-- Réassurance -->
+          <div class="bg-[#254a29] rounded-2xl p-5 text-white space-y-2">
+            <div class="flex items-center gap-2 text-sm font-semibold">
+              <i class="bi bi-lightning-charge text-[#f49926]"></i>
+              Livraison express
+            </div>
+            <p class="text-xs text-white/70 leading-relaxed">
+              Jus pressés le matin, livrés en moins de 2h à Yaoundé. Commandez avant 15h.
+            </p>
+          </div>
+        </aside>
       </div>
-    </section>
+
+      <!-- Panier vide -->
+      <div v-else class="py-20 text-center">
+        <div class="w-20 h-20 mx-auto rounded-full bg-[#fef7ee] flex items-center justify-center text-3xl text-[#f49926] mb-5">
+          <i class="bi bi-bag"></i>
+        </div>
+        <h2 class="text-xl font-bold text-[#254a29]">Votre panier est vide</h2>
+        <p class="text-slate-400 text-sm mt-2 mb-6">Ajoutez vos jus préférés depuis le catalogue.</p>
+        <Link
+          :href="route('products')"
+          class="inline-flex items-center gap-2 bg-[#E85A14] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#d45012] transition"
+        >
+          <i class="bi bi-grid"></i>
+          Voir le catalogue
+        </Link>
+      </div>
+
+    </div>
   </AppLayout>
 </template>
 
@@ -190,64 +189,37 @@ import useCart from '@/Composables/useCart'
 const props = defineProps({
   cart: {
     type: Object,
-    default: () => ({
-      items: [],
-      subtotal: 0,
-      delivery_fee: 0,
-      total: 0,
-      currency: 'FCFA',
-    }),
+    default: () => ({ items: [], subtotal: 0, delivery_fee: 0, total: 0, count: 0, currency: 'FCFA', free_delivery_threshold: 0 }),
   },
 })
 
-const page = usePage()
-const shop = computed(() => page.props.shop || {})
-const currency = computed(() => shop.value.currency || 'FCFA')
+const page        = usePage()
+const shop        = computed(() => page.props.shop || {})
+const currency    = computed(() => props.cart?.currency || shop.value.currency || 'FCFA')
 const maxQuantity = computed(() => Number(shop.value.max_quantity || 12))
+const placeholder = '/images/catalog/placeholder.jpg'
 
 const { updateItem, removeItem, clearCart, gotoCheckout, loading } = useCart()
 const items = computed(() => props.cart.items ?? [])
-const cart = computed(() => props.cart ?? {})
-const quantities = reactive({})
-const placeholderImage = '/images/catalog/placeholder.jpg'
+const cart  = computed(() => props.cart ?? {})
 
-watch(
-  items,
-  (value) => {
-    value.forEach((item) => {
-      quantities[item.product_id] = item.quantity
-    })
-  },
-  { immediate: true },
-)
+const quantities = reactive({})
+watch(items, (value) => {
+  value.forEach(item => { quantities[item.product_id] = item.quantity })
+}, { immediate: true })
 
 const changeQuantity = (item, delta) => {
   const current = quantities[item.product_id] ?? item.quantity
-  let next = current + delta
-  if (next < 1) next = 1
-  if (next > maxQuantity.value) next = maxQuantity.value
+  const next = Math.min(Math.max(current + delta, 1), maxQuantity.value)
   quantities[item.product_id] = next
   updateItem(item.product_id, next)
 }
 
-const manualUpdate = (item) => {
-  let value = Number(quantities[item.product_id])
-  if (!value || value < 1) value = 1
-  if (value > maxQuantity.value) value = maxQuantity.value
-  quantities[item.product_id] = value
-  updateItem(item.product_id, value)
-}
-
 const cartCountLabel = computed(() => {
-  const count = Number(cart.value.count ?? items.value.length ?? 0)
-  if (count <= 0) {
-    return 'Aucun produit pour le moment'
-  }
-  return `${count} ${count > 1 ? 'produits' : 'produit'} dans votre panier`
+  const n = Number(cart.value.count ?? items.value.length ?? 0)
+  if (!n) return 'Aucun article'
+  return `${n} article${n > 1 ? 's' : ''}`
 })
 
-const formatPrice = (amount) => {
-  const number = Number(amount) || 0
-  return `${number.toFixed(0)} ${currency.value}`
-}
+const formatPrice = (amount) => `${(Number(amount) || 0).toFixed(0)} ${currency.value}`
 </script>
