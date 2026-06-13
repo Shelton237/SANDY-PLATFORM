@@ -69,10 +69,10 @@
             <td class="px-6 py-4 text-slate-500">{{ product.stock ?? 0 }}</td>
             <td class="px-6 py-4 text-right">
               <div class="flex justify-end gap-2">
-                <Link :href="route('admin.products.edit', product.id)" class="text-[#254a29] hover:text-[#f49926]">
+                <Link :href="route('admin.products.edit', product.slug)" class="text-[#254a29] hover:text-[#f49926]">
                   Editer
                 </Link>
-                <Link :href="route('admin.products.show', product.id)" class="text-slate-400 hover:text-[#254a29]">
+                <Link :href="route('admin.products.show', product.slug)" class="text-slate-400 hover:text-[#254a29]">
                   Voir
                 </Link>
               </div>

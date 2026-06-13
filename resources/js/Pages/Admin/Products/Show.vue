@@ -10,7 +10,7 @@
             <h1 class="text-3xl font-semibold text-[#254a29]">{{ product.name }}</h1>
             <p class="text-sm text-slate-500">{{ product.tagline }}</p>
           </div>
-          <Link :href="route('admin.products.edit', product.id)" class="text-sm font-semibold text-[#f49926] hover:text-[#f28700]">
+          <Link :href="route('admin.products.edit', product.slug)" class="text-sm font-semibold text-[#f49926] hover:text-[#f28700]">
             Editer
           </Link>
         </div>
