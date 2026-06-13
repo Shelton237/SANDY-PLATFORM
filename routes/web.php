@@ -28,9 +28,9 @@ Route::get('/products/{slug}', [ProductController::class, 'show'])->name('produc
 
 // Panier
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
-Route::post('/cart/remove/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/add/{product:id}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update/{cartItem:id}', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove/{cartItem:id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
 // Checkout & commandes
