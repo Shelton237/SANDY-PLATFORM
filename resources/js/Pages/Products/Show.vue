@@ -173,7 +173,7 @@
             <h2 class="text-sm uppercase tracking-[0.3em] text-slate-400 mb-4">Ingrédients</h2>
             <ul class="space-y-2">
               <li
-                v-for="item in product.ingredients"
+                v-for="item in ingredients"
                 :key="item"
                 class="flex items-center gap-3 text-sm text-[#254a29]"
               >
@@ -188,7 +188,7 @@
             <h2 class="text-sm uppercase tracking-[0.3em] text-slate-400 mb-4">Bienfaits</h2>
             <ul class="space-y-2">
               <li
-                v-for="benefit in product.benefits"
+                v-for="benefit in benefits"
                 :key="benefit"
                 class="flex items-start gap-3 text-sm text-slate-600"
               >
@@ -408,8 +408,16 @@ const coverImage = (item) => {
   return item.images?.[0]?.url || item.image_path || item.image || placeholder
 }
 
-const hasIngredients  = computed(() => (props.product.ingredients ?? []).length > 0)
-const hasBenefits     = computed(() => (props.product.benefits ?? []).length > 0)
+const normalizeListItem = (item) => {
+  if (typeof item === 'string') return item
+  if (item && typeof item === 'object') return item.name || item.label || JSON.stringify(item)
+  return String(item)
+}
+
+const ingredients     = computed(() => (props.product.ingredients ?? []).map(normalizeListItem).filter(Boolean))
+const benefits        = computed(() => (props.product.benefits ?? []).map(normalizeListItem).filter(Boolean))
+const hasIngredients  = computed(() => ingredients.value.length > 0)
+const hasBenefits     = computed(() => benefits.value.length > 0)
 const hasAvailability = computed(() => Boolean(props.product.availability))
 const moments         = computed(() => props.product.moments ?? [])
 const outOfStock      = computed(() => (props.product.stock ?? 1) <= 0)
